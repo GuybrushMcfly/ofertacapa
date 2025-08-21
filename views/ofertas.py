@@ -166,4 +166,17 @@ def mostrar():
 
     html_code = create_html_table(df_vista)
     altura = min(800, 100 + (len(df_vista) * 45))
+    st.markdown("""
+        <style>
+        .main .block-container {
+            max-width: 100% !important;
+            padding: 0 2rem;
+        }
+        iframe {
+            width: 100% !important;
+        }
+        </style>
+    """, unsafe_allow_html=True)
+
+    
     components.html(html_code, height=altura, scrolling=True)
