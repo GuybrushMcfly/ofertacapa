@@ -17,46 +17,35 @@ def mostrar():
     # Convertir a DataFrame
     df_comisiones = pd.DataFrame(data)
 
-    # Recalcular columna combinada "Actividad (Comisión)"
+    # Crear columna combinada
     df_comisiones["Actividad (Comisión)"] = (
         df_comisiones["nombre_actividad"] + " (" + df_comisiones["id_comision_sai"] + ")"
     )
 
-    # Seleccionar columnas originales del formulario
-    columnas_originales = [
-        "Actividad (Comisión)",
-        "fecha_desde",
-        "fecha_hasta",
-        "fecha_cierre",
-        "creditos",
-        "modalidad_cursada",
-        "apto_tramo",
-        "url_inap"
+    # Columnas a mostrar (sin Tramo)
+    columnas_finales = [
+        "Actividad (Comisión)", "fecha_desde", "fecha_hasta", "fecha_cierre",
+        "creditos", "modalidad_cursada", "url_inap"
     ]
 
-    columnas_existentes = [col for col in columnas_originales if col in df_comisiones.columns]
-
-    df_vista = df_comisiones[columnas_existentes].rename(columns={
+    df_vista = df_comisiones[columnas_finales].rename(columns={
         "fecha_desde": "Inicio",
         "fecha_hasta": "Fin",
         "fecha_cierre": "Cierre",
         "creditos": "Créditos",
         "modalidad_cursada": "Modalidad",
-        "apto_tramo": "Tramo",
         "url_inap": "INAP"
     })
 
-    # =========================
-    # Render tabla HTML con DataTables
-    # =========================
+    # ============================
+    # Tabla HTML con dos botones
+    # ============================
     def create_html_table(df):
         table_id = "coursesTable"
 
         html = f"""
         <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
         <style>
         .courses-table {{
             width: 90%;
@@ -89,7 +78,7 @@ def mostrar():
             transform: translateY(-2px);
             box-shadow: 0 4px 12px rgba(19, 106, 193, 0.3);
         }}
-        .courses-table a {{
+        .courses-table a.boton {{
             color: #136ac1;
             text-decoration: none;
             font-weight: bold;
@@ -98,8 +87,9 @@ def mostrar():
             border-radius: 5px;
             transition: all 0.3s ease;
             display: inline-block;
+            margin-right: 6px;
         }}
-        .courses-table a:hover {{
+        .courses-table a.boton:hover {{
             background-color: #136ac1;
             color: white;
             transform: scale(1.05);
@@ -113,7 +103,7 @@ def mostrar():
         <table id="{table_id}" class="courses-table">
         <thead>
         <tr>
-            {''.join(f'<th>{col}</th>' for col in df.columns)}
+            {''.join(f'<th>{col}</th>' if col != "INAP" else '<th>Acciones</th>' for col in df.columns)}
         </tr>
         </thead>
         <tbody>
@@ -124,61 +114,41 @@ def mostrar():
             for col in df.columns:
                 val = row[col]
                 if col == "INAP":
+                    html += "<td>"
                     if pd.notna(val) and val:
-                        html += f'<td><a href="{val}" target="_blank">🌐 Acceder</a></td>'
+                        html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
                     else:
-                        html += '<td><span class="no-link">Sin enlace</span></td>'
+                        html += '<span class="no-link">Sin enlace</span>'
+                    html += f'<a href="#preinscripcion" class="boton">📝 INDEC</a></td>'
                 else:
                     html += f"<td>{val}</td>"
             html += "</tr>"
 
-        html += f"""
+        html += """
         </tbody>
         </table>
-
-        <script>
-        $(document).ready(function() {{
-            $('#{table_id}').DataTable({{
-                pageLength: 10,
-                dom: '<"top"f<"length-menu"l>>rt<"bottom"ip><"clear">',
-                language: {{
-                    search: "", searchPlaceholder: "🔍 Buscar...",
-                    lengthMenu: "Mostrar _MENU_ registros por página",
-                    zeroRecords: "No se encontraron resultados",
-                    info: "Mostrando página _PAGE_ de _PAGES_",
-                    infoEmpty: "No hay registros disponibles",
-                    infoFiltered: "(filtrado de _MAX_ registros totales)",
-                    paginate: {{ previous: "Anterior", next: "Siguiente" }}
-                }}
-            }});
-            $(".dataTables_filter").css({{ "float": "left", "margin-bottom": "10px" }});
-            $(".dataTables_filter input").css({{ "width": "300px" }});
-            $(".dataTables_length").css({{ "float": "right" }});
-        }});
-        </script>
         """
         return html
 
-    # Ajustar altura del iframe según cantidad de filas
-    altura = min(800, 100 + (len(df_vista) * 45))
+    html_code = create_html_table(df_vista)
 
-    # CSS para que no se “encajone”
+    # Estilo general para expandir ancho
     st.markdown("""
-    <style>
-    .main .block-container {
-        max-width: 100% !important;
-        padding: 0rem 2rem;
-    }
-    iframe {
-        width: 100% !important;
-        display: block;
-    }
-    .element-container {
-        width: 100% !important;
-    }
-    </style>
+        <style>
+        .main .block-container {
+            max-width: 100% !important;
+            padding-left: 0rem !important;
+            padding-right: 0rem !important;
+        }
+        iframe {
+            width: 100% !important;
+        }
+        .element-container {
+            width: 100% !important;
+        }
+        </style>
     """, unsafe_allow_html=True)
 
-    # Render
-    html_code = create_html_table(df_vista)
+    # Render tabla
+    altura = min(800, 100 + (len(df_vista) * 45))
     components.html(html_code, height=altura, scrolling=True)
