@@ -1,39 +1,70 @@
 # espacio-ofertas.py
 import streamlit as st
 
-st.set_page_config(page_title="Preinscripción INAP", layout="wide")
+st.set_page_config(page_title="Espacio de Ofertas de Capacitación", layout="wide")
 
 # =========================
-# Estado de navegación
+# Inicializar vista actual
 # =========================
 if "vista_actual" not in st.session_state:
-    st.session_state.vista_actual = "tutorial"
+    st.session_state.vista_actual = "destacados"  # por defecto
 
 # =========================
-# Botones de navegación
+# Estilo CSS de tabs (como Evaluaciones)
 # =========================
-col1, col2, col3, col4 = st.columns(4)
+st.markdown("""
+<style>
+.tab-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+.tab-button {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px 20px;
+    margin: 0 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+}
+.tab-button:hover {
+    background-color: #e3f2fd;
+    border-color: #136ac1;
+}
+.tab-active {
+    background-color: #136ac1 !important;
+    color: white !important;
+    border: 1px solid #136ac1 !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
-with col1:
-    if st.button("📖 TUTORIAL"):
-        st.session_state.vista_actual = "tutorial"
+# =========================
+# Tabs de navegación
+# =========================
+tabs = ["tutorial", "destacados", "ofertas", "preinscripcion"]
+labels = ["📘 Tutorial", "🌟 Destacados", "📚 Ofertas", "📝 Preinscripción"]
 
-with col2:
-    if st.button("🌟 DESTACADOS"):
-        st.session_state.vista_actual = "destacados"
+cols = st.columns(len(tabs))
 
-with col3:
-    if st.button("📚 OFERTAS DE CURSOS"):
-        st.session_state.vista_actual = "ofertas"
+for i, (tab, label) in enumerate(zip(tabs, labels)):
+    with cols[i]:
+        # Si se hace clic, cambia la vista
+        if st.button(label, key=f"btn_{tab}"):
+            st.session_state.vista_actual = tab
 
-with col4:
-    if st.button("📝 PREINSCRIPCIÓN"):
-        st.session_state.vista_actual = "preinscripcion"
+        # Pintar activo o inactivo
+        if st.session_state.vista_actual == tab:
+            st.markdown(f"<div class='tab-button tab-active'>{label}</div>", unsafe_allow_html=True)
+        else:
+            st.markdown(f"<div class='tab-button'>{label}</div>", unsafe_allow_html=True)
 
 st.markdown("---")
 
 # =========================
-# Renderizado de cada vista
+# Renderizar vistas
 # =========================
 if st.session_state.vista_actual == "tutorial":
     from views import tutorial
@@ -50,4 +81,3 @@ elif st.session_state.vista_actual == "ofertas":
 elif st.session_state.vista_actual == "preinscripcion":
     from views import preinscripcion
     preinscripcion.mostrar()
-
