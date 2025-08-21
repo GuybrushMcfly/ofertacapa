@@ -17,16 +17,12 @@ def mostrar():
     # Convertir a DataFrame
     df_comisiones = pd.DataFrame(data)
 
-    # ========== DEBUG opcional ==========
-    # st.write(df_comisiones.columns.tolist())
-    # st.dataframe(df_comisiones.head())
-
     # Recalcular columna combinada "Actividad (Comisión)"
     df_comisiones["Actividad (Comisión)"] = (
         df_comisiones["nombre_actividad"] + " (" + df_comisiones["id_comision_sai"] + ")"
     )
 
-    # Seleccionar columnas disponibles (ajustado a los nombres REALES del form original)
+    # Seleccionar columnas originales del formulario
     columnas_originales = [
         "Actividad (Comisión)",
         "fecha_desde",
@@ -38,7 +34,6 @@ def mostrar():
         "url_inap"
     ]
 
-    # Filtrar solo si existen las columnas
     columnas_existentes = [col for col in columnas_originales if col in df_comisiones.columns]
 
     df_vista = df_comisiones[columnas_existentes].rename(columns={
@@ -64,7 +59,7 @@ def mostrar():
 
         <style>
         .courses-table {{
-            width: 95%;
+            width: 90%;
             margin: 0 auto;
             border-collapse: collapse;
             font-size: 13px;
@@ -164,19 +159,26 @@ def mostrar():
         """
         return html
 
-    html_code = create_html_table(df_vista)
+    # Ajustar altura del iframe según cantidad de filas
     altura = min(800, 100 + (len(df_vista) * 45))
+
+    # CSS para que no se “encajone”
     st.markdown("""
-        <style>
-        .main .block-container {
-            max-width: 100% !important;
-            padding: 0 2rem;
-        }
-        iframe {
-            width: 100% !important;
-        }
-        </style>
+    <style>
+    .main .block-container {
+        max-width: 100% !important;
+        padding: 0rem 2rem;
+    }
+    iframe {
+        width: 100% !important;
+        display: block;
+    }
+    .element-container {
+        width: 100% !important;
+    }
+    </style>
     """, unsafe_allow_html=True)
 
-    
+    # Render
+    html_code = create_html_table(df_vista)
     components.html(html_code, height=altura, scrolling=True)
