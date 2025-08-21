@@ -17,13 +17,17 @@ def mostrar():
     # Convertir a DataFrame
     df_comisiones = pd.DataFrame(data)
 
+    # ========== DEBUG opcional ==========
+    # st.write(df_comisiones.columns.tolist())
+    # st.dataframe(df_comisiones.head())
+
     # Recalcular columna combinada "Actividad (Comisión)"
     df_comisiones["Actividad (Comisión)"] = (
         df_comisiones["nombre_actividad"] + " (" + df_comisiones["id_comision_sai"] + ")"
     )
 
-    # Seleccionar columnas para mostrar
-    df_vista = df_comisiones[[
+    # Seleccionar columnas disponibles (ajustado a los nombres REALES del form original)
+    columnas_originales = [
         "Actividad (Comisión)",
         "fecha_desde",
         "fecha_hasta",
@@ -32,7 +36,12 @@ def mostrar():
         "modalidad_cursada",
         "apto_tramo",
         "url_inap"
-    ]].rename(columns={
+    ]
+
+    # Filtrar solo si existen las columnas
+    columnas_existentes = [col for col in columnas_originales if col in df_comisiones.columns]
+
+    df_vista = df_comisiones[columnas_existentes].rename(columns={
         "fecha_desde": "Inicio",
         "fecha_hasta": "Fin",
         "fecha_cierre": "Cierre",
@@ -128,29 +137,29 @@ def mostrar():
                     html += f"<td>{val}</td>"
             html += "</tr>"
 
-        html += """
+        html += f"""
         </tbody>
         </table>
 
         <script>
-        $(document).ready(function() {
-            $('#""" + table_id + """').DataTable({
+        $(document).ready(function() {{
+            $('#{table_id}').DataTable({{
                 pageLength: 10,
                 dom: '<"top"f<"length-menu"l>>rt<"bottom"ip><"clear">',
-                language: {
+                language: {{
                     search: "", searchPlaceholder: "🔍 Buscar...",
                     lengthMenu: "Mostrar _MENU_ registros por página",
                     zeroRecords: "No se encontraron resultados",
                     info: "Mostrando página _PAGE_ de _PAGES_",
                     infoEmpty: "No hay registros disponibles",
                     infoFiltered: "(filtrado de _MAX_ registros totales)",
-                    paginate: { previous: "Anterior", next: "Siguiente" }
-                }
-            });
-            $(".dataTables_filter").css({ "float": "left", "margin-bottom": "10px" });
-            $(".dataTables_filter input").css({ "width": "300px" });
-            $(".dataTables_length").css({ "float": "right" });
-        });
+                    paginate: {{ previous: "Anterior", next: "Siguiente" }}
+                }}
+            }});
+            $(".dataTables_filter").css({{ "float": "left", "margin-bottom": "10px" }});
+            $(".dataTables_filter input").css({{ "width": "300px" }});
+            $(".dataTables_length").css({{ "float": "right" }});
+        }});
         </script>
         """
         return html
