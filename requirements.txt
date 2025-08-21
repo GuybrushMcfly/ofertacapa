@@ -1,0 +1,10 @@
+streamlit==1.48.0
+pandas
+supabase==1.0.3
+fpdf==1.7.2
+plotly
+streamlit-aggrid
+python-docx
+xlsxwriter
+pytz
+mailjet-rest   # (solo si vas a enviar mails)
