@@ -161,7 +161,7 @@ def mostrar():
                 if col == "Acciones":
                     html += '<td>'
                     if pd.notna(val) and val and val != "None":
-                        html += f'<a href="{val}" target="_blank" class="boton">INAP</a>'
+                        html += f'<a href="{val}" target="_blank" class="boton"> INAP</a>'
                     else:
                         html += '<span class="no-link">Sin enlace</span>'
                     html += '</td>'
