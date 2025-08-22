@@ -25,6 +25,11 @@ supabase = get_supabase_client()
 @st.dialog("✅ ¡Preinscripción exitosa!", width="large", dismissible=False)
 def mostrar_dialogo_exito():
     actividad = st.session_state.get("actividad_nombre", "la actividad seleccionada")
+    datos_agente = st.session_state.get("datos_agenteform", {})
+    
+    # Tomamos solo el nombre (si existe en los datos del agente)
+    nombre = datos_agente.get("nombre", "Agente")
+
     st.markdown(f"""
     <div style="
         background-color:#f0f8ff;
@@ -33,7 +38,8 @@ def mostrar_dialogo_exito():
         padding:20px;
         text-align:center;
         font-size:16px;">
-        <b>Tu preinscripción en la actividad <span style="color:#136ac1;">{actividad}</span> fue registrada correctamente.</b> 🎉
+        <b>{nombre}</b>, tu preinscripción en la actividad 
+        <span style="color:#136ac1;">{actividad}</span> fue registrada correctamente. 🎉
         <br><br>
         <span style="color:#555;">Recordá que esta solicitud no implica la asignación de vacante.</span>
     </div>
@@ -44,6 +50,7 @@ def mostrar_dialogo_exito():
         st.session_state.clear()
         st.session_state["__reset_placeholder"] = True
         st.rerun()
+
 
 
 # ==========================================================
