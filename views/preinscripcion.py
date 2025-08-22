@@ -96,7 +96,7 @@ def mostrar():
     # -------------------------
     # PASO 2: Selección
     # -------------------------
-    st.markdown("")
+    #st.markdown("")
     st.markdown("###### 1) 🔎 Seleccioná la actividad en la cual querés preinscribirte.")
     
 
