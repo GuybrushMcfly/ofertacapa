@@ -65,58 +65,122 @@ def mostrar():
     st.markdown("""
     <style>
     .destacada-card {
-        background-color: #f9f9f9;
-        padding: 15px;
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        padding: 18px;
         border-left: 5px solid #136ac1;
-        border-radius: 10px;
-        box-shadow: 1px 1px 5px rgba(0,0,0,0.05);
-        height: 220px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        height: 240px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
-        margin-bottom: 10px;
-        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
         cursor: pointer;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .destacada-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: linear-gradient(90deg, #136ac1, #4fa8e8);
+        transform: scaleX(0);
+        transition: transform 0.3s ease;
+    }
+    
+    .destacada-card:hover::before {
+        transform: scaleX(1);
     }
     
     .destacada-card:hover {
-        transform: scale(1.05);
-        box-shadow: 0 8px 20px rgba(19, 106, 193, 0.2);
+        transform: translateY(-8px) scale(1.02);
+        box-shadow: 0 12px 25px rgba(19, 106, 193, 0.15);
+        border-left-color: #4fa8e8;
     }
     
-    .destacada-card h5 {
+    .card-title {
         color: #136ac1;
-        margin-bottom: 8px;
-        font-size: 14px;
-        line-height: 1.2;
+        margin-bottom: 12px;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.3;
+        text-shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
     
-    .destacada-card p {
-        color: #333;
+    .card-dates {
+        color: #2c5aa0;
         font-size: 12px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .card-dates::before {
+        content: '📅';
+        margin-right: 6px;
+    }
+    
+    .card-info {
+        color: #5a6c7d;
+        font-size: 11px;
+        font-weight: 500;
         margin-bottom: 8px;
-        flex-grow: 1;
+        line-height: 1.4;
+    }
+    
+    .card-credits {
+        background: linear-gradient(90deg, #e8f2ff, #f0f8ff);
+        color: #136ac1;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 4px 8px;
+        border-radius: 12px;
+        display: inline-block;
+        margin-top: 4px;
+        border: 1px solid #d1e7ff;
     }
     
     .card-button {
-        background-color: #136ac1;
-        color: white;
-        text-decoration: none;
-        padding: 8px 12px;
-        border-radius: 6px;
+        background: linear-gradient(135deg, #136ac1 0%, #1e7fd4 100%);
+        color: white !important;
+        text-decoration: none !important;
+        padding: 10px 16px;
+        border-radius: 8px;
         font-size: 12px;
-        transition: background-color 0.2s ease;
+        font-weight: 600;
+        transition: all 0.2s ease;
         display: inline-block;
         text-align: center;
-        margin-top: 5px;
+        margin-top: 8px;
         border: none;
         cursor: pointer;
+        box-shadow: 0 2px 4px rgba(19, 106, 193, 0.2);
+        width: 100%;
     }
     
     .card-button:hover {
-        background-color: #0d4a87;
-        color: white;
-        text-decoration: none;
+        background: linear-gradient(135deg, #0d4a87 0%, #1666b8 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(19, 106, 193, 0.3);
+        color: white !important;
+        text-decoration: none !important;
+    }
+    
+    .no-link {
+        color: #999;
+        font-size: 11px;
+        font-style: italic;
+        text-align: center;
+        padding: 8px;
+        background: #f5f5f5;
+        border-radius: 6px;
+        margin-top: 8px;
     }
     
     .destacada-empty {
@@ -171,23 +235,20 @@ def mostrar():
                 creditos = d.get("creditos", "")
                 link = d.get("link_externo", "")
                 
-                # Crear la tarjeta con HTML
+                # Crear la tarjeta con HTML incluyendo el botón
                 card_content = f"""
                 <div class="destacada-card">
                     <div>
                         <h5>{titulo} ({comision})</h5>
                         <p>{fechas}<br>{modalidad}{' · ' + str(creditos) + ' créditos' if creditos else ''}</p>
                     </div>
+                    <div>
+                        {'<a href="'+link+'" target="_blank" class="card-button">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:11px;">Sin enlace disponible</span>'}
+                    </div>
                 </div>
                 """
                 
                 st.markdown(card_content, unsafe_allow_html=True)
-                
-                # Botón de acceso (usando Streamlit nativo)
-                if link:
-                    st.markdown(f'<a href="{link}" target="_blank" style="background-color:#136ac1;color:white;text-decoration:none;padding:6px 10px;border-radius:4px;font-size:12px;display:inline-block;">🌐 Acceder</a>', unsafe_allow_html=True)
-                else:
-                    st.markdown('<span style="color:#999;font-size:11px;">Sin enlace disponible</span>', unsafe_allow_html=True)
                     
             else:
                 # Tarjeta vacía
