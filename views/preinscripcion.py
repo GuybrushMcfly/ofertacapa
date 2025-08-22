@@ -182,12 +182,12 @@ def mostrar():
             st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
             
             # 🔹 Mensajes secuenciales para INAP
-            if st.session_state.get("datos_agenteform") and fila["organismo"] == "INAP":
-                st.toast("‼️Seleccionaste una actividad del INAP")
-                time.sleep(2)  # espera 2 segundos
-                st.toast("🚨 Recordá que tenés que preinscribirte en el formulario INDEC")
-                time.sleep(2)  # espera 2 segundos
-                st.toast("🚨 Y también tenés que preinscribirte en el INAP.\nSiempre debes completar la doble preinscripción")      
+            #if st.session_state.get("datos_agenteform") and fila["organismo"] == "INAP":
+            #    st.toast("‼️Seleccionaste una actividad del INAP")
+            #    time.sleep(2)  # espera 2 segundos
+            #    st.toast("🚨 Recordá que tenés que preinscribirte en el formulario INDEC")
+            #    time.sleep(2)  # espera 2 segundos
+            #    st.toast("🚨 Y también tenés que preinscribirte en el INAP.\nSiempre debes completar la doble preinscripción")      
             
             #datos = st.session_state["datos_agenteform"]
             #if datos:
