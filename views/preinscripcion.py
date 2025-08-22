@@ -13,29 +13,38 @@ from modules.db import (
     obtener_comisiones_abiertas
 )
 
+# ==========================================================
+# CONEXIÓN A SUPABASE
+# ==========================================================
 supabase = get_supabase_client()
 
 
 # ==========================================================
-# DIÁLOGO DE ÉXITO (se define UNA VEZ con decorador)
+# DIÁLOGO DE ÉXITO (modal al inscribirse)
 # ==========================================================
 @st.dialog("✅ ¡Preinscripción exitosa!", width="small", dismissible=False)
 def mostrar_dialogo_exito():
+    """
+    Muestra un popup modal cuando la inscripción fue exitosa.
+    Incluye un botón "Cerrar" que limpia session_state y hace rerun.
+    """
     st.markdown("Tu inscripción fue registrada correctamente. 🎉")
     st.markdown("---")
     if st.button("Cerrar"):
         st.session_state.clear()   # limpia todos los valores en memoria
-        # 👇 Forzar que el selectbox use otra key al rerenderizar
-        st.session_state["__reset_placeholder"] = True
-        st.rerun()                 # vuelve a correr el script y resetea el formulario
+        st.session_state["__reset_placeholder"] = True  # fuerza reset del dropdown
+        st.rerun()  # vuelve a correr el script y resetea el formulario
 
-# ==================== ESTILO GENERAL ====================
+
+# ==========================================================
+# ESTILO GENERAL DEL FORMULARIO (70% de ancho, centrado)
+# ==========================================================
 st.markdown(
     """
     <style>
     .main-container {
-        max-width: 70%;   /* 👈 ancho máximo */
-        margin: 0 auto;   /* 👈 centra horizontalmente */
+        max-width: 70%;   /* 👈 ancho máximo del formulario */
+        margin: 0 auto;   /* 👈 centrado horizontal */
         padding: 20px;
     }
     </style>
@@ -43,16 +52,23 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
-
+# ==========================================================
+# FUNCIÓN PRINCIPAL
+# ==========================================================
 def mostrar():
+    # Encabezado principal
     st.markdown("## 📝 Formulario de Preinscripción")
+    # Abrimos el contenedor centrado
+    st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
-    # Traer comisiones abiertas
+    # ==========================================================
+    # PASO 1: Traer comisiones abiertas
+    # ==========================================================
     df_temp = pd.DataFrame(obtener_comisiones_abiertas(supabase))
     if df_temp.empty:
         st.warning("No hay comisiones disponibles actualmente.")
+        st.markdown("</div>", unsafe_allow_html=True)
         return
 
     # ==========================================================
@@ -61,22 +77,34 @@ def mostrar():
     with st.container():
         st.markdown("##### 2) Seleccioná la actividad en la cual querés preinscribirte.")
 
-        # Crear columna combinada para el dropdown
-        df_temp["Actividad (Comisión)"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
+        # Crear columna combinada para mostrar en dropdown
+        df_temp["Actividad (Comisión)"] = (
+            df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
+        )
         dropdown_list = ["-Seleccioná una actividad para preinscribirte-"] + df_temp["Actividad (Comisión)"].tolist()
 
-        # Mantener selección previa por query params o session_state
+        # Detectar selección previa (query params o session_state)
         selected_from_query = st.query_params.get("selected_activity", [None])[0]
         initial_index = dropdown_list.index(selected_from_query) if selected_from_query in dropdown_list else 0
-        clave_selectbox = f"actividad_key_{random.randint(0, 999999)}" if st.session_state.get("__reset_placeholder") else "actividad_key_default"
+        clave_selectbox = (
+            f"actividad_key_{random.randint(0, 999999)}"
+            if st.session_state.get("__reset_placeholder")
+            else "actividad_key_default"
+        )
 
-        actividad_seleccionada = st.selectbox("Actividad disponible", dropdown_list, index=initial_index, key=clave_selectbox)
+        # Renderizar selectbox de actividades
+        actividad_seleccionada = st.selectbox(
+            "Actividad disponible",
+            dropdown_list,
+            index=initial_index,
+            key=clave_selectbox,
+        )
 
         # Validar selección
         if actividad_seleccionada not in dropdown_list:
             actividad_seleccionada = dropdown_list[0]
 
-        # Reset tras éxito
+        # Reset después de una inscripción exitosa
         if st.session_state.get("__reset_placeholder", False):
             st.session_state["__reset_placeholder"] = False
             st.session_state["actividad_anterior"] = "-Seleccioná una actividad para preinscribirte-"
@@ -84,7 +112,7 @@ def mostrar():
         if "actividad_anterior" not in st.session_state:
             st.session_state["actividad_anterior"] = ""
 
-        # Si cambió la selección → resetear validaciones previas
+        # Si cambió la selección, limpiar validaciones previas
         if actividad_seleccionada != st.session_state["actividad_anterior"]:
             st.session_state["actividad_anterior"] = actividad_seleccionada
             st.session_state["cuil_valido"] = False
@@ -96,6 +124,7 @@ def mostrar():
         if actividad_seleccionada != "-Seleccioná una actividad para preinscribirte-":
             fila = df_temp[df_temp["Actividad (Comisión)"] == actividad_seleccionada].iloc[0]
 
+            # Guardar datos relevantes en session_state
             st.session_state["actividad_nombre"] = fila["nombre_actividad"]
             st.session_state["comision_nombre"] = fila["id_comision_sai"]
             st.session_state["fecha_inicio"] = fila["fecha_desde"]
@@ -103,18 +132,23 @@ def mostrar():
             st.session_state["comision_id"] = fila["id"]            # UUID de comisión
             st.session_state["id_actividad"] = fila["id_actividad"]
 
-            st.markdown(f"""
-            <div style="background-color: #f0f8ff; padding: 15px; border-left: 5px solid #136ac1; border-radius: 5px;">
-              <b>🟦 Actividad:</b> {fila['nombre_actividad']}<br>
-              <b>🆔 Comisión:</b> {fila['id_comision_sai']}<br>
-              <b>🧬 UUID Comisión:</b> <code>{fila['id']}</code><br>
-              <b>📅 Fechas:</b> {fila['fecha_desde']} al {fila['fecha_hasta']}<br>
-              <b>📌 Cierre Inscripción:</b> {fila['fecha_cierre']}<br>
-              <b>⭐ Créditos:</b> {fila['creditos']}<br>
-              <b>🎓 Modalidad:</b> {fila['modalidad_cursada']}<br>
-              <b>❓ Apto tramo:</b> {fila['apto_tramo']}<br>
-            </div>
-            """, unsafe_allow_html=True)
+            # Render tarjeta con detalles de la comisión
+            st.markdown(
+                f"""
+                <div style="background-color: #f0f8ff; padding: 15px; 
+                            border-left: 5px solid #136ac1; border-radius: 5px;">
+                  <b>🟦 Actividad:</b> {fila['nombre_actividad']}<br>
+                  <b>🆔 Comisión:</b> {fila['id_comision_sai']}<br>
+                  <b>🧬 UUID Comisión:</b> <code>{fila['id']}</code><br>
+                  <b>📅 Fechas:</b> {fila['fecha_desde']} al {fila['fecha_hasta']}<br>
+                  <b>📌 Cierre Inscripción:</b> {fila['fecha_cierre']}<br>
+                  <b>⭐ Créditos:</b> {fila['creditos']}<br>
+                  <b>🎓 Modalidad:</b> {fila['modalidad_cursada']}<br>
+                  <b>❓ Apto tramo:</b> {fila['apto_tramo']}<br>
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
 
     # ==========================================================
     # PASO 3: Validación de CUIL
@@ -125,48 +159,47 @@ def mostrar():
             cuil_input = st.text_input("CUIL (11 dígitos)", max_chars=11)
 
             if st.button("Validar CUIL"):
+                # Validación básica de formato
                 if not validar_cuil(cuil_input):
                     st.error("CUIL inválido. Verificá que tenga 11 dígitos y sea correcto.")
                     return
 
+                # Validación en base de datos
                 if not verificar_formulario_cuil(supabase, cuil_input):
                     st.error("⚠️ El CUIL no corresponde a un agente activo.")
                     return
 
+                # Chequeo historial
                 if verificar_formulario_historial(supabase, cuil_input, st.session_state["id_actividad"]):
                     st.warning("⚠️ Ya realizaste esta actividad y fue APROBADA.")
                     return
 
+                # Chequeo de inscripción previa en esta comisión
                 if verificar_formulario_comision(supabase, cuil_input, st.session_state["comision_id"]):
                     st.warning("⚠️ Ya estás inscripto en esta comisión.")
                     return
 
-                # Guardar datos en sesión
+                # Guardar datos en session_state si pasa validaciones
                 st.session_state["cuil"] = cuil_input
                 st.session_state["cuil_valido"] = True
                 st.session_state["validado"] = True
                 st.success("✅ CUIL válido. Podés completar el formulario.")
                 st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
 
-                # Mostrar los datos obtenidos del agente después de validar
+                # Debug opcional: mostrar los datos obtenidos
                 datos = st.session_state["datos_agenteform"]
                 if datos:
                     st.markdown("### 👤 Datos obtenidos del agente")
-                    st.json(datos)  # debug: muestra todo el diccionario
+                    st.json(datos)
 
-    
-
-    # ==========================================================
-    # PASO 4: Formulario de inscripción
-    # ==========================================================
     # ==========================================================
     # PASO 4: Formulario de inscripción (simplificado)
     # ==========================================================
     with st.container():
         if (
-            st.session_state.get("validado") and 
-            st.session_state.get("cuil_valido") and
-            not st.session_state.get("inscripcion_exitosa")
+            st.session_state.get("validado")
+            and st.session_state.get("cuil_valido")
+            and not st.session_state.get("inscripcion_exitosa")
         ):
             datos = st.session_state["datos_agenteform"]
             correo_oficial = datos.get("email", "")
@@ -178,7 +211,7 @@ def mostrar():
             st.markdown(f"📧 Te vamos a contactar al correo registrado: **{correo_oficial}**")
             email_alt = st.text_input("Correo alternativo (opcional)").strip()
 
-            # Botón de enviar
+            # Botón de envío
             if st.button("ENVIAR INSCRIPCIÓN"):
                 if not tareas:
                     st.error("⚠️ El campo 'Tareas desarrolladas' es obligatorio.")
@@ -188,17 +221,19 @@ def mostrar():
                     st.error("⚠️ Correo alternativo inválido.")
                     return
 
-                # Calcular edad (si hay fecha de nacimiento)
+                # Calcular edad si hay fecha de nacimiento
                 edad = None
                 if datos.get("fecha_nacimiento"):
                     try:
                         fecha_nac = pd.to_datetime(datos["fecha_nacimiento"])
                         hoy = pd.Timestamp.today()
-                        edad = hoy.year - fecha_nac.year - ((hoy.month, hoy.day) < (fecha_nac.month, fecha_nac.day))
+                        edad = hoy.year - fecha_nac.year - (
+                            (hoy.month, hoy.day) < (fecha_nac.month, fecha_nac.day)
+                        )
                     except:
                         pass
 
-                # Datos a guardar
+                # Datos a guardar en Supabase
                 datos_inscripcion = {
                     "comision_id": st.session_state["comision_id"],
                     "cuil": st.session_state["cuil"],
@@ -210,8 +245,8 @@ def mostrar():
                     "email_alternativo": email_alt if email_alt else None,
                     "fecha_nacimiento": datos.get("fecha_nacimiento"),
                     "edad_inscripcion": edad,
-                    "titulo":datos.get("titulo"),
-                    "nivel_educativo":datos.get("nivel_educativo"),
+                    "titulo": datos.get("titulo"),
+                    "nivel_educativo": datos.get("nivel_educativo"),
                     "sexo": datos.get("sexo"),
                     "situacion_revista": datos.get("situacion_revista"),
                     "nivel": datos.get("nivel"),
@@ -219,17 +254,17 @@ def mostrar():
                     "agrupamiento": datos.get("agrupamiento"),
                     "tramo": datos.get("tramo"),
                     "id_dependencia_simple": datos.get("id_dependencia_simple"),
-                    "id_dependencia_general": datos.get("id_dependencia_general")
+                    "id_dependencia_general": datos.get("id_dependencia_general"),
                 }
 
+                # Insertar inscripción en base
                 result = insertar_inscripcion(supabase, datos_inscripcion)
 
-                
                 if result.data:
                     st.session_state["inscripcion_exitosa"] = True
-                    mostrar_dialogo_exito()   # 👈 acá se abre el popup modal
+                    mostrar_dialogo_exito()   # 👈 mostrar popup modal
                 else:
                     st.error("❌ Ocurrió un error al guardar la inscripción.")
 
-
-st.markdown("</div>", unsafe_allow_html=True)
+    # Cerrar el contenedor centrado
+    st.markdown("</div>", unsafe_allow_html=True)
