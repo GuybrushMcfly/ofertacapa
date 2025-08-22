@@ -183,7 +183,7 @@ def mostrar():
         $(document).ready(function() {
             $('#tabla-cursos').DataTable({
                 paging: true,        // ✅ paginación siempre
-                pageLength: 10,      // ✅ máximo 10 por página
+                pageLength: 7,      // ✅ máximo 10 por página
                 searching: false,
                 info: false,
                 lengthChange: false,
