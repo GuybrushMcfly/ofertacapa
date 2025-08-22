@@ -18,25 +18,34 @@ supabase = get_supabase_client()
 def mostrar():
     st.markdown("## 📝 Formulario de Preinscripción")
 
+    # Traer comisiones abiertas
     df_temp = pd.DataFrame(obtener_comisiones_abiertas(supabase))
     if df_temp.empty:
         st.warning("No hay comisiones disponibles actualmente.")
         return
 
-    # ========== PASO 2: Selección de actividad ==========
+    # ==========================================================
+    # PASO 2: Selección de actividad
+    # ==========================================================
     with st.container():
         st.markdown("##### 2) Seleccioná la actividad en la cual querés preinscribirte.")
+
+        # Crear columna combinada para el dropdown
         df_temp["Actividad (Comisión)"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
         dropdown_list = ["-Seleccioná una actividad para preinscribirte-"] + df_temp["Actividad (Comisión)"].tolist()
 
+        # Mantener selección previa por query params o session_state
         selected_from_query = st.query_params.get("selected_activity", [None])[0]
         initial_index = dropdown_list.index(selected_from_query) if selected_from_query in dropdown_list else 0
         clave_selectbox = f"actividad_key_{random.randint(0, 999999)}" if st.session_state.get("__reset_placeholder") else "actividad_key_default"
+
         actividad_seleccionada = st.selectbox("Actividad disponible", dropdown_list, index=initial_index, key=clave_selectbox)
 
+        # Validar selección
         if actividad_seleccionada not in dropdown_list:
             actividad_seleccionada = dropdown_list[0]
 
+        # Reset tras éxito
         if st.session_state.get("__reset_placeholder", False):
             st.session_state["__reset_placeholder"] = False
             st.session_state["actividad_anterior"] = "-Seleccioná una actividad para preinscribirte-"
@@ -44,6 +53,7 @@ def mostrar():
         if "actividad_anterior" not in st.session_state:
             st.session_state["actividad_anterior"] = ""
 
+        # Si cambió la selección → resetear validaciones previas
         if actividad_seleccionada != st.session_state["actividad_anterior"]:
             st.session_state["actividad_anterior"] = actividad_seleccionada
             st.session_state["cuil_valido"] = False
@@ -51,17 +61,19 @@ def mostrar():
             st.session_state["cuil"] = ""
             st.session_state["datos_agenteform"] = {}
 
+        # Mostrar detalles de la comisión elegida
         if actividad_seleccionada != "-Seleccioná una actividad para preinscribirte-":
             fila = df_temp[df_temp["Actividad (Comisión)"] == actividad_seleccionada].iloc[0]
-            st.session_state["actividad_nombre"] = fila["Actividad"]
-            st.session_state["comision_nombre"] = fila["Comisión"]
-            st.session_state["fecha_inicio"] = fila["Fecha inicio"]
-            st.session_state["fecha_fin"] = fila["Fecha fin"]
-            st.session_state["comision_id"] = fila["id"]
+
+            st.session_state["actividad_nombre"] = fila["nombre_actividad"]
+            st.session_state["comision_nombre"] = fila["id_comision_sai"]
+            st.session_state["fecha_inicio"] = fila["fecha_desde"]
+            st.session_state["fecha_fin"] = fila["fecha_hasta"]
+            st.session_state["comision_id"] = fila["id"]            # UUID de comisión
             st.session_state["id_actividad"] = fila["id_actividad"]
 
             st.markdown(f"""
-            <div style=\"background-color: #f0f8ff; padding: 15px; border-left: 5px solid #136ac1; border-radius: 5px;\">
+            <div style="background-color: #f0f8ff; padding: 15px; border-left: 5px solid #136ac1; border-radius: 5px;">
               <b>🟦 Actividad:</b> {fila['nombre_actividad']}<br>
               <b>🆔 Comisión:</b> {fila['id_comision_sai']}<br>
               <b>🧬 UUID Comisión:</b> <code>{fila['id']}</code><br>
@@ -73,7 +85,9 @@ def mostrar():
             </div>
             """, unsafe_allow_html=True)
 
-    # ========== PASO 3: Validación de CUIL ==========
+    # ==========================================================
+    # PASO 3: Validación de CUIL
+    # ==========================================================
     with st.container():
         if actividad_seleccionada != "-Seleccioná una actividad para preinscribirte-":
             st.markdown("##### 3) Ingresá tu número de CUIL y validalo con el botón.")
@@ -96,13 +110,16 @@ def mostrar():
                     st.warning("⚠️ Ya estás inscripto en esta comisión.")
                     return
 
+                # Guardar datos en sesión
                 st.session_state["cuil"] = cuil_input
                 st.session_state["cuil_valido"] = True
                 st.session_state["validado"] = True
                 st.success("✅ CUIL válido. Podés completar el formulario.")
                 st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
 
-    # ========== PASO 4: Formulario de inscripción ==========
+    # ==========================================================
+    # PASO 4: Formulario de inscripción
+    # ==========================================================
     with st.container():
         if (
             st.session_state.get("validado") and 
@@ -124,7 +141,7 @@ def mostrar():
             email_alt = st.text_input("Correo alternativo (opcional)")
 
             if st.button("ENVIAR INSCRIPCIÓN"):
-                if email_alt and not validar_email(email_alt):
+                if email_alt and "@" not in email_alt:
                     st.error("Correo alternativo inválido.")
                     return
 
