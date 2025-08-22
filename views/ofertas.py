@@ -76,7 +76,7 @@ def mostrar():
         "link_externo": "Acciones"
     })
 
-    # ✅ Mostrar mensaje visual si el DataFrame está vacío (como en el form.py original)
+    # ✅ Mostrar mensaje visual si el DataFrame está vacío
     if df_vista.empty:
         st.info("🔍 No hay cursos que coincidan con los filtros seleccionados.")
         return
@@ -160,6 +160,9 @@ def mostrar():
                         html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
                     else:
                         html += '<span class="no-link">Sin enlace</span>'
+                    # 🚀 Nuevo botón Copiar
+                    actividad = row["Actividad (Comisión)"]
+                    html += f'<a href="#" onclick="copyToField(`{actividad}`)" class="boton">📋 Copiar</a>'
                     html += '</td>'
                 else:
                     html += f"<td>{val}</td>"
@@ -169,10 +172,7 @@ def mostrar():
             </tbody>
         </table>
         </div>
-        """
 
-        # Script DataTables para paginación y ordenamiento
-        html += """
         <script>
         $(document).ready(function() {
             $('#tabla-cursos').DataTable({
@@ -190,6 +190,10 @@ def mostrar():
                 }
             });
         });
+
+        function copyToField(value) {
+            window.parent.postMessage({type: 'setField', value: value}, "*");
+        }
         </script>
         """
         return html
@@ -211,7 +215,34 @@ def mostrar():
         </style>
     """, unsafe_allow_html=True)
 
-    # Render tabla final
+    # Inicializar campo libre en session_state
+    if "campo_libre" not in st.session_state:
+        st.session_state["campo_libre"] = ""
+
+    # Render tabla
     html_code = create_html_table(df_vista)
-    altura = min(800, 100 + (len(df_vista) * 45))  # Calcula altura según cantidad de filas
+    altura = min(800, 100 + (len(df_vista) * 45))
     components.html(html_code, height=altura, scrolling=True)
+
+    # Listener para recibir mensajes desde JS
+    message_code = """
+    <script>
+    window.addEventListener("message", (event) => {
+        if (event.data.type === "setField") {
+            const input = document.getElementById("campoLibreInput");
+            if (input) {
+                input.value = event.data.value;
+                input.dispatchEvent(new Event("input", { bubbles: true }));
+            }
+        }
+    });
+    </script>
+    """
+    components.html(message_code, height=0, width=0)
+
+    # Campo de texto simple
+    st.session_state["campo_libre"] = st.text_input(
+        "✍ Campo libre:",
+        st.session_state["campo_libre"],
+        key="campoLibreInput"
+    )
