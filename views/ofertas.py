@@ -196,7 +196,7 @@ def mostrar():
         $(document).ready(function() {
             $('#tabla-cursos').DataTable({
                 paging: true,        // ✅ paginación siempre
-                pageLength: 6,      // ✅ máximo 10 por página
+                pageLength: 8,      // ✅ máximo 10 por página
                 searching: false,
                 info: false,
                 lengthChange: false,
@@ -248,7 +248,7 @@ def mostrar():
     html_code = create_html_table(df_vista)
     
     # Altura dinámica: hasta 10 filas + espacio extra para paginación
-    max_filas = 7
+    max_filas = 8
     filas_visibles = min(len(df_vista), max_filas)
     altura = 170 + (filas_visibles * 45)   # 140 en lugar de 100 para sumar espacio al footer
     
