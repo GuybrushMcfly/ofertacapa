@@ -1,7 +1,7 @@
 [theme]
 primaryColor = "#2C75B2"               # azul gobierno sobrio
-backgroundColor = "#ebedf0"            # gris azulado claro (ni blanco ni oscuro)
+backgroundColor = "#FAFAFA"            # gris azulado claro (ni blanco ni oscuro)
 #backgroundColor = "#E5E8EC"            # gris azulado claro (ni blanco ni oscuro)
-secondaryBackgroundColor = "#FAFAFA"   # gris medio para campos y tarjetas
+secondaryBackgroundColor = "#E5E8EC"   # gris medio para campos y tarjetas
 textColor = "#1E1E1E"                  # gris casi negro
 font = "sans serif"
