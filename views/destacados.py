@@ -107,7 +107,7 @@ def mostrar():
     .card-title {
         color: #136ac1;
         margin-bottom: 12px;
-        font-size: 15px;
+        font-size: 18px;
         font-weight: 700;
         line-height: 1.3;
         text-shadow: 0 1px 2px rgba(0,0,0,0.05);
@@ -115,7 +115,7 @@ def mostrar():
     
     .card-dates {
         color: #2c5aa0;
-        font-size: 12px;
+        font-size: 15px;
         font-weight: 600;
         margin-bottom: 6px;
         display: flex;
@@ -129,7 +129,7 @@ def mostrar():
     
     .card-info {
         color: #5a6c7d;
-        font-size: 11px;
+        font-size: 15px;
         font-weight: 500;
         margin-bottom: 8px;
         line-height: 1.4;
@@ -138,7 +138,7 @@ def mostrar():
     .card-credits {
         background: linear-gradient(90deg, #e8f2ff, #f0f8ff);
         color: #136ac1;
-        font-size: 11px;
+        font-size: 15px;
         font-weight: 600;
         padding: 4px 8px;
         border-radius: 12px;
