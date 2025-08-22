@@ -122,6 +122,8 @@ def mostrar():
         st.session_state["comision_nombre"] = fila["id_comision_sai"]
         st.session_state["fecha_inicio"] = fila["fecha_desde"]
         st.session_state["fecha_fin"] = fila["fecha_hasta"]
+        st.write("👉 Columnas del DataFrame:", df_comisiones.columns.tolist())
+        st.write("👉 Fila seleccionada:", fila.to_dict())
         st.session_state["comision_id"] = fila["id"]
         st.session_state["id_actividad"] = fila["id_actividad"]
 
