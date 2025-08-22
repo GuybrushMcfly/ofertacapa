@@ -1,4 +1,5 @@
 import streamlit as st
+import time
 import pandas as pd
 import random
 from datetime import date
@@ -166,7 +167,6 @@ def mostrar():
             if verificar_formulario_historial(supabase, cuil_input, st.session_state["id_actividad"]):
                 # st.warning("⚠️ Ya realizaste esta actividad y fue APROBADA.")
                 st.info("⚠️ Ya aprobaste esta actividad. Podés consultar tu historial de capacitaciones.")
-                st.toast("lalala")
                 return
 
             if verificar_formulario_comision(supabase, cuil_input, st.session_state["comision_id"]):
@@ -180,12 +180,14 @@ def mostrar():
             st.success("✅ CUIL/CUIT válido. Podés completar el formulario.")
             st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
             
-            # 🔹 Mostrar mensajes especiales si el organismo es INAP
+
+              # 🔹 Mensajes secuenciales para INAP
             if st.session_state.get("datos_agenteform") and fila["organismo"] == "INAP":
-                st.toast("📌 Seleccionaste una actividad del INAP")
-                st.toast("📝 Recordá que tenés que preinscribirte en el formulario INDEC")
-                st.toast("⚠️ Y también tenés que preinscribirte en el INAP. Siempre deben hacerse la doble preinscripción")
-        
+                st.toast("📌 Seleccionaste una actividad del INAP", icon="📘")
+                time.sleep(2)  # espera 2 segundos
+                st.toast("📝 Recordá que tenés que preinscribirte en el formulario INDEC", icon="📝")
+                time.sleep(2)  # espera 2 segundos
+                st.toast("⚠️ Y también tenés que preinscribirte en el INAP.\nSiempre deben hacerse la doble preinscripción", icon="⚠️")      
             
             datos = st.session_state["datos_agenteform"]
             if datos:
