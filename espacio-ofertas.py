@@ -1,7 +1,7 @@
 import streamlit as st
 from streamlit_option_menu import option_menu
 
-#st.set_page_config(page_title="🎓 Espacio de Ofertas de Capacitación", layout="wide")
+st.set_page_config(page_title="🎓 Espacio de Ofertas de Capacitación", layout="wide")
 
 
 st.markdown(
@@ -20,7 +20,7 @@ st.markdown(
 # =========================
 # Encabezado
 # =========================
-st.markdown("<h1 style='font-size:26px;'>🎓 Espacio de Ofertas de Capacitación</h1>", unsafe_allow_html=True)
+#st.markdown("<h1 style='font-size:26px;'>🎓 Espacio de Ofertas de Capacitación</h1>", unsafe_allow_html=True)
 
 # =========================
 # Navegación con botones horizontales (estilo Evaluaciones)
