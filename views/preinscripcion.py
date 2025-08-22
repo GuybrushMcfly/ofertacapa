@@ -91,7 +91,13 @@ def mostrar():
     # -------------------------
     st.markdown("##### 2) Seleccioná la actividad en la cual querés preinscribirte.")
     df_temp["Actividad (Comisión)"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
-    dropdown_list = ["-Seleccioná una actividad para preinscribirte-"] + df_temp["Actividad (Comisión)"].tolist()
+    
+    # 🔹 Ordenar actividades alfabéticamente
+    actividades_ordenadas = sorted(df_temp["Actividad (Comisión)"].tolist(), key=str.lower)
+    
+    # 🔹 Armar lista final con el placeholder arriba
+    dropdown_list = ["-Seleccioná una actividad para preinscribirte-"] + actividades_ordenadas
+
 
     selected_from_query = st.query_params.get("selected_activity", [None])[0]
     initial_index = dropdown_list.index(selected_from_query) if selected_from_query in dropdown_list else 0
