@@ -117,7 +117,7 @@ def mostrar():
         color: #2c5aa0;
         font-size: 12px;
         font-weight: 500;
-        margin-bottom: 6px;
+        margin-bottom: 8px;
         display: flex;
         align-items: center;
     }
