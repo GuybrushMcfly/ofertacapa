@@ -80,7 +80,7 @@ def mostrar():
     # -------------------------
     # PASO 1: Traer comisiones
     # -------------------------
-    st.markdown("## 📝 Formulario de Preinscripción")
+    st.markdown("#### 📝 Preinscripción en actividades de capacitación")
     df_temp = pd.DataFrame(obtener_comisiones_abiertas(supabase))
     if df_temp.empty:
         st.warning("No hay comisiones disponibles actualmente.")
@@ -90,7 +90,7 @@ def mostrar():
     # -------------------------
     # PASO 2: Selección
     # -------------------------
-    st.markdown("##### 2) Seleccioná la actividad en la cual querés preinscribirte.")
+    st.markdown("##### 1) Seleccioná la actividad en la cual querés preinscribirte.")
     df_temp["Actividad (Comisión)"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
     
     # 🔹 Ordenar actividades alfabéticamente
