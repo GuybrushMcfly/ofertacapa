@@ -115,8 +115,8 @@ def mostrar():
     
     .card-dates {
         color: #2c5aa0;
-        font-size: 15px;
-        font-weight: 600;
+        font-size: 14px;
+        font-weight: 500;
         margin-bottom: 6px;
         display: flex;
         align-items: center;
