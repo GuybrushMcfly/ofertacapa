@@ -6,17 +6,6 @@ import streamlit.components.v1 as components
 st.set_page_config(page_title="Espacio de Ofertas de Capacitación", layout="wide")
 
 
-components.html("""
-<script>
-    const vista = sessionStorage.getItem("vista_actual");
-    if (vista) {
-        window.parent.postMessage({type: "streamlit:setComponentValue", key: "vista_actual", value: vista}, "*");
-        sessionStorage.removeItem("vista_actual");
-        window.location.reload();
-    }
-</script>
-""", height=0)
-
 
 # =========================
 # Inicializar vista actual
