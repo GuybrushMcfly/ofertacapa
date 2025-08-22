@@ -29,12 +29,12 @@ def mostrar():
     # ===================== RENDER DE TARJETAS =====================
     # Crear grid usando columnas de Streamlit (más confiable)
     
-    # Primera fila (3 columnas)
-    col1, col2, col3 = st.columns(3)
+    # Primera fila (3 columnas con más separación)
+    col1, col2, col3 = st.columns(3, gap="large")
     columns_row1 = [col1, col2, col3]
     
-    # Segunda fila (3 columnas)
-    col4, col5, col6 = st.columns(3)
+    # Segunda fila (3 columnas con más separación)
+    col4, col5, col6 = st.columns(3, gap="large")
     columns_row2 = [col4, col5, col6]
     
     all_columns = columns_row1 + columns_row2
@@ -59,7 +59,8 @@ def mostrar():
         
         destacados = rotated_destacadas.to_dict(orient="records")
         
-        st.info(f"📊 Mostrando ofertas {st.session_state.rotation_offset + 1} a {min(st.session_state.rotation_offset + 6, len(df_destacadas))} de {len(df_destacadas)} disponibles")
+        # Información de rotación más discreta (opcional, se puede comentar/descomentar)
+        # st.info(f"📊 Mostrando ofertas {st.session_state.rotation_offset + 1} a {min(st.session_state.rotation_offset + 6, len(df_destacadas))} de {len(df_destacadas)} disponibles")
     
     # Aplicar estilo para las tarjetas individuales con animaciones
     st.markdown("""
@@ -106,7 +107,7 @@ def mostrar():
     .card-title {
         color: #136ac1;
         margin-bottom: 12px;
-        font-size: 15px;
+        font-size: 13px;
         font-weight: 700;
         line-height: 1.3;
         text-shadow: 0 1px 2px rgba(0,0,0,0.05);
@@ -184,23 +185,33 @@ def mostrar():
     }
     
     .destacada-empty {
-        background-color: #f5f5f5;
+        background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
         border: 2px dashed #ddd;
-        border-radius: 10px;
-        height: 220px;
+        border-radius: 12px;
+        height: 240px;
         display: flex;
+        flex-direction: column;
         align-items: center;
         justify-content: center;
         color: #999;
         font-style: italic;
         font-size: 12px;
-        margin-bottom: 10px;
-        transition: transform 0.3s ease;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        position: relative;
     }
     
     .destacada-empty:hover {
-        transform: scale(1.02);
+        transform: translateY(-4px);
         border-color: #bbb;
+        box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    }
+    
+    .destacada-empty::before {
+        content: '⭐';
+        font-size: 24px;
+        margin-bottom: 8px;
+        opacity: 0.5;
     }
     
     /* Animación de entrada suave */
@@ -235,15 +246,36 @@ def mostrar():
                 creditos = d.get("creditos", "")
                 link = d.get("link_externo", "")
                 
-                # Crear la tarjeta con HTML incluyendo el botón
+                # Procesar la información para mejor presentación
+                fechas_formatted = ""
+                if d.get("fecha_desde") and d.get("fecha_hasta"):
+                    fecha_desde = pd.to_datetime(d['fecha_desde']).strftime('%d/%m/%Y')
+                    fecha_hasta = pd.to_datetime(d['fecha_hasta']).strftime('%d/%m/%Y')
+                    fechas_formatted = f"{fecha_desde} al {fecha_hasta}"
+                
+                modalidad_formatted = d.get("modalidad_cursada", "")
+                creditos_text = ""
+                if d.get("creditos"):
+                    creditos_text = f"{creditos} créditos"
+                
+                # Crear línea de créditos + modalidad
+                creditos_modalidad = []
+                if creditos_text:
+                    creditos_modalidad.append(f"🎓 {creditos_text}")
+                if modalidad_formatted:
+                    creditos_modalidad.append(f"🖥️ {modalidad_formatted}")
+                creditos_modalidad_line = " • ".join(creditos_modalidad)
+                
+                # Crear la tarjeta con HTML mejorado
                 card_content = f"""
                 <div class="destacada-card">
-                    <div>
-                        <h5>{titulo} ({comision})</h5>
-                        <p>{fechas}<br>{modalidad}{' · ' + str(creditos) + ' créditos' if creditos else ''}</p>
+                    <div style="flex-grow: 1;">
+                        <div class="card-title"><strong>{titulo} ({comision})</strong></div>
+                        {'<div class="card-dates">' + fechas_formatted + '</div>' if fechas_formatted else ''}
+                        {'<div class="card-info">' + creditos_modalidad_line + '</div>' if creditos_modalidad_line else ''}
                     </div>
-                    <div>
-                        {'<a href="'+link+'" target="_blank" class="card-button">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:11px;">Sin enlace disponible</span>'}
+                    <div style="margin-top: auto;">
+                        {'<a href="'+link+'" target="_blank" class="card-button">🌐 Acceder al curso</a>' if link else '<div class="no-link">⚠️ Sin enlace disponible</div>'}
                     </div>
                 </div>
                 """
@@ -251,9 +283,12 @@ def mostrar():
                 st.markdown(card_content, unsafe_allow_html=True)
                     
             else:
-                # Tarjeta vacía
+                # Tarjeta vacía con mejor diseño
                 st.markdown("""
                 <div class="destacada-empty">
-                    Próximamente más actividades
+                    <div style="text-align: center;">
+                        <div style="font-size: 14px; font-weight: 600; margin-bottom: 4px;">Próximamente</div>
+                        <div>Más actividades destacadas</div>
+                    </div>
                 </div>
                 """, unsafe_allow_html=True)
