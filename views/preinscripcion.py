@@ -33,7 +33,7 @@ def mostrar_dialogo_exito():
         padding:20px;
         text-align:center;
         font-size:16px;">
-        🎓 <b>Tu preinscripción en la actividad <span style="color:#136ac1;">{actividad}</span> fue registrada correctamente.</b> 🎉
+        <b>Tu preinscripción en la actividad <span style="color:#136ac1;">{actividad}</span> fue registrada correctamente.</b> 🎉
         <br><br>
         <span style="color:#555;">Recordá que esta solicitud no implica la asignación de vacante.</span>
     </div>
