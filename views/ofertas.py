@@ -185,6 +185,7 @@ def mostrar():
                 searching: false,
                 info: false,
                 lengthChange: false,
+                fixedHeader: true,   // 👈 encabezado fijo
                 order: [],
                 columnDefs: [
                     { targets: 0, width: "40%" },  // Actividad (Comisión)
