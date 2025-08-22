@@ -3,6 +3,20 @@ from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="🎓 Espacio de Ofertas de Capacitación", layout="wide")
 
+
+# 🎨 Estilos globales
+st.markdown(
+    """
+    <style>
+    /* Ocultar íconos de ancla en los títulos */
+    .stHeading .stMarkdown a {
+        display: none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
 # =========================
 # Encabezado
 # =========================
