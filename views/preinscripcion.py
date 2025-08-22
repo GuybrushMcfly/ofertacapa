@@ -90,8 +90,8 @@ def mostrar():
     # -------------------------
     # PASO 2: Selección
     # -------------------------
-    st.markdown("#### 1) Seleccioná la actividad en la cual querés preinscribirte.")
-    st.markdown("---")
+    st.markdown("##### 1) Seleccioná la actividad en la cual querés preinscribirte.")
+    st.markdown("")
 
     df_temp["Actividad (Comisión)"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
     
@@ -157,7 +157,7 @@ def mostrar():
     # -------------------------
     if actividad_seleccionada != "-Seleccioná una actividad para preinscribirte-":
         st.markdown("---")
-        st.markdown("#### 2) Ingresá tu número de CUIL/CUIT y validalo con el botón.")
+        st.markdown("##### 2) Ingresá tu número de CUIL/CUIT y validalo con el botón.")
                 
         cuil_input = st.text_input("CUIL/CUIT (11 dígitos)", max_chars=11)
 
