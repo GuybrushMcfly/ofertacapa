@@ -39,7 +39,7 @@ seleccion = option_menu(
             "font-size": "16px",
             "text-align": "center",
             "margin": "0 10px",
-            "max-width": "280px",
+            "max-width": "250px",
             "color": "1E1E1E",
             "font-weight": "bold",
             "background-color": "#C9D8E6",
