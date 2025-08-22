@@ -150,11 +150,20 @@ def mostrar():
                         html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
                     else:
                         html += '<span class="no-link">Sin enlace</span>'
-                    
+                                        
                     html += f'''
                         <a href="#" class="boton" onclick="cambiarVista()">📝 INDEC</a>
+                        <script>
+                        function cambiarVista() {{
+                            window.parent.postMessage({{
+                                type: "streamlit:setQueryParams",
+                                queryParams: {{ "selected_tab": "preinscripcion" }}
+                            }}, "*");
+                        }}
+                        </script>
                     </td>
-                    '''                    
+                    '''
+                                      
                 else:
                     html += f"<td>{val}</td>"
             html += "</tr>"
