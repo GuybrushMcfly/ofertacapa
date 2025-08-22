@@ -82,7 +82,7 @@ def obtener_comisiones_abiertas(supabase: Client):
 
 def obtener_inscripciones(supabase: Client):
     """
-    Devuelve todas las inscripciones (tabla cursos_inscripciones o pruebainscripciones)
+    Devuelve todas las inscripciones (tabla cursos_inscripciones)
     """
     resp = supabase.table("cursos_inscripciones").select("*").execute()
     return resp.data if resp.data else []
