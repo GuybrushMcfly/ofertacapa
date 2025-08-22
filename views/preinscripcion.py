@@ -44,7 +44,8 @@ def mostrar_dialogo_exito():
         <b><span style="color:#136ac1;">{actividad}</span></b> fue registrada correctamente. 🎉
         <br><br>
         <span style="color:#555;">ℹ️ Recordá que esta solicitud no implica la asignación de vacante.</span>        
-        <span style="color:#555;">ℹ️ Si el curso es de INAP, y aún no lo hiciste, acordate de registrarte en su página.</span>      
+        <br><br>
+        <span style="color:#555;">📝 Si es un curso de INAP, y aún no lo hiciste, acordate de registrarte en su página.</span>      
     </div>
     """, unsafe_allow_html=True)
 
