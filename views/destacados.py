@@ -6,27 +6,24 @@ from modules.db import get_supabase_client, obtener_comisiones_abiertas
 def mostrar():
     st.markdown("## 🌟 Actividades destacadas")
 
-    # Conexión a Supabase y traemos comisiones abiertas
     supabase = get_supabase_client()
     df_comisiones = pd.DataFrame(obtener_comisiones_abiertas(supabase))
 
-    if df_comisiones.empty:
-        st.warning("⚠️ No hay comisiones abiertas en este momento.")
-        return
-
-    # Filtramos solo las destacadas (campo oferta_destacada = True)
-    if "oferta_destacada" not in df_comisiones.columns:
-        st.error("⚠️ La vista no tiene el campo 'oferta_destacada'.")
-        return
-
-    destacados = df_comisiones[df_comisiones["oferta_destacada"] == True]
-
-    if destacados.empty:
+    if df_comisiones.empty or "oferta_destacada" not in df_comisiones.columns:
         st.info("ℹ️ Actualmente no hay actividades destacadas.")
         return
 
-    # Tomamos hasta 6
-    destacados = destacados.head(6).to_dict(orient="records")
+    # Filtrar solo las destacadas
+    destacados = df_comisiones[df_comisiones["oferta_destacada"] == True].head(6)
+
+    # Si hay menos de 6 → rellenamos con tarjetas vacías
+    if len(destacados) < 6:
+        faltan = 6 - len(destacados)
+        vacias = pd.DataFrame([{} for _ in range(faltan)])
+        destacados = pd.concat([destacados, vacias], ignore_index=True)
+
+    # Pasar a diccionarios
+    destacados = destacados.to_dict(orient="records")
 
     # ===================== ESTILO TARJETAS =====================
     st.markdown("""
@@ -44,7 +41,7 @@ def mostrar():
         border-radius: 10px;
         box-shadow: 1px 1px 5px rgba(0,0,0,0.05);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        height: 220px;
+        height: 240px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -56,18 +53,18 @@ def mostrar():
     .card h4 {
         color: #136ac1;
         margin-bottom: 10px;
+        font-size: 16px;
     }
     .card p {
         color: #333;
-        font-size: 14px;
-        flex-grow: 1;
-        text-align: justify;
+        font-size: 13px;
+        text-align: left;
     }
     .card a {
         background-color: #136ac1;
         color: white !important;
         text-decoration: none;
-        padding: 8px 12px;
+        padding: 6px 12px;
         border-radius: 6px;
         font-size: 13px;
         transition: background-color 0.2s ease;
@@ -77,6 +74,15 @@ def mostrar():
     .card a:hover {
         background-color: #0d4a87;
     }
+    .card-empty {
+        background-color: #f0f0f0;
+        border: 2px dashed #ccc;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+        font-style: italic;
+    }
     </style>
     """, unsafe_allow_html=True)
 
@@ -84,16 +90,38 @@ def mostrar():
     st.markdown("<div class='card-grid'>", unsafe_allow_html=True)
 
     for d in destacados:
+        if not d or "nombre_actividad" not in d:
+            st.markdown("<div class='card card-empty'>Sin actividad destacada</div>", unsafe_allow_html=True)
+            continue
+
         titulo = d.get("nombre_actividad", "Actividad")
-        organismo = d.get("organismo", "Organismo")
+        comision = d.get("id_comision_sai", "")
         modalidad = d.get("modalidad_cursada", "")
+        creditos = d.get("creditos", "-")
+        fecha_desde = d.get("fecha_desde", "")
+        fecha_hasta = d.get("fecha_hasta", "")
         link = d.get("link_externo", "")
+
+        # Formatear fechas si existen
+        if fecha_desde and fecha_hasta:
+            try:
+                fecha_desde_fmt = pd.to_datetime(fecha_desde).strftime("%d/%m/%Y")
+                fecha_hasta_fmt = pd.to_datetime(fecha_hasta).strftime("%d/%m/%Y")
+                fechas = f"{fecha_desde_fmt} al {fecha_hasta_fmt}"
+            except:
+                fechas = ""
+        else:
+            fechas = ""
 
         st.markdown(f"""
         <div class="card">
             <div>
-                <h4>{titulo}</h4>
-                <p><b>{organismo}</b><br>{modalidad}</p>
+                <h4>{titulo} ({comision})</h4>
+                <p>
+                    📅 {fechas}<br>
+                    🎓 {modalidad}<br>
+                    ⭐ Créditos: {creditos}
+                </p>
             </div>
             <div>
                 {'<a href="'+link+'" target="_blank">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:12px;">Sin enlace</span>'}
