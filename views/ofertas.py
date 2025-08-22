@@ -180,12 +180,14 @@ def mostrar():
         <script>
         $(document).ready(function() {
             $('#tabla-cursos').DataTable({
-                paging: true,
+                paging: false,           // 👈 sin paginado
                 pageLength: 10,
                 searching: false,
                 info: false,
                 lengthChange: false,
                 fixedHeader: true,   // 👈 encabezado fijo
+                scrollY: '600px',   // 👈 scroll interno con encabezado fijo
+                scrollCollapse: true,
                 order: [],
                 columnDefs: [
                     { targets: 0, width: "40%" },  // Actividad (Comisión)
@@ -228,6 +230,7 @@ def mostrar():
 
     # Render tabla final
     html_code = create_html_table(df_vista)
-    altura = 100 + (len(df_vista) * 45)  # 45 px aprox por fila
+    altura = 100 + (len(df_vista) * 45)
     components.html(html_code, height=altura, scrolling=False)
+
 
