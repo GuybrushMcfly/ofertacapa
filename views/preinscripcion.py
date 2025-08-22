@@ -140,7 +140,7 @@ def mostrar():
         st.markdown(f"""
         <div style="background-color: #f0f8ff; padding: 15px; border-left: 5px solid #136ac1; border-radius: 5px;">
           <b>🆔 Comisión:</b> {fila['id_comision_sai']}<br>
-          <b>📅 Fechas:</b> {fecha_inicio} al {fecha_fin}<br>
+          <b>📅 Cursada:</b> {fecha_inicio} al {fecha_fin}<br>
           <b>📅 Cierre Inscripción:</b> {fecha_cierre}<br>
           <b>⭐ Créditos:</b> {fila['creditos']}<br>
           <b>🎓 Modalidad:</b> {fila['modalidad_cursada']}<br>
@@ -157,10 +157,10 @@ def mostrar():
 
         if st.button("Validar CUIL/CUIT"):
             if not validar_cuil(cuil_input):
-                st.error("CUIL inválido. Verificá que tenga 11 dígitos y sea correcto.")
+                st.error("CUIL/CUIT inválido. Verificá que tenga 11 dígitos y sea correcto.")
                 return
             if not verificar_formulario_cuil(supabase, cuil_input):
-                st.error("⚠️ El CUIL no corresponde a un agente activo.")
+                st.error("⚠️ El CUIL/CUIT no corresponde a un agente activo.")
                 return
             if verificar_formulario_historial(supabase, cuil_input, st.session_state["id_actividad"]):
                 st.warning("⚠️ Ya realizaste esta actividad y fue APROBADA.")
