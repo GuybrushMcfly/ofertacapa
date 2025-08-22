@@ -1,267 +1,89 @@
 import streamlit as st
-import pandas as pd
 import streamlit.components.v1 as components
-from modules.db import get_supabase_client, obtener_comisiones_abiertas
+import pandas as pd
 
-def mostrar():
-    st.header("📚 Ofertas de cursos")
+st.header("📚 Ofertas de cursos")
 
-    # Conexión a Supabase
-    supabase = get_supabase_client()
-    data = obtener_comisiones_abiertas(supabase)
+# Simulamos DataFrame de cursos
+df = pd.DataFrame({
+    "Actividad (Comisión)": ["Curso A (ABC123)", "Curso B (XYZ789)"],
+    "Inicio": ["01-09-2025", "15-09-2025"],
+    "Fin": ["10-09-2025", "20-09-2025"],
+    "Modalidad": ["Virtual", "Presencial"]
+})
 
-    if not data:
-        st.warning("No se encontraron cursos disponibles.")
-        return
+# ========== TABLA HTML ========== #
+def create_html_table(df):
+    headers = ''.join(f"<th>{col}</th>" for col in df.columns)
 
-    # Convertir a DataFrame
-    df_comisiones = pd.DataFrame(data)
-
-    # Crear columna combinada: Actividad (Comisión)
-    df_comisiones["Actividad (Comisión)"] = (
-        df_comisiones["nombre_actividad"] + " (" + df_comisiones["id_comision_sai"] + ")"
-    )
-
-    # Clasificar duración según créditos
-    df_comisiones["creditos"] = df_comisiones["creditos"].fillna(0).astype(int)
-    def clasificar_duracion(c):
-        if c < 10: return "BREVE"
-        elif c < 20: return "INTERMEDIA"
-        else: return "PROLONGADA"
-    df_comisiones["duracion"] = df_comisiones["creditos"].apply(clasificar_duracion)
-
-    # Formatear fechas en formato dd-mm-yyyy
-    for col in ["fecha_desde", "fecha_hasta", "fecha_cierre"]:
-        df_comisiones[col] = pd.to_datetime(df_comisiones[col]).dt.strftime("%d-%m-%Y")
-
-    # FILTROS: Organismo, Modalidad, Duración
-    organismos = ["Todos"] + sorted(df_comisiones["organismo"].dropna().unique().tolist())
-    modalidades = ["Todas"] + sorted(df_comisiones["modalidad_cursada"].dropna().unique().tolist())
-    duraciones = ["Todas"] + sorted(df_comisiones["duracion"].unique())
-
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        filtro_org = st.selectbox("Organismo", organismos)
-    with col2:
-        filtro_mod = st.selectbox("Modalidad", modalidades)
-    with col3:
-        filtro_dur = st.selectbox("Duración", duraciones)
-
-    # Aplicar filtros según selección
-    df_filtrado = df_comisiones.copy()
-    if filtro_org != "Todos":
-        df_filtrado = df_filtrado[df_filtrado["organismo"] == filtro_org]
-    if filtro_mod != "Todas":
-        df_filtrado = df_filtrado[df_filtrado["modalidad_cursada"] == filtro_mod]
-    if filtro_dur != "Todas":
-        df_filtrado = df_filtrado[df_filtrado["duracion"] == filtro_dur]
-
-    # Columnas a mostrar en la tabla
-    columnas_finales = [
-        "Actividad (Comisión)", "fecha_desde", "fecha_hasta", "fecha_cierre",
-        "creditos", "modalidad_cursada", "link_externo"
-    ]
-    faltantes = [col for col in columnas_finales if col not in df_filtrado.columns]
-    if faltantes:
-        st.error(f"❌ Columnas faltantes: {faltantes}")
-        st.stop()
-
-    # Renombrar columnas para visualización
-    df_vista = df_filtrado[columnas_finales].rename(columns={
-        "fecha_desde": "Inicio",
-        "fecha_hasta": "Fin",
-        "fecha_cierre": "Cierre",
-        "creditos": "Créditos",
-        "modalidad_cursada": "Modalidad",
-        "link_externo": "Acciones"
-    })
-
-    # ✅ Mostrar mensaje visual si el DataFrame está vacío
-    if df_vista.empty:
-        st.info("🔍 No hay cursos que coincidan con los filtros seleccionados.")
-        return
-
-    # ========== TABLA HTML ==========
-    def create_html_table(df):
-        headers = ''.join(f"<th>{col}</th>" for col in df.columns)
-
-        html = f"""
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-
-        <style>
-        .courses-table {{
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            border-radius: 8px;
-            overflow: hidden;
-            background-color: white;
-        }}
-        .courses-table thead tr {{
-            background-color: #136ac1;
-            color: #ffffff;
-            text-align: left;
-            font-weight: bold;
-        }}
-        .courses-table th, .courses-table td {{
-            padding: 10px 8px;
-            border-bottom: 1px solid #e0e0e0;
-        }}
-        .courses-table tbody tr {{
-            background-color: #ffffff;
-            transition: all 0.3s ease;
-        }}
-        .courses-table tbody tr:hover {{
-            background-color: #e3f2fd;
-            transform: translateY(-1px);
-        }}
-        .courses-table a.boton {{
-            color: #136ac1;
-            text-decoration: none;
-            font-weight: bold;
-            padding: 4px 8px;
-            border: 2px solid #136ac1;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            display: inline-block;
-            margin-right: 6px;
-        }}
-        .courses-table a.boton:hover {{
-            background-color: #136ac1;
-            color: white;
-            transform: scale(1.05);
-        }}
-        .no-link {{
-            color: #bdc3c7;
-            font-style: italic;
-        }}
-        </style>
-
-        <div style="overflow-x:auto">
-        <table class="courses-table" id="tabla-cursos">
-            <thead>
-                <tr>{headers}</tr>
-            </thead>
-            <tbody>
+    html = f"""
+    <table border="1" style="border-collapse:collapse;width:100%">
+        <thead><tr>{headers}<th>Acciones</th></tr></thead>
+        <tbody>
+    """
+    for _, row in df.iterrows():
+        actividad = row["Actividad (Comisión)"]
+        html += "<tr>"
+        for col in df.columns:
+            html += f"<td>{row[col]}</td>"
+        # 🚀 Botón Copiar que guarda en sessionStorage y fuerza rerun
+        html += f"""
+        <td>
+            <a href="javascript:void(0);" 
+               onclick="copyToField(`{actividad}`)" 
+               style="color:#136ac1;font-weight:bold;">📋 Copiar</a>
+        </td>
         """
+        html += "</tr>"
+    html += "</tbody></table>"
 
-        # Agregar filas
-        for _, row in df.iterrows():
-            html += "<tr>"
-            for col in df.columns:
-                val = row[col]
-                if col == "Acciones":
-                    html += '<td>'
-                    if pd.notna(val) and val and val != "None":
-                        html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
-                    else:
-                        html += '<span class="no-link">Sin enlace</span>'
-                    # 🚀 Nuevo botón Copiar
-                    actividad = row["Actividad (Comisión)"]
-                    html += f'<a href="javascript:void(0);" onclick="copyToField(`{actividad}`)" class="boton">📋 Copiar</a>'
-                    html += '</td>'
-                else:
-                    html += f"<td>{val}</td>"
-            html += "</tr>"
-
-        html += """
-            </tbody>
-        </table>
-        </div>
-
-        <script>
-        $(document).ready(function() {
-            $('#tabla-cursos').DataTable({
-                paging: true,
-                pageLength: 10,
-                searching: false,
-                info: false,
-                lengthChange: false,
-                order: [],
-                columnDefs: [
-                    { targets: 0, width: "30%" },
-                    { targets: 1, width: "10%" },
-                    { targets: 2, width: "10%" },
-                    { targets: 3, width: "10%" },
-                    { targets: 4, width: "10%" },
-                    { targets: 5, width: "15%" },
-                    { targets: 6, width: "15%" }
-                ],
-                language: {
-                    paginate: {
-                        previous: "Anterior",
-                        next: "Siguiente"
-                    }
-                }
-            });
-        });
-
-        function copyToField(value) {
-            sessionStorage.setItem("campoLibre", value);
-            window.parent.postMessage({type: "refreshStreamlit"}, "*");
-        }
-        </script>
-        """
-        return html
-
-    # ========== ESTILOS Y RENDER ==========
-    st.markdown("""
-        <style>
-        .main .block-container {
-            max-width: 100% !important;
-            padding-left: 0rem !important;
-            padding-right: 0rem !important;
-        }
-        iframe {
-            width: 100% !important;
-        }
-        .element-container {
-            width: 100% !important;
-        }
-        </style>
-    """, unsafe_allow_html=True)
-
-    # Inicializar campo libre en session_state
-    if "campo_libre" not in st.session_state:
-        st.session_state["campo_libre"] = ""
-
-    # Render tabla
-    html_code = create_html_table(df_vista)
-    altura = min(800, 100 + (len(df_vista) * 45))
-    components.html(html_code, height=altura, scrolling=True)
-
-    # Script para leer de sessionStorage y actualizar campo
-    message_code = """
+    # Script de copia
+    html += """
     <script>
-    const valor = sessionStorage.getItem("campoLibre") || "";
-    window.parent.postMessage({type: "setCampoLibre", value: valor}, "*");
+    function copyToField(value) {
+        sessionStorage.setItem("campoLibre", value);
+        window.parent.postMessage({type: "streamlit:rerun"}, "*");
+    }
     </script>
     """
-    components.html(message_code, height=0, width=0)
+    return html
 
-    # Listener para actualizar campo en el input
-    listener_code = """
-    <script>
-    window.addEventListener("message", (event) => {
-        if (event.data.type === "setCampoLibre") {
-            const input = window.parent.document.querySelector('input#campoLibreInput');
-            if (input) {
-                input.value = event.data.value;
-                input.dispatchEvent(new Event("input", { bubbles: true }));
-            }
+components.html(create_html_table(df), height=300, scrolling=True)
+
+# ========== SCRIPT INVISIBLE PARA LEER sessionStorage ========== #
+campo_code = """
+<script>
+const valor = sessionStorage.getItem("campoLibre") || "";
+window.parent.postMessage({type: "setCampoLibre", value: valor}, "*");
+</script>
+"""
+components.html(campo_code, height=0)
+
+# Inicializar en session_state
+if "campo_libre" not in st.session_state:
+    st.session_state["campo_libre"] = ""
+
+# Listener que engancha el valor enviado
+message_code = """
+<script>
+window.addEventListener("message", (event) => {
+    if (event.data.type === "setCampoLibre") {
+        const input = window.parent.document.querySelector("input#campoLibreInput");
+        if (input) {
+            input.value = event.data.value;
+            input.dispatchEvent(new Event("input", { bubbles: true }));
         }
-    });
-    </script>
-    """
-    components.html(listener_code, height=0, width=0)
+    }
+});
+</script>
+"""
+components.html(message_code, height=0)
 
-    # Campo de texto simple
-    st.session_state["campo_libre"] = st.text_input(
-        "✍ Campo libre:",
-        st.session_state["campo_libre"],
-        key="campoLibreInput"
-    )
+# Campo libre en Streamlit
+st.session_state["campo_libre"] = st.text_input(
+    "✍ Campo libre:",
+    st.session_state["campo_libre"],
+    key="campoLibreInput"
+)
+
+st.write("Valor actual:", st.session_state["campo_libre"])
