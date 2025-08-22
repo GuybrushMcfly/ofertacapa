@@ -208,8 +208,8 @@ def mostrar():
                     { targets: 2, width: "10%" },  // Fin
                     { targets: 3, width: "10%" },  // Cierre
                     { targets: 4, width: "5%" },  // Créditos
-                    { targets: 5, width: "15%" },  // Modalidad
-                    { targets: 6, width: "15%" }   // Acciones
+                    { targets: 5, width: "10%" },  // Modalidad
+                    { targets: 6, width: "20%" }   // Acciones
                 ],
                 language: {
                     paginate: {
