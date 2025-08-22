@@ -206,10 +206,11 @@ def mostrar():
             # Guardar nuevamente en la sesión ya corregido
             st.session_state["datos_agenteform"] = datos
             
-            # Mostrar los datos corregidos
-            st.markdown("### 👤 Datos obtenidos del agente")
-            st.json(datos)
+            
 
+            # ❌ No mostramos nada en pantalla
+            # st.markdown("### 👤 Datos obtenidos del agente")
+            # st.json(datos)
 
 
     # -------------------------
