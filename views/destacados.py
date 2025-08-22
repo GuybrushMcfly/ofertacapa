@@ -1,22 +1,32 @@
+# views/destacados.py
 import streamlit as st
 import pandas as pd
+from modules.db import get_supabase_client, obtener_comisiones_abiertas
 
-def mostrar(df_comisiones: pd.DataFrame):
+def mostrar():
     st.markdown("## 🌟 Actividades destacadas")
 
-    # ===================== FILTRO POR DESTACADAS =====================
+    # Conexión a Supabase y traemos comisiones abiertas
+    supabase = get_supabase_client()
+    df_comisiones = pd.DataFrame(obtener_comisiones_abiertas(supabase))
+
+    if df_comisiones.empty:
+        st.warning("⚠️ No hay comisiones abiertas en este momento.")
+        return
+
+    # Filtramos solo las destacadas (campo oferta_destacada = True)
     if "oferta_destacada" not in df_comisiones.columns:
-        st.warning("⚠️ La tabla no tiene el campo 'oferta_destacada'.")
+        st.error("⚠️ La vista no tiene el campo 'oferta_destacada'.")
         return
 
-    destacados_df = df_comisiones[df_comisiones["oferta_destacada"] == True]
+    destacados = df_comisiones[df_comisiones["oferta_destacada"] == True]
 
-    if destacados_df.empty:
-        st.info("ℹ️ No hay ofertas destacadas en este momento.")
+    if destacados.empty:
+        st.info("ℹ️ Actualmente no hay actividades destacadas.")
         return
 
-    # Tomar hasta 6 destacadas aleatorias (rotación)
-    destacados = destacados_df.sample(n=min(6, len(destacados_df))).to_dict(orient="records")
+    # Tomamos hasta 6
+    destacados = destacados.head(6).to_dict(orient="records")
 
     # ===================== ESTILO TARJETAS =====================
     st.markdown("""
