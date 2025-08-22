@@ -1,4 +1,6 @@
 import streamlit as st
+import pandas as pd
+from datetime import date, datetime
 from modules.db import (
     get_supabase_client,
     verificar_formulario_cuil,
@@ -9,77 +11,90 @@ from modules.db import (
     obtener_comisiones_abiertas
 )
 from modules.utils import validar_cuil, validar_email, normalizar_titulo
-from datetime import datetime
 
 supabase = get_supabase_client()
 
+# ========== PREINSCRIPCIÓN ==========
 def mostrar():
     st.markdown("## 📝 Formulario de Preinscripción")
 
     # 1️⃣ Cargar comisiones disponibles
-    comisiones = obtener_comisiones_abiertas(supabase)
-    if not comisiones:
-        st.warning("No hay comisiones abiertas en este momento.")
+    df_temp = pd.DataFrame(obtener_comisiones_abiertas(supabase))
+
+    if df_temp.empty:
+        st.warning("No hay comisiones disponibles actualmente.")
         return
 
-    opciones_dropdown = ["-Seleccioná una actividad-"] + [
-        f"{c['nombre_actividad']} ({c['id_comision_sai']})" for c in comisiones
-    ]
-    seleccion = st.selectbox("Actividad disponible", opciones_dropdown)
+    # 2️⃣ Dropdown de selección de actividad (combinada)
+    df_temp["Actividad dropdown"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
+    dropdown_list = ["-Seleccioná una actividad para preinscribirte-"] + df_temp["Actividad dropdown"].tolist()
 
-    if seleccion == "-Seleccioná una actividad-":
-        st.stop()
-
-    fila = next((c for c in comisiones if f"{c['nombre_actividad']} ({c['id_comision_sai']})" == seleccion), None)
-    if not fila:
-        st.error("No se encontró la actividad seleccionada.")
+    actividad_seleccionada = st.selectbox("Actividad disponible", dropdown_list)
+    if actividad_seleccionada == dropdown_list[0]:
         return
 
-    actividad_id = fila["id_actividad"]
-    comision_id = fila["id_comision_sai"]
+    fila = df_temp[df_temp["Actividad dropdown"] == actividad_seleccionada].iloc[0]
 
     st.markdown("""
-        <div style='border-left: 5px solid #136ac1; padding: 10px; background-color: #f0f8ff;'>
-            <b>Organiza:</b> {0}<br>
-            <b>Fechas:</b> {1} al {2}<br>
-            <b>Modalidad:</b> {3}<br>
-            <b>Créditos:</b> {4}
-        </div>
+    <div style='border-left: 5px solid #136ac1; background-color: #f0f8ff; padding: 12px; margin-top: 10px;'>
+        <b>Actividad:</b> {0}<br>
+        <b>Organismo:</b> {1}<br>
+        <b>Comisión:</b> {2}<br>
+        <b>Fecha inicio:</b> {3} | <b>Fecha fin:</b> {4}<br>
+        <b>Modalidad:</b> {5}<br>
+        <b>Créditos:</b> {6}
+    </div>
     """.format(
-        fila.get("organismo", ""),
-        fila.get("fecha_desde", ""),
-        fila.get("fecha_hasta", ""),
-        fila.get("modalidad_cursada", ""),
-        fila.get("creditos", "")
+        fila["nombre_actividad"],
+        fila["organismo"],
+        fila["id_comision_sai"],
+        fila["fecha_desde"],
+        fila["fecha_hasta"],
+        fila["modalidad_cursada"],
+        fila["creditos"]
     ), unsafe_allow_html=True)
 
-    # 2️⃣ Ingreso y validación de CUIL
-    cuil_input = st.text_input("Ingresá tu CUIL (11 dígitos)", max_chars=11)
+    # 3️⃣ Validación del CUIL
+    cuil_input = st.text_input("CUIL (11 dígitos)")
 
     if st.button("Validar CUIL"):
         if not validar_cuil(cuil_input):
-            st.error("CUIL inválido. Verificá que tenga 11 dígitos.")
-            st.stop()
+            st.error("CUIL inválido. Debe tener 11 dígitos.")
+            return
 
-        existe = verificar_formulario_cuil(supabase, cuil_input).data
-        if not existe:
-            st.error("El CUIL no corresponde a un agente activo.")
-            st.stop()
+        try:
+            actividad_id = fila["id_actividad"]
+            comision_id = fila["id_comision_sai"]
 
-        ya_aprobo = verificar_formulario_historial(supabase, cuil_input, actividad_id).data
-        if ya_aprobo:
-            st.warning("Ya aprobaste esta actividad previamente.")
-            st.stop()
+            st.write("🔎 Debug actividad_id:", actividad_id)
+            st.write("🔎 Debug cuil_input:", cuil_input)
 
-        ya_inscripto = verificar_formulario_inscripcion(supabase, cuil_input, comision_id).data
-        if ya_inscripto:
-            st.warning("Ya estás inscripto en esta comisión.")
-            st.stop()
+            existe = verificar_formulario_cuil(supabase, cuil_input).data
+            if not existe:
+                st.error("El CUIL no corresponde a un agente activo.")
+                return
 
-        st.session_state["validado"] = True
-        st.session_state["cuil"] = cuil_input
+            ya_aprobo = verificar_formulario_historial(supabase, cuil_input, actividad_id).data
+            if ya_aprobo:
+                st.warning("Ya aprobaste esta actividad previamente.")
+                return
 
-    if st.session_state.get("validado"):
+            ya_inscripto = verificar_formulario_inscripcion(supabase, cuil_input, comision_id).data
+            if ya_inscripto:
+                st.warning("Ya estás inscripto en esta comisión.")
+                return
+
+            st.session_state["cuil_validado"] = True
+            st.session_state["cuil"] = cuil_input
+            st.session_state["actividad_id"] = actividad_id
+            st.session_state["comision_id"] = comision_id
+
+        except Exception as e:
+            st.error(f"⚠️ Error al validar datos: {e}")
+            return
+
+    # 4️⃣ Mostrar formulario si está validado
+    if st.session_state.get("cuil_validado"):
         datos = obtener_datos_para_formulario(supabase, st.session_state["cuil"]).data or {}
 
         with st.form("formulario_preinscripcion"):
@@ -98,12 +113,12 @@ def mostrar():
             if submitted:
                 if not validar_email(correo_alternativo):
                     st.error("Correo alternativo inválido.")
-                    st.stop()
+                    return
 
                 datos_inscripcion = {
                     "cuil": st.session_state["cuil"],
-                    "id_actividad": actividad_id,
-                    "id_comision": comision_id,
+                    "id_actividad": st.session_state["actividad_id"],
+                    "id_comision": st.session_state["comision_id"],
                     "nivel_educativo": nivel_educativo,
                     "titulo": normalizar_titulo(titulo),
                     "tareas": tareas.lower().strip(),
