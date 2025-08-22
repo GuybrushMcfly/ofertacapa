@@ -235,7 +235,7 @@ def mostrar():
     html_code = create_html_table(df_vista)
     
     # Altura dinámica: hasta 10 filas + espacio extra para paginación
-    max_filas = 10
+    max_filas = 7
     filas_visibles = min(len(df_vista), max_filas)
     altura = 140 + (filas_visibles * 45)   # 140 en lugar de 100 para sumar espacio al footer
     
