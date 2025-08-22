@@ -90,7 +90,9 @@ def mostrar():
     # -------------------------
     # PASO 2: Selección
     # -------------------------
-    st.markdown("##### 1) Seleccioná la actividad en la cual querés preinscribirte.")
+    st.markdown("#### 1) Seleccioná la actividad en la cual querés preinscribirte.")
+    st.markdown("---")
+
     df_temp["Actividad (Comisión)"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
     
     # 🔹 Ordenar actividades alfabéticamente
