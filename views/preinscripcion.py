@@ -128,6 +128,9 @@ def mostrar():
     # ==========================================================
     # PASO 4: Formulario de inscripción
     # ==========================================================
+    # ==========================================================
+    # PASO 4: Formulario de inscripción (simplificado)
+    # ==========================================================
     with st.container():
         if (
             st.session_state.get("validado") and 
@@ -137,22 +140,24 @@ def mostrar():
             datos = st.session_state["datos_agenteform"]
             correo_oficial = datos.get("email", "")
 
-            col1, col2 = st.columns(2)
-            niveles = ["-Seleccioná-", "PRIMARIO", "SECUNDARIO", "TERCIARIO", "UNIVERSITARIO", "POSGRADO"]
-            with col1:
-                nivel_educativo = st.selectbox("Nivel educativo", niveles, index=0)
-            with col2:
-                titulo = st.text_input("Título").upper()
+            # Campo obligatorio: tareas desarrolladas
+            tareas = st.text_area("✍️ Tareas desarrolladas (obligatorio)", height=120).strip().lower()
 
-            tareas = st.text_area("Tareas desarrolladas", height=100).lower()
+            # Campo opcional: correo alternativo
             st.markdown(f"📧 Te vamos a contactar al correo registrado: **{correo_oficial}**")
-            email_alt = st.text_input("Correo alternativo (opcional)")
+            email_alt = st.text_input("Correo alternativo (opcional)").strip()
 
+            # Botón de enviar
             if st.button("ENVIAR INSCRIPCIÓN"):
-                if email_alt and "@" not in email_alt:
-                    st.error("Correo alternativo inválido.")
+                if not tareas:
+                    st.error("⚠️ El campo 'Tareas desarrolladas' es obligatorio.")
                     return
 
+                if email_alt and "@" not in email_alt:
+                    st.error("⚠️ Correo alternativo inválido.")
+                    return
+
+                # Calcular edad (si hay fecha de nacimiento)
                 edad = None
                 if datos.get("fecha_nacimiento"):
                     try:
@@ -162,17 +167,16 @@ def mostrar():
                     except:
                         pass
 
+                # Datos a guardar
                 datos_inscripcion = {
                     "comision_id": st.session_state["comision_id"],
                     "cuil": st.session_state["cuil"],
                     "fecha_inscripcion": date.today().isoformat(),
                     "estado_inscripcion": "Nueva",
                     "vacante": False,
-                    "nivel_educativo": nivel_educativo if nivel_educativo != "-Seleccioná-" else None,
-                    "titulo": titulo,
                     "tareas_desarrolladas": tareas,
                     "email": correo_oficial,
-                    "email_alternativo": email_alt,
+                    "email_alternativo": email_alt if email_alt else None,
                     "fecha_nacimiento": datos.get("fecha_nacimiento"),
                     "edad_inscripcion": edad,
                     "sexo": datos.get("sexo"),
@@ -189,8 +193,13 @@ def mostrar():
 
                 if result.data:
                     st.session_state["inscripcion_exitosa"] = True
-                    st.balloons()
-                    st.success("✅ ¡Preinscripción exitosa!")
-                    st.rerun()
+
+                    # Abrir diálogo de éxito
+                    with st.dialog("✅ ¡Preinscripción exitosa!", width="small", dismissible=False):
+                        st.markdown("Tu inscripción fue registrada correctamente. 🎉")
+                        if st.button("Cerrar"):
+                            st.session_state.clear()  # limpiar todo
+                            st.rerun()
                 else:
                     st.error("❌ Ocurrió un error al guardar la inscripción.")
+
