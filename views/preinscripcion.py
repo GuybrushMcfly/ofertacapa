@@ -25,7 +25,10 @@ def mostrar_dialogo_exito():
     st.markdown("---")
     if st.button("Cerrar"):
         st.session_state.clear()   # limpia todos los valores en memoria
+        # 👇 Forzar que el selectbox use otra key al rerenderizar
+        st.session_state["__reset_placeholder"] = True
         st.rerun()                 # vuelve a correr el script y resetea el formulario
+
 
 def mostrar():
     st.markdown("## 📝 Formulario de Preinscripción")
@@ -191,6 +194,8 @@ def mostrar():
                     "email_alternativo": email_alt if email_alt else None,
                     "fecha_nacimiento": datos.get("fecha_nacimiento"),
                     "edad_inscripcion": edad,
+                    "titulo":datos.get("titulo"),
+                    "nivel_educativo":datos.get("nivel_educativo"),
                     "sexo": datos.get("sexo"),
                     "situacion_revista": datos.get("situacion_revista"),
                     "nivel": datos.get("nivel"),
