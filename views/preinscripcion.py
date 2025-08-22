@@ -178,7 +178,14 @@ def mostrar():
             st.session_state["validado"] = True
             st.success("✅ CUIL/CUIT válido. Podés completar el formulario.")
             st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
-
+            
+            # 🔹 Mostrar mensajes especiales si el organismo es INAP
+            if st.session_state.get("datos_agenteform") and fila["organismo"] == "INAP":
+                st.toast("📌 Seleccionaste una actividad del INAP")
+                st.toast("📝 Recordá que tenés que preinscribirte en el formulario INDEC")
+                st.toast("⚠️ Y también tenés que preinscribirte en el INAP. Siempre deben hacerse la doble preinscripción")
+        
+            
             datos = st.session_state["datos_agenteform"]
             if datos:
                 st.markdown("### 👤 Datos obtenidos del agente")
