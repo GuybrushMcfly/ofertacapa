@@ -13,14 +13,12 @@ def mostrar():
         st.info("ℹ️ Actualmente no hay actividades destacadas.")
         return
 
-    # Filtrar solo las destacadas
+    # Filtrar solo las destacadas (hasta 6)
     destacados = df_comisiones[df_comisiones["oferta_destacada"] == True].head(6)
 
-    # Si hay menos de 6 → rellenamos con tarjetas vacías
-    if len(destacados) < 6:
-        faltan = 6 - len(destacados)
-        vacias = pd.DataFrame([{} for _ in range(faltan)])
-        destacados = pd.concat([destacados, vacias], ignore_index=True)
+    if destacados.empty:
+        st.info("ℹ️ Actualmente no hay actividades destacadas.")
+        return
 
     destacados = destacados.to_dict(orient="records")
 
@@ -40,7 +38,7 @@ def mostrar():
         border-radius: 10px;
         box-shadow: 1px 1px 5px rgba(0,0,0,0.05);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        height: 200px; /* altura fija más compacta */
+        height: 200px; /* altura fija */
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -74,26 +72,13 @@ def mostrar():
     .card a:hover {
         background-color: #0d4a87;
     }
-    .card-empty {
-        background-color: #f0f0f0;
-        border: 2px dashed #ccc;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #999;
-        font-style: italic;
-    }
     </style>
     """, unsafe_allow_html=True)
 
-    # ===================== RENDER TARJETAS =====================
-    st.markdown("<div class='card-grid'>", unsafe_allow_html=True)
+    # ===================== ARMAR HTML DE TARJETAS =====================
+    html_tarjetas = "<div class='card-grid'>"
 
     for d in destacados:
-        if not d or "nombre_actividad" not in d:
-            st.markdown("<div class='card card-empty'>Sin actividad destacada</div>", unsafe_allow_html=True)
-            continue
-
         titulo = d.get("nombre_actividad", "Actividad")
         comision = d.get("id_comision_sai", "")
         modalidad = d.get("modalidad_cursada", "")
@@ -114,18 +99,21 @@ def mostrar():
 
         boton = f'<a href="{link}" target="_blank">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:12px;">Sin enlace</span>'
 
-        st.markdown(f"""
+        html_tarjetas += f"""
         <div class="card">
             <div>
                 <h4>{titulo} ({comision})</h4>
                 <p>
-                    📅 {fechas}<br>
-                    🎓 {modalidad}<br>
-                    ⭐ Créditos: {creditos}
+                    📅 {fechas if fechas else ''}<br>
+                    🎓 {modalidad if modalidad else ''}<br>
+                    ⭐ Créditos: {creditos if creditos not in [None, "nan", "NaN"] else "-"}
                 </p>
             </div>
             <div>{boton}</div>
         </div>
-        """, unsafe_allow_html=True)
+        """
 
-    st.markdown("</div>", unsafe_allow_html=True)
+    html_tarjetas += "</div>"
+
+    # Renderizar todas las tarjetas en bloque
+    st.markdown(html_tarjetas, unsafe_allow_html=True)
