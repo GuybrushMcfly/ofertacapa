@@ -1,18 +1,26 @@
 # views/destacados.py
 import streamlit as st
 import pandas as pd
+from modules.db import get_supabase_client, obtener_comisiones_abiertas
 
-def mostrar(df_comisiones: pd.DataFrame):
+def mostrar():
     st.markdown("## 🌟 Actividades destacadas")
 
-    # Filtrar solo las destacadas
-    destacados = df_comisiones[df_comisiones["oferta_destacada"] == True].head(6)
+    # Conectar a Supabase
+    supabase = get_supabase_client()
+    df_comisiones = pd.DataFrame(obtener_comisiones_abiertas(supabase))
 
-    if destacados.empty:
-        st.info("📭 No hay ofertas destacadas en este momento.")
+    # Filtrar destacadas
+    df_destacadas = df_comisiones[df_comisiones["oferta_destacada"] == True]
+
+    if df_destacadas.empty:
+        st.info("⚠️ No hay actividades destacadas disponibles por el momento.")
         return
 
-    # ====== ESTILOS (idénticos a versión 2) ======
+    # Limitar a 6
+    destacados = df_destacadas.head(6).to_dict(orient="records")
+
+    # ===================== ESTILO TARJETAS =====================
     st.markdown("""
     <style>
     .card-grid {
@@ -28,6 +36,7 @@ def mostrar(df_comisiones: pd.DataFrame):
         border-radius: 10px;
         box-shadow: 1px 1px 5px rgba(0,0,0,0.05);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
+        height: 220px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -39,12 +48,12 @@ def mostrar(df_comisiones: pd.DataFrame):
     .card h4 {
         color: #136ac1;
         margin-bottom: 10px;
-        font-size: 16px;
     }
     .card p {
         color: #333;
         font-size: 14px;
-        margin: 0 0 10px 0;
+        flex-grow: 1;
+        text-align: justify;
     }
     .card a {
         background-color: #136ac1;
@@ -63,13 +72,12 @@ def mostrar(df_comisiones: pd.DataFrame):
     </style>
     """, unsafe_allow_html=True)
 
-    # ====== RENDER ======
+    # ===================== RENDER DE TARJETAS =====================
     st.markdown("<div class='card-grid'>", unsafe_allow_html=True)
 
-    for _, d in destacados.iterrows():
-        titulo = f"{d.get('nombre_actividad','')} ({d.get('id_comision_sai','')})"
-        fecha_desde = pd.to_datetime(d.get("fecha_desde")).strftime("%d/%m/%Y") if pd.notna(d.get("fecha_desde")) else ""
-        fecha_hasta = pd.to_datetime(d.get("fecha_hasta")).strftime("%d/%m/%Y") if pd.notna(d.get("fecha_hasta")) else ""
+    for d in destacados:
+        titulo = d.get("nombre_actividad", "")
+        fechas = f"{d.get('fecha_desde', '')} al {d.get('fecha_hasta', '')}"
         modalidad = d.get("modalidad_cursada", "")
         creditos = d.get("creditos", "")
         link = d.get("link_externo", "")
@@ -78,9 +86,7 @@ def mostrar(df_comisiones: pd.DataFrame):
         <div class="card">
             <div>
                 <h4>{titulo}</h4>
-                <p>📅 {fecha_desde} al {fecha_hasta}</p>
-                <p>🎓 {modalidad}</p>
-                <p>⭐ Créditos: {creditos}</p>
+                <p>{fechas}<br>{modalidad} · {creditos} créditos</p>
             </div>
             <div>
                 {'<a href="'+link+'" target="_blank">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:12px;">Sin enlace</span>'}
