@@ -78,7 +78,10 @@ def mostrar():
     
     for d in destacados:
         titulo = d.get("nombre_actividad", "")
-        fechas = f"{d.get('fecha_desde','')} al {d.get('fecha_hasta','')}"
+        comision = d.get("id_comision_sai", "")
+        fechas = ""
+        if d.get("fecha_desde") and d.get("fecha_hasta"):
+            fechas = f"{pd.to_datetime(d['fecha_desde']).strftime('%d/%m/%Y')} al {pd.to_datetime(d['fecha_hasta']).strftime('%d/%m/%Y')}"
         modalidad = d.get("modalidad_cursada", "")
         creditos = d.get("creditos", "")
         link = d.get("link_externo", "")
@@ -86,8 +89,8 @@ def mostrar():
         cards_html += f"""
         <div class="card">
             <div>
-                <h4>{titulo}</h4>
-                <p>{fechas}<br>{modalidad} · {creditos} créditos</p>
+                <h4>{titulo} ({comision})</h4>
+                <p>{fechas}<br>{modalidad}{' · ' + str(creditos) + ' créditos' if creditos else ''}</p>
             </div>
             <div>
                 {'<a href="'+link+'" target="_blank">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:12px;">Sin enlace</span>'}
@@ -97,4 +100,6 @@ def mostrar():
     
     cards_html += "</div>"
     
+    # 🚀 Render final (interpreta HTML real, no texto plano)
     st.markdown(cards_html, unsafe_allow_html=True)
+
