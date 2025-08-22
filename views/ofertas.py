@@ -162,7 +162,7 @@ def mostrar():
                     html += '<td>'
                     if pd.notna(val) and val and val != "None":
                         
-                        html += f'<a href="{val}" target="_blank" class="boton"> INAP</a>'
+                        html += f'<a href="{val}" target="_blank" class="boton"> Form. INAP</a>'
 
                     else:
                         html += '<span class="no-link">Sin enlace</span>'
