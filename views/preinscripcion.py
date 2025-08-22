@@ -12,6 +12,7 @@ from modules.db import (
     insertar_inscripcion,
     obtener_comisiones_abiertas
 )
+from modules.utils import formatear_fecha
 
 # ==========================================================
 # CONEXIÓN A SUPABASE
@@ -125,16 +126,21 @@ def mostrar():
         st.session_state["comision_id"] = fila["id"]
         st.session_state["id_actividad"] = fila["id_actividad"]
 
+        # 🔹 Formatear fechas con utils
+        fecha_inicio = formatear_fecha(pd.to_datetime(fila["fecha_desde"]))
+        fecha_fin = formatear_fecha(pd.to_datetime(fila["fecha_hasta"]))
+        fecha_cierre = formatear_fecha(pd.to_datetime(fila["fecha_cierre"]))
+
         st.markdown(f"""
         <div style="background-color: #f0f8ff; padding: 15px; border-left: 5px solid #136ac1; border-radius: 5px;">
-          <b>🟦 Actividad:</b> {fila['nombre_actividad']}<br>
+     #     <b>🟦 Actividad:</b> {fila['nombre_actividad']}<br>
           <b>🆔 Comisión:</b> {fila['id_comision_sai']}<br>
-          <b>🧬 UUID Comisión:</b> <code>{fila['id']}</code><br>
-          <b>📅 Fechas:</b> {fila['fecha_desde']} al {fila['fecha_hasta']}<br>
-          <b>📌 Cierre Inscripción:</b> {fila['fecha_cierre']}<br>
+     #     <b>🧬 UUID Comisión:</b> <code>{fila['id']}</code><br>
+          <b>📅 Fechas:</b> {fecha_inicio} al {fecha_fin}<br>
+          <b>📅 Cierre Inscripción:</b> {fecha_cierre}<br>
           <b>⭐ Créditos:</b> {fila['creditos']}<br>
           <b>🎓 Modalidad:</b> {fila['modalidad_cursada']}<br>
-          <b>❓ Apto tramo:</b> {fila['apto_tramo']}<br>
+          <b>🇹 Apto tramo:</b> {fila['apto_tramo']}<br>
         </div>
         """, unsafe_allow_html=True)
 
