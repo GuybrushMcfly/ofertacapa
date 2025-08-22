@@ -63,7 +63,7 @@ def mostrar():
         """
         <style>
         .main-container {
-            max-width: 85%;              /* Ancho máximo */
+            max-width: 70%;              /* Ancho máximo */
             margin: 0 auto;              /* Centrar horizontal */
         }
         </style>
