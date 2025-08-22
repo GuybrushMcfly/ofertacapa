@@ -54,18 +54,16 @@ def mostrar_dialogo_exito():
         st.rerun()
 
 
-
-
 # ==========================================================
 # FUNCIÓN PRINCIPAL
 # ==========================================================
 def mostrar():
-    # ==================== ESTILO GENERAL ====================
+    # ==================== ESTILO GENERAL SOLO PARA EL CONTENIDO ====================
     st.markdown(
         """
         <style>
-        .block-container {
-            max-width: 85% !important;   /* Ancho máximo al 70% */
+        .main-container {
+            max-width: 85%;              /* Ancho máximo */
             margin: 0 auto;              /* Centrar horizontal */
         }
         </style>
@@ -73,8 +71,7 @@ def mostrar():
         unsafe_allow_html=True
     )
 
-
-    # 🔹 Abrir contenedor centrado
+    # 🔹 Abrir contenedor centrado (solo afecta al contenido debajo del menú)
     st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
     # -------------------------
@@ -82,11 +79,10 @@ def mostrar():
     # -------------------------
     #st.markdown("#### 📝 Preinscripción en actividades de capacitación")
     st.markdown(
-        "<h4 style='text-align: center; color: #136ac1;'>📝 PREINSCRIPCIÓN EN ACTIVIDADES DE CAPACITACIÓN</h3>",
+        "<h4 style='text-align: center; color: #136ac1;'>📝 PREINSCRIPCIÓN EN ACTIVIDADES DE CAPACITACIÓN</h4>",
         unsafe_allow_html=True
     )
 
-    
     df_temp = pd.DataFrame(obtener_comisiones_abiertas(supabase))
     if df_temp.empty:
         st.warning("No hay comisiones disponibles actualmente.")
@@ -99,7 +95,6 @@ def mostrar():
     #st.markdown("")
     st.markdown("###### 1) 🔎 Seleccioná la actividad en la cual querés preinscribirte.")
     
-
     df_temp["Actividad (Comisión)"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
     
     # 🔹 Ordenar actividades alfabéticamente
@@ -107,7 +102,6 @@ def mostrar():
     
     # 🔹 Armar lista final con el placeholder arriba
     dropdown_list = ["-Seleccioná una actividad para preinscribirte-"] + actividades_ordenadas
-
 
     selected_from_query = st.query_params.get("selected_activity", [None])[0]
     initial_index = dropdown_list.index(selected_from_query) if selected_from_query in dropdown_list else 0
@@ -192,8 +186,7 @@ def mostrar():
             st.success("✅ CUIL/CUIT válido. Podés continuar con la preinscripción.")
             st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
             
-
-              # 🔹 Mensajes secuenciales para INAP
+            # 🔹 Mensajes secuenciales para INAP
             if st.session_state.get("datos_agenteform") and fila["organismo"] == "INAP":
                 st.toast("‼️Seleccionaste una actividad del INAP")
                 time.sleep(2)  # espera 2 segundos
@@ -218,12 +211,9 @@ def mostrar():
             # Guardar nuevamente en la sesión ya corregido
             st.session_state["datos_agenteform"] = datos
             
-            
-
             # ❌ No mostramos nada en pantalla
             # st.markdown("### 👤 Datos obtenidos del agente")
             # st.json(datos)
-
 
     # -------------------------
     # PASO 4: Formulario final
