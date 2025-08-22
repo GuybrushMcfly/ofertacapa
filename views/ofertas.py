@@ -180,14 +180,12 @@ def mostrar():
         <script>
         $(document).ready(function() {
             $('#tabla-cursos').DataTable({
-                paging: false,           // 👈 sin paginado
-                pageLength: 10,
+                paging: true,        // ✅ paginación siempre
+                pageLength: 10,      // ✅ máximo 10 por página
                 searching: false,
                 info: false,
                 lengthChange: false,
-                fixedHeader: true,   // 👈 encabezado fijo
-                scrollY: '600px',   // 👈 scroll interno con encabezado fijo
-                scrollCollapse: true,
+                fixedHeader: true,   // ✅ encabezado fijo
                 order: [],
                 columnDefs: [
                     { targets: 0, width: "40%" },  // Actividad (Comisión)
@@ -205,6 +203,7 @@ def mostrar():
                     }
                 }
             });
+
 
         });
         </script>
@@ -228,9 +227,16 @@ def mostrar():
         </style>
     """, unsafe_allow_html=True)
 
+
     # Render tabla final
     html_code = create_html_table(df_vista)
-    altura = 100 + (len(df_vista) * 45)
+    
+    # Altura dinámica: hasta 10 filas
+    max_filas = 10
+    filas_visibles = min(len(df_vista), max_filas)
+    altura = 100 + (filas_visibles * 45)  # 45px aprox por fila
+    
     components.html(html_code, height=altura, scrolling=False)
+
 
 
