@@ -58,25 +58,15 @@ def mostrar_dialogo_exito():
 # FUNCIÓN PRINCIPAL
 # ==========================================================
 def mostrar():
-    # ==================== ESTILO SOLO PARA EL CUERPO ====================
+    # ==================== ESTILO GENERAL ====================
     st.markdown(
         """
         <style>
-        /* Ajusta SOLO cuando estoy en la vista de preinscripción */
-        .block-container {
-            max-width: 85% !important;
-            padding-left: 2rem;
-            padding-right: 2rem;
-            margin: 0 auto;
-        }
+        /* Acá podés agregar estilos generales si querés */
         </style>
         """,
         unsafe_allow_html=True
     )
-
-
-    # 🔹 Abrir contenedor centrado (solo afecta al contenido debajo del menú)
-    st.markdown("<div class='main-container'>", unsafe_allow_html=True)
 
     # -------------------------
     # PASO 1: Traer comisiones
@@ -90,7 +80,6 @@ def mostrar():
     df_temp = pd.DataFrame(obtener_comisiones_abiertas(supabase))
     if df_temp.empty:
         st.warning("No hay comisiones disponibles actualmente.")
-        st.markdown("</div>", unsafe_allow_html=True)   # cerrar div
         return
 
     # -------------------------
@@ -282,6 +271,3 @@ def mostrar():
                 mostrar_dialogo_exito()
             else:
                 st.error("❌ Ocurrió un error al guardar la inscripción.")
-
-    # 🔹 Cerrar contenedor centrado
-    st.markdown("</div>", unsafe_allow_html=True)
