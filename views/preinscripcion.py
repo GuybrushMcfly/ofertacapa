@@ -58,18 +58,22 @@ def mostrar_dialogo_exito():
 # FUNCIÓN PRINCIPAL
 # ==========================================================
 def mostrar():
-    # ==================== ESTILO GENERAL SOLO PARA EL CONTENIDO ====================
+    # ==================== ESTILO SOLO PARA EL CUERPO ====================
     st.markdown(
         """
         <style>
-        .main-container {
-            max-width: 70%;              /* Ancho máximo */
-            margin: 0 auto;              /* Centrar horizontal */
+        /* Ajusta SOLO cuando estoy en la vista de preinscripción */
+        .block-container {
+            max-width: 85% !important;
+            padding-left: 2rem;
+            padding-right: 2rem;
+            margin: 0 auto;
         }
         </style>
         """,
         unsafe_allow_html=True
     )
+
 
     # 🔹 Abrir contenedor centrado (solo afecta al contenido debajo del menú)
     st.markdown("<div class='main-container'>", unsafe_allow_html=True)
