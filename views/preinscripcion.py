@@ -133,9 +133,7 @@ def mostrar():
 
         st.markdown(f"""
         <div style="background-color: #f0f8ff; padding: 15px; border-left: 5px solid #136ac1; border-radius: 5px;">
-     #     <b>🟦 Actividad:</b> {fila['nombre_actividad']}<br>
           <b>🆔 Comisión:</b> {fila['id_comision_sai']}<br>
-     #     <b>🧬 UUID Comisión:</b> <code>{fila['id']}</code><br>
           <b>📅 Fechas:</b> {fecha_inicio} al {fecha_fin}<br>
           <b>📅 Cierre Inscripción:</b> {fecha_cierre}<br>
           <b>⭐ Créditos:</b> {fila['creditos']}<br>
@@ -148,10 +146,10 @@ def mostrar():
     # PASO 3: Validación CUIL
     # -------------------------
     if actividad_seleccionada != "-Seleccioná una actividad para preinscribirte-":
-        st.markdown("##### 3) Ingresá tu número de CUIL y validalo con el botón.")
-        cuil_input = st.text_input("CUIL (11 dígitos)", max_chars=11)
+        st.markdown("##### 3) Ingresá tu número de CUIL/CUIT y validalo con el botón.")
+        cuil_input = st.text_input("CUIL/CUIT (11 dígitos)", max_chars=11)
 
-        if st.button("Validar CUIL"):
+        if st.button("Validar CUIL/CUIT"):
             if not validar_cuil(cuil_input):
                 st.error("CUIL inválido. Verificá que tenga 11 dígitos y sea correcto.")
                 return
@@ -168,7 +166,7 @@ def mostrar():
             st.session_state["cuil"] = cuil_input
             st.session_state["cuil_valido"] = True
             st.session_state["validado"] = True
-            st.success("✅ CUIL válido. Podés completar el formulario.")
+            st.success("✅ CUIL/CUIT válido. Podés completar el formulario.")
             st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
 
             datos = st.session_state["datos_agenteform"]
