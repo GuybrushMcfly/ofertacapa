@@ -64,15 +64,15 @@ def mostrar():
     st.markdown(
         """
         <style>
-        .main-container {
-            max-width: 70%;   /* ancho máximo */
-            margin: 0 auto;   /* centrado horizontal */
-            padding: 20px;
+        .block-container {
+            max-width: 70% !important;   /* Ancho máximo al 70% */
+            margin: 0 auto;              /* Centrar horizontal */
         }
         </style>
         """,
         unsafe_allow_html=True
     )
+
 
     # 🔹 Abrir contenedor centrado
     st.markdown("<div class='main-container'>", unsafe_allow_html=True)
