@@ -197,10 +197,10 @@ def mostrar():
             # ✅ Ajustes de valores por defecto
             datos = st.session_state["datos_agenteform"]
             
-            if not datos.get("nivel_educativo"):
+            if not datos.get("nivel_educativo") or str(datos.get("nivel_educativo")).upper() == "NULL":
                 datos["nivel_educativo"] = "SECUNDARIO"
             
-            if not datos.get("titulo"):
+            if not datos.get("titulo") or str(datos.get("titulo")).upper() == "NULL":
                 datos["titulo"] = "SIN DATOS"
             
             # Guardar nuevamente en la sesión ya corregido
@@ -209,6 +209,7 @@ def mostrar():
             # Mostrar los datos corregidos
             st.markdown("### 👤 Datos obtenidos del agente")
             st.json(datos)
+
 
 
     # -------------------------
