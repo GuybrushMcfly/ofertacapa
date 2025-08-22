@@ -73,7 +73,7 @@ def mostrar():
         "fecha_cierre": "Cierre",
         "creditos": "Créditos",
         "modalidad_cursada": "Modalidad",
-        "link_externo": "Acciones"
+        "link_externo": "Form. Externo"
     })
 
     # ✅ Mostrar mensaje visual si el DataFrame está vacío (como en el form.py original)
@@ -161,7 +161,7 @@ def mostrar():
                 if col == "Acciones":
                     html += '<td>'
                     if pd.notna(val) and val and val != "None":
-                        html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
+                        html += f'<a href="{val}" target="_blank" class="boton">INAP</a>'
                     else:
                         html += '<span class="no-link">Sin enlace</span>'
                     html += '</td>'
@@ -192,9 +192,9 @@ def mostrar():
                     { targets: 1, width: "10%" },  // Inicio
                     { targets: 2, width: "10%" },  // Fin
                     { targets: 3, width: "10%" },  // Cierre
-                    { targets: 4, width: "10%" },  // Créditos
+                    { targets: 4, width: "5%" },  // Créditos
                     { targets: 5, width: "15%" },  // Modalidad
-                    { targets: 6, width: "15%" }   // Acciones
+                    { targets: 6, width: "20%" }   // Acciones
                 ],
                 language: {
                     paginate: {
