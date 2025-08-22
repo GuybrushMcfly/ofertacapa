@@ -32,23 +32,6 @@ def mostrar_dialogo_exito():
     # Tomamos solo el nombre (si existe en los datos del agente)
     nombre = datos_agente.get("nombre", "Agente")
 
-    # Recuperar datos de la comisión
-    organismo = st.session_state.get("organismo", "")
-    link_externo = st.session_state.get("link_externo", "#")
-
-    # ==================== MENSAJE DE CONFIRMACIÓN ====================
-    mensaje_extra = ""
-    if organismo == "INAP":  
-        mensaje_extra = f"""
-        <br><br>
-        <span style="color:#b22222; font-weight:bold;">
-            ⚠️ Si aún no lo hiciste, acordate que también debés anotarte en INAP:
-            <a href="{link_externo}" target="_blank" style="color:#136ac1; text-decoration:none;">
-                {actividad}
-            </a>
-        </span>
-        """
-    
     st.markdown(f"""
     <div style="
         background-color:#f0f8ff;
@@ -61,17 +44,9 @@ def mostrar_dialogo_exito():
         <b><span style="color:#136ac1;">{actividad}</span></b> fue registrada correctamente. 🎉
         <br><br>
         <span style="color:#555;">ℹ️ Recordá que esta solicitud no implica la asignación de vacante.</span>        
-        {mensaje_extra}
+        <span style="color:#555;">ℹ️ Si el curso es de INAP, y aún no lo hiciste, acordate de registrarte en su página.</span>      
     </div>
     """, unsafe_allow_html=True)
-
-    st.markdown("---")
-    if st.button("Cerrar"):
-        st.session_state.clear()
-        st.session_state["__reset_placeholder"] = True
-        st.rerun()
-
-
 
     st.markdown("---")
     if st.button("Cerrar"):
