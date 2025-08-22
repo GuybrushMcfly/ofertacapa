@@ -24,12 +24,21 @@ supabase = get_supabase_client()
 # ==========================================================
 @st.dialog("✅ ¡Preinscripción exitosa!", width="small", dismissible=False)
 def mostrar_dialogo_exito():
-    st.markdown("Tu inscripción fue registrada correctamente. 🎉")
+    actividad = st.session_state.get("actividad_nombre", "la actividad seleccionada")
+
+    st.markdown(
+        f"Tu preinscripción en la actividad **{actividad}** fue registrada correctamente. 🎉"
+    )
+    st.markdown(
+        "<br>Recordá que esta solicitud no implica la asignación de vacante.",
+        unsafe_allow_html=True
+    )
     st.markdown("---")
+
     if st.button("Cerrar"):
-        st.session_state.clear()   
-        st.session_state["__reset_placeholder"] = True  
-        st.rerun()                 
+        st.session_state.clear()
+        st.session_state["__reset_placeholder"] = True
+        st.rerun()
 
 
 # ==========================================================
