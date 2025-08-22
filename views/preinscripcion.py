@@ -189,10 +189,27 @@ def mostrar():
                 time.sleep(2)  # espera 2 segundos
                 st.toast("⚠️ Y también tenés que preinscribirte en el INAP.\nSiempre deben hacerse la doble preinscripción")      
             
+            #datos = st.session_state["datos_agenteform"]
+            #if datos:
+            #    st.markdown("### 👤 Datos obtenidos del agente")
+            #    st.json(datos)
+            
+            # ✅ Ajustes de valores por defecto
             datos = st.session_state["datos_agenteform"]
-            if datos:
-                st.markdown("### 👤 Datos obtenidos del agente")
-                st.json(datos)
+            
+            if not datos.get("nivel_educativo"):
+                datos["nivel_educativo"] = "SECUNDARIO"
+            
+            if not datos.get("titulo"):
+                datos["titulo"] = "SIN DATOS"
+            
+            # Guardar nuevamente en la sesión ya corregido
+            st.session_state["datos_agenteform"] = datos
+            
+            # Mostrar los datos corregidos
+            st.markdown("### 👤 Datos obtenidos del agente")
+            st.json(datos)
+
 
     # -------------------------
     # PASO 4: Formulario final
@@ -203,7 +220,7 @@ def mostrar():
         and not st.session_state.get("inscripcion_exitosa")
     ):
         datos = st.session_state["datos_agenteform"]
-        correo_oficial = datos.get("email", "")
+        correo_oficial = datos.get("email", "")    
         tareas = st.text_area("✍️ Tareas desarrolladas (obligatorio)", height=120).strip().lower()
         st.markdown(f"📧 Te vamos a contactar al correo registrado: **{correo_oficial}**")
         email_alt = st.text_input("Correo alternativo (opcional)").strip()
