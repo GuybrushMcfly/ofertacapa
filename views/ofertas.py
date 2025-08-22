@@ -73,7 +73,7 @@ def mostrar():
         "fecha_cierre": "Cierre",
         "creditos": "Créditos",
         "modalidad_cursada": "Modalidad",
-        "link_externo": "Form. Externo"
+        "link_externo": "Externo"
     })
 
     # ✅ Mostrar mensaje visual si el DataFrame está vacío (como en el form.py original)
@@ -158,7 +158,7 @@ def mostrar():
             html += "<tr>"
             for col in df.columns:
                 val = row[col]
-                if col == "Form. Externo":
+                if col == "Externo":
                     html += '<td>'
                     if pd.notna(val) and val and val != "None":
                         
