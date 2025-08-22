@@ -43,7 +43,7 @@ st.markdown(
     """
     <style>
     .main-container {
-        max-width: 70%;   /* 👈 ancho máximo del formulario */
+        max-width: 60%;   /* 👈 ancho máximo del formulario */
         margin: 0 auto;   /* 👈 centrado horizontal */
         padding: 20px;
     }
