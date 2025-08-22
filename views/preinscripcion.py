@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-from datetime import date
+from datetime import date, datetime
 from modules.db import (
     get_supabase_client,
     validar_cuil,
@@ -54,9 +54,6 @@ def mostrar():
             actividad_id = fila["id_actividad"]
             comision_id = fila["id_comision_sai"]
 
-            st.write("🔎 Debug actividad_id:", actividad_id)
-            st.write("🔎 Debug cuil_input:", cuil_input)
-
             if not verificar_formulario_cuil(supabase, cuil_input):
                 st.error("El CUIL no corresponde a un agente activo.")
                 return
@@ -84,20 +81,35 @@ def mostrar():
         with st.form("formulario_preinscripcion"):
             st.markdown("### ✍️ Completá los siguientes datos")
 
-            nivel_educativo = st.selectbox("Nivel educativo", [
+            nivel_pre = datos.get("nivel_educativo", "")
+            niveles = [
                 "Primario completo", "Secundario completo", "Terciario", "Universitario", "Posgrado"
-            ], index=0)
+            ]
+            idx_nivel = niveles.index(nivel_pre) if nivel_pre in niveles else 0
+            nivel_educativo = st.selectbox("Nivel educativo", niveles, index=idx_nivel)
 
-            titulo = st.text_input("Título alcanzado", value="")
+            titulo_default = datos.get("titulo", "")
+            titulo = st.text_input("Título alcanzado", value=titulo_default).upper()
+
             tareas = st.text_area("Tareas desarrolladas", height=100)
             correo_alternativo = st.text_input("Correo alternativo")
 
             submitted = st.form_submit_button("Confirmar preinscripción")
 
             if submitted:
-                if not validar_email(correo_alternativo):
+                if correo_alternativo and not validar_email(correo_alternativo):
                     st.error("Correo alternativo inválido.")
                     return
+
+                # Calcular edad si hay fecha_nacimiento
+                edad = None
+                if "fecha_nacimiento" in datos and datos["fecha_nacimiento"]:
+                    try:
+                        nacimiento = pd.to_datetime(datos["fecha_nacimiento"])
+                        hoy = pd.to_datetime(date.today())
+                        edad = hoy.year - nacimiento.year - ((hoy.month, hoy.day) < (nacimiento.month, nacimiento.day))
+                    except:
+                        pass
 
                 datos_inscripcion = {
                     "cuil": st.session_state["cuil"],
@@ -107,13 +119,26 @@ def mostrar():
                     "titulo": normalizar_titulo(titulo),
                     "tareas": tareas.lower().strip(),
                     "correo_alternativo": correo_alternativo,
-                    "fecha": date.today().isoformat()
+                    "fecha": date.today().isoformat(),
+                    "estado_inscripcion": "Nueva",  # ✅ agregado
+                    "fecha_nacimiento": datos.get("fecha_nacimiento"),
+                    "edad_inscripcion": edad,
+                    "email": datos.get("email"),
+                    "sexo": datos.get("sexo"),
+                    "nivel": datos.get("nivel"),
+                    "grado": datos.get("grado"),
+                    "tramo": datos.get("tramo"),
+                    "agrupamiento": datos.get("agrupamiento"),
+                    "situacion_revista": datos.get("situacion_revista"),
+                    "id_dependencia_simple": datos.get("id_dependencia_simple"),
+                    "id_dependencia_general": datos.get("id_dependencia_general")
                 }
 
                 resp = insertar_inscripcion(supabase, datos_inscripcion)
                 if resp.data:
                     st.success("✅ ¡Preinscripción exitosa!")
                     st.balloons()
+                    st.session_state.clear()
                     st.rerun()
                 else:
                     st.error("Error al registrar la inscripción. Intentá nuevamente.")
