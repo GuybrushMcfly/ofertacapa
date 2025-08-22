@@ -92,8 +92,7 @@ def mostrar():
 
         <style>
         .courses-table {{
-            width: 95%;
-            margin: 0 auto;
+            width: 100%;
             border-collapse: collapse;
             font-size: 13px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -142,6 +141,7 @@ def mostrar():
         }}
         </style>
 
+        <div style="overflow-x:auto">
         <table class="courses-table" id="tabla-cursos">
             <thead>
                 <tr>{headers}</tr>
@@ -165,7 +165,11 @@ def mostrar():
                     html += f"<td>{val}</td>"
             html += "</tr>"
 
-        html += "</tbody></table>"
+        html += """
+            </tbody>
+        </table>
+        </div>
+        """
 
         # Script DataTables para paginación y ordenamiento
         html += """
@@ -173,7 +177,7 @@ def mostrar():
         $(document).ready(function() {
             $('#tabla-cursos').DataTable({
                 paging: true,
-                pageLength: 10,  // 🔢 Muestra 10 filas por página
+                pageLength: 10,
                 searching: false,
                 info: false,
                 lengthChange: false,
