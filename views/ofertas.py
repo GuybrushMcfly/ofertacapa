@@ -182,6 +182,15 @@ def mostrar():
                 info: false,
                 lengthChange: false,
                 order: [],
+                columnDefs: [
+                    { targets: 0, width: "30%" },  // Actividad (Comisión)
+                    { targets: 1, width: "10%" },  // Inicio
+                    { targets: 2, width: "10%" },  // Fin
+                    { targets: 3, width: "10%" },  // Cierre
+                    { targets: 4, width: "10%" },  // Créditos
+                    { targets: 5, width: "15%" },  // Modalidad
+                    { targets: 6, width: "15%" }   // Acciones
+                ],
                 language: {
                     paginate: {
                         previous: "Anterior",
@@ -189,6 +198,7 @@ def mostrar():
                     }
                 }
             });
+
         });
 
         function copyToField(value) {
