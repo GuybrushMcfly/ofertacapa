@@ -156,7 +156,9 @@ def mostrar():
     # PASO 3: Validación CUIL
     # -------------------------
     if actividad_seleccionada != "-Seleccioná una actividad para preinscribirte-":
-        st.markdown("###### 2) Ingresá tu número de CUIL/CUIT y validalo con el botón.")
+        st.markdown("---")
+        st.markdown("#### 2) Ingresá tu número de CUIL/CUIT y validalo con el botón.")
+                
         cuil_input = st.text_input("CUIL/CUIT (11 dígitos)", max_chars=11)
 
         if st.button("Validar CUIL/CUIT"):
