@@ -177,7 +177,7 @@ def mostrar():
             st.session_state["cuil"] = cuil_input
             st.session_state["cuil_valido"] = True
             st.session_state["validado"] = True
-            st.success("✅ CUIL/CUIT válido. Podés completar el formulario.")
+            st.success("✅ CUIL/CUIT válido. Podés continuar con la preinscripción.")
             st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
             
 
@@ -224,7 +224,7 @@ def mostrar():
         datos = st.session_state["datos_agenteform"]
         correo_oficial = datos.get("email", "")    
         tareas = st.text_area("✍️ Tareas desarrolladas (obligatorio)", height=120).strip().lower()
-        st.markdown(f"📧 Te vamos a contactar al correo registrado: **{correo_oficial}**")
+        st.markdown(f"📧 Te vamos a contactar al correo registrado: **{correo_oficial}**. Si necesitás agregar otra forma de contacto, completá el siguiente campo.")
         email_alt = st.text_input("Correo alternativo (opcional)").strip()
 
         if st.button("ENVIAR INSCRIPCIÓN"):
