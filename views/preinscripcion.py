@@ -122,10 +122,19 @@ def mostrar():
         st.session_state["comision_nombre"] = fila["id_comision_sai"]
         st.session_state["fecha_inicio"] = fila["fecha_desde"]
         st.session_state["fecha_fin"] = fila["fecha_hasta"]
-        st.write("👉 Columnas del DataFrame:", df_comisiones.columns.tolist())
+        
+        # Debug para ver qué columnas y datos hay realmente
+        st.write("👉 Columnas del DataFrame:", df_temp.columns.tolist())
         st.write("👉 Fila seleccionada:", fila.to_dict())
-        st.session_state["comision_id"] = fila["id"]
+        
+        # Ahora usamos id si existe, si no usamos id_comision_sai
+        if "id" in fila:
+            st.session_state["comision_id"] = fila["id"]
+        else:
+            st.session_state["comision_id"] = fila["id_comision_sai"]
+        
         st.session_state["id_actividad"] = fila["id_actividad"]
+
 
         st.markdown(f"""
         <div style="background-color: #f0f8ff; padding: 15px; border-left: 5px solid #136ac1; border-radius: 5px;">
