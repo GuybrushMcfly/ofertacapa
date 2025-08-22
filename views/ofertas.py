@@ -164,7 +164,6 @@ def mostrar():
                     actividad = row["Actividad (Comisión)"]
                     html += f'<a href="javascript:void(0);" onclick="copyToField(`{actividad}`)" class="boton">📋 Copiar</a>'
                     html += '</td>'
-
                 else:
                     html += f"<td>{val}</td>"
             html += "</tr>"
@@ -184,13 +183,13 @@ def mostrar():
                 lengthChange: false,
                 order: [],
                 columnDefs: [
-                    { targets: 0, width: "30%" },  // Actividad (Comisión)
-                    { targets: 1, width: "10%" },  // Inicio
-                    { targets: 2, width: "10%" },  // Fin
-                    { targets: 3, width: "10%" },  // Cierre
-                    { targets: 4, width: "10%" },  // Créditos
-                    { targets: 5, width: "15%" },  // Modalidad
-                    { targets: 6, width: "15%" }   // Acciones
+                    { targets: 0, width: "30%" },
+                    { targets: 1, width: "10%" },
+                    { targets: 2, width: "10%" },
+                    { targets: 3, width: "10%" },
+                    { targets: 4, width: "10%" },
+                    { targets: 5, width: "15%" },
+                    { targets: 6, width: "15%" }
                 ],
                 language: {
                     paginate: {
@@ -199,11 +198,11 @@ def mostrar():
                     }
                 }
             });
-
         });
 
         function copyToField(value) {
-            window.parent.postMessage({type: 'setField', value: value}, "*");
+            sessionStorage.setItem("campoLibre", value);
+            window.parent.postMessage({type: "refreshStreamlit"}, "*");
         }
         </script>
         """
@@ -235,12 +234,21 @@ def mostrar():
     altura = min(800, 100 + (len(df_vista) * 45))
     components.html(html_code, height=altura, scrolling=True)
 
-    # Listener para recibir mensajes desde JS
+    # Script para leer de sessionStorage y actualizar campo
     message_code = """
     <script>
+    const valor = sessionStorage.getItem("campoLibre") || "";
+    window.parent.postMessage({type: "setCampoLibre", value: valor}, "*");
+    </script>
+    """
+    components.html(message_code, height=0, width=0)
+
+    # Listener para actualizar campo en el input
+    listener_code = """
+    <script>
     window.addEventListener("message", (event) => {
-        if (event.data.type === "setField") {
-            const input = document.getElementById("campoLibreInput");
+        if (event.data.type === "setCampoLibre") {
+            const input = window.parent.document.querySelector('input#campoLibreInput');
             if (input) {
                 input.value = event.data.value;
                 input.dispatchEvent(new Event("input", { bubbles: true }));
@@ -249,7 +257,7 @@ def mostrar():
     });
     </script>
     """
-    components.html(message_code, height=0, width=0)
+    components.html(listener_code, height=0, width=0)
 
     # Campo de texto simple
     st.session_state["campo_libre"] = st.text_input(
