@@ -250,7 +250,7 @@ def mostrar():
     # Altura dinámica: hasta 10 filas + espacio extra para paginación
     max_filas = 8
     filas_visibles = min(len(df_vista), max_filas)
-    altura = 170 + (filas_visibles * 45)   # 140 en lugar de 100 para sumar espacio al footer
+    altura = 180 + (filas_visibles * 45)   # 140 en lugar de 100 para sumar espacio al footer
     
     components.html(html_code, height=altura, scrolling=False)
 
