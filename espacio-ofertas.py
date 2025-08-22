@@ -9,7 +9,7 @@ st.set_page_config(page_title="Espacio de Ofertas de Capacitación", layout="wid
 query_params = st.experimental_get_query_params()
 if "selected_tab" in query_params:
     st.session_state.vista_actual = query_params["selected_tab"][0]
-    st.experimental_set_query_params()  # Limpia la URL
+    st.query_params  # Limpia la URL
 
 
 # =========================
