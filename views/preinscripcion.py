@@ -80,7 +80,13 @@ def mostrar():
     # -------------------------
     # PASO 1: Traer comisiones
     # -------------------------
-    st.markdown("#### 📝 Preinscripción en actividades de capacitación")
+    #st.markdown("#### 📝 Preinscripción en actividades de capacitación")
+    st.markdown(
+        "<h3 style='text-align: center; color: #136ac1;'>📝 PREINSCRIPCIÓN EN ACTIVIDADES DE CAPACITACIÓN</h3>",
+        unsafe_allow_html=True
+    )
+
+    
     df_temp = pd.DataFrame(obtener_comisiones_abiertas(supabase))
     if df_temp.empty:
         st.warning("No hay comisiones disponibles actualmente.")
