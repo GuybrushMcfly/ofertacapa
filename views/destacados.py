@@ -24,134 +24,100 @@ def mostrar():
     while len(destacados) < 6:
         destacados.append(None)
     
-    # ===================== ESTILO TARJETAS =====================
+
+    
+    # ===================== RENDER DE TARJETAS =====================
+    # Crear grid usando columnas de Streamlit (más confiable)
+    
+    # Primera fila (3 columnas)
+    col1, col2, col3 = st.columns(3)
+    columns_row1 = [col1, col2, col3]
+    
+    # Segunda fila (3 columnas)
+    col4, col5, col6 = st.columns(3)
+    columns_row2 = [col4, col5, col6]
+    
+    all_columns = columns_row1 + columns_row2
+    
+    # Aplicar estilo para las tarjetas individuales
     st.markdown("""
     <style>
-    .card-grid {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: repeat(2, 1fr);
-        gap: 25px;
-        margin-top: 20px;
-        min-height: 470px; /* Altura mínima para 2 filas */
-    }
-    
-    .card {
+    .destacada-card {
         background-color: #f9f9f9;
-        padding: 20px;
+        padding: 15px;
         border-left: 5px solid #136ac1;
         border-radius: 10px;
         box-shadow: 1px 1px 5px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
-        height: 220px;
+        height: 200px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
+        margin-bottom: 10px;
     }
-    
-    .card:hover {
-        transform: scale(1.03);
-        box-shadow: 0 8px 18px rgba(0,0,0,0.15);
-    }
-    
-    .card h4 {
+    .destacada-card h5 {
         color: #136ac1;
-        margin-bottom: 10px;
-        font-size: 16px;
-        line-height: 1.3;
-    }
-    
-    .card p {
-        color: #333;
+        margin-bottom: 8px;
         font-size: 14px;
+        line-height: 1.2;
+    }
+    .destacada-card p {
+        color: #333;
+        font-size: 12px;
+        margin-bottom: 8px;
         flex-grow: 1;
-        text-align: justify;
-        margin-bottom: 10px;
     }
-    
-    .card a {
-        background-color: #136ac1;
-        color: white !important;
-        text-decoration: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        font-size: 13px;
-        transition: background-color 0.2s ease;
-        display: inline-block;
-        text-align: center;
-        align-self: flex-start;
-    }
-    
-    .card a:hover {
-        background-color: #0d4a87;
-    }
-    
-    .card-empty {
+    .destacada-empty {
         background-color: #f5f5f5;
         border: 2px dashed #ddd;
         border-radius: 10px;
-        height: 220px;
+        height: 200px;
         display: flex;
         align-items: center;
         justify-content: center;
         color: #999;
         font-style: italic;
-    }
-    
-    /* Responsive para dispositivos móviles */
-    @media (max-width: 768px) {
-        .card-grid {
-            grid-template-columns: 1fr;
-            grid-template-rows: auto;
-            min-height: auto;
-        }
-    }
-    
-    @media (max-width: 1200px) and (min-width: 769px) {
-        .card-grid {
-            grid-template-columns: repeat(2, 1fr);
-            grid-template-rows: repeat(3, 1fr);
-            min-height: 705px; /* Altura para 3 filas */
-        }
+        font-size: 12px;
+        margin-bottom: 10px;
     }
     </style>
     """, unsafe_allow_html=True)
     
-    # ===================== RENDER DE TARJETAS =====================
-    cards_html = "<div class='card-grid'>"
-    
-    for i, d in enumerate(destacados):
-        if d is None:
-            # Tarjeta vacía
-            cards_html += """
-            <div class="card-empty">
-                <span>Próximamente más actividades</span>
-            </div>
-            """
-        else:
-            # Tarjeta con datos
-            titulo = d.get("nombre_actividad", "")
-            comision = d.get("id_comision_sai", "")
-            fechas = ""
-            if d.get("fecha_desde") and d.get("fecha_hasta"):
-                fechas = f"{pd.to_datetime(d['fecha_desde']).strftime('%d/%m/%Y')} al {pd.to_datetime(d['fecha_hasta']).strftime('%d/%m/%Y')}"
-            modalidad = d.get("modalidad_cursada", "")
-            creditos = d.get("creditos", "")
-            link = d.get("link_externo", "")
-        
-            cards_html += f"""
-            <div class="card">
-                <div>
-                    <h4>{titulo} ({comision})</h4>
-                    <p>{fechas}<br>{modalidad}{' · ' + str(creditos) + ' créditos' if creditos else ''}</p>
+    # Renderizar en cada columna
+    for i, col in enumerate(all_columns):
+        with col:
+            if i < len(destacados) and destacados[i] is not None:
+                d = destacados[i]
+                titulo = d.get("nombre_actividad", "")
+                comision = d.get("id_comision_sai", "")
+                fechas = ""
+                if d.get("fecha_desde") and d.get("fecha_hasta"):
+                    fechas = f"{pd.to_datetime(d['fecha_desde']).strftime('%d/%m/%Y')} al {pd.to_datetime(d['fecha_hasta']).strftime('%d/%m/%Y')}"
+                modalidad = d.get("modalidad_cursada", "")
+                creditos = d.get("creditos", "")
+                link = d.get("link_externo", "")
+                
+                # Crear la tarjeta con HTML
+                card_content = f"""
+                <div class="destacada-card">
+                    <div>
+                        <h5>{titulo} ({comision})</h5>
+                        <p>{fechas}<br>{modalidad}{' · ' + str(creditos) + ' créditos' if creditos else ''}</p>
+                    </div>
                 </div>
-                <div>
-                    {'<a href="'+link+'" target="_blank">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:12px;">Sin enlace disponible</span>'}
+                """
+                
+                st.markdown(card_content, unsafe_allow_html=True)
+                
+                # Botón de acceso (usando Streamlit nativo)
+                if link:
+                    st.markdown(f'<a href="{link}" target="_blank" style="background-color:#136ac1;color:white;text-decoration:none;padding:6px 10px;border-radius:4px;font-size:12px;display:inline-block;">🌐 Acceder</a>', unsafe_allow_html=True)
+                else:
+                    st.markdown('<span style="color:#999;font-size:11px;">Sin enlace disponible</span>', unsafe_allow_html=True)
+                    
+            else:
+                # Tarjeta vacía
+                st.markdown("""
+                <div class="destacada-empty">
+                    Próximamente más actividades
                 </div>
-            </div>
-            """
-    
-    cards_html += "</div>"
-    
-    # 🚀 Render final
-    st.markdown(cards_html, unsafe_allow_html=True)
+                """, unsafe_allow_html=True)
