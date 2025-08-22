@@ -96,7 +96,8 @@ def mostrar():
     # -------------------------
     # PASO 2: Selección
     # -------------------------
-    st.markdown("##### 1) Seleccioná la actividad en la cual querés preinscribirte.")
+    st.markdown("")
+    st.markdown("###### 1) Seleccioná la actividad en la cual querés preinscribirte.")
     st.markdown("")
 
     df_temp["Actividad (Comisión)"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
@@ -112,7 +113,8 @@ def mostrar():
     initial_index = dropdown_list.index(selected_from_query) if selected_from_query in dropdown_list else 0
     clave_selectbox = f"actividad_key_{random.randint(0,999999)}" if st.session_state.get("__reset_placeholder") else "actividad_key_default"
 
-    actividad_seleccionada = st.selectbox("Actividad disponible", dropdown_list, index=initial_index, key=clave_selectbox)
+    #actividad_seleccionada = st.selectbox("Actividad disponible", dropdown_list, index=initial_index, key=clave_selectbox)
+    actividad_seleccionada = st.selectbox("", dropdown_list, index=initial_index, key=clave_selectbox)
 
     if actividad_seleccionada not in dropdown_list:
         actividad_seleccionada = dropdown_list[0]
