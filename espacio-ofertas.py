@@ -19,23 +19,25 @@ seleccion = option_menu(
     default_index=1,  # Por defecto muestra 'Destacados'
     styles={
         "container": {
-            "display": "flex",
-            "justify-content": "center",
-            "background-color": "#ffffff",
-            "margin-bottom": "20px"
+            "padding": "0!important", 
+            "background-color": "transparent",
         },
         "nav-link": {
             "font-size": "16px",
+            "text-align": "center",
+            "margin": "0 10px",
+            "max-width": "280px",
+            "color": "1E1E1E",
             "font-weight": "bold",
-            "color": "#333333",
-            "padding": "10px 20px",
-            "margin": "0px 6px",
+            "background-color": "#C9D8E6",
             "border-radius": "8px",
-            "background-color": "#e6ecf3",
+            "--hover-color": "#B0C9E3",
         },
         "nav-link-selected": {
             "background-color": "#2C75B2",
             "color": "#ffffff",
+            "font-weight": "bold",
+            "border-radius": "8px",
         },
     }
 )
