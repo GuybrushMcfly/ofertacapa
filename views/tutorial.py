@@ -8,7 +8,7 @@ def mostrar():
     <style>
     .flip-card {
       background-color: transparent;
-      width: 400px;
+      width: 280px;
       height: 200px;
       perspective: 1000px;
       margin: 10px auto;
@@ -38,7 +38,7 @@ def mostrar():
       padding: 15px;
     }
     .flip-card-front {
-      background-color: #136ac1;
+      background-color: #d14fbb;
       color: white;
       font-size: 18px;
       font-weight: bold;
