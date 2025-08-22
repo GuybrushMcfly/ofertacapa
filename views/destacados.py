@@ -129,7 +129,7 @@ def mostrar():
     
     .card-info {
         color: #5a6c7d;
-        font-size: 15px;
+        font-size: 12px;
         font-weight: 500;
         margin-bottom: 8px;
         line-height: 1.4;
@@ -138,7 +138,7 @@ def mostrar():
     .card-credits {
         background: linear-gradient(90deg, #e8f2ff, #f0f8ff);
         color: #136ac1;
-        font-size: 15px;
+        font-size: 12px;
         font-weight: 600;
         padding: 4px 8px;
         border-radius: 12px;
