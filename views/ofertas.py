@@ -228,5 +228,6 @@ def mostrar():
 
     # Render tabla final
     html_code = create_html_table(df_vista)
-    altura = min(800, 100 + (len(df_vista) * 45))  # Calcula altura según cantidad de filas
-    components.html(html_code, height=altura, scrolling=True)
+    altura = 100 + (len(df_vista) * 45)  # 45 px aprox por fila
+    components.html(html_code, height=altura, scrolling=False)
+
