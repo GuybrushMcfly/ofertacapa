@@ -203,7 +203,7 @@ def mostrar():
                 fixedHeader: true,   // ✅ encabezado fijo
                 order: [],
                 columnDefs: [
-                    { targets: 0, width: "40%" },  // Actividad (Comisión)
+                    { targets: 0, width: "30%" },  // Actividad (Comisión)
                     { targets: 1, width: "10%" },  // Inicio
                     { targets: 2, width: "10%" },  // Fin
                     { targets: 3, width: "10%" },  // Cierre
