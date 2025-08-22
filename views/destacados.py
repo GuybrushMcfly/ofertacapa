@@ -1,44 +1,33 @@
 # views/destacados.py
 import streamlit as st
 import pandas as pd
-from modules.db import get_supabase_client, obtener_comisiones_abiertas
 
-def mostrar():
+def mostrar(df_comisiones: pd.DataFrame):
     st.markdown("## 🌟 Actividades destacadas")
 
-    supabase = get_supabase_client()
-    df_comisiones = pd.DataFrame(obtener_comisiones_abiertas(supabase))
-
-    if df_comisiones.empty or "oferta_destacada" not in df_comisiones.columns:
-        st.info("ℹ️ Actualmente no hay actividades destacadas.")
-        return
-
-    # Filtrar solo las destacadas (hasta 6)
+    # Filtrar solo las destacadas
     destacados = df_comisiones[df_comisiones["oferta_destacada"] == True].head(6)
 
     if destacados.empty:
-        st.info("ℹ️ Actualmente no hay actividades destacadas.")
+        st.info("📭 No hay ofertas destacadas en este momento.")
         return
 
-    destacados = destacados.to_dict(orient="records")
-
-    # ===================== ESTILO TARJETAS =====================
+    # ====== ESTILOS (idénticos a versión 2) ======
     st.markdown("""
     <style>
     .card-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr); /* siempre 3 columnas */
-        gap: 20px;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
         margin-top: 20px;
     }
     .card {
         background-color: #f9f9f9;
-        padding: 15px;
+        padding: 20px;
         border-left: 5px solid #136ac1;
         border-radius: 10px;
         box-shadow: 1px 1px 5px rgba(0,0,0,0.05);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
-        height: 200px; /* altura fija */
         display: flex;
         flex-direction: column;
         justify-content: space-between;
@@ -49,22 +38,21 @@ def mostrar():
     }
     .card h4 {
         color: #136ac1;
-        margin-bottom: 6px;
-        font-size: 15px;
+        margin-bottom: 10px;
+        font-size: 16px;
     }
     .card p {
         color: #333;
-        font-size: 13px;
-        text-align: left;
-        margin: 0;
+        font-size: 14px;
+        margin: 0 0 10px 0;
     }
     .card a {
         background-color: #136ac1;
         color: white !important;
         text-decoration: none;
-        padding: 6px 10px;
+        padding: 8px 12px;
         border-radius: 6px;
-        font-size: 12px;
+        font-size: 13px;
         transition: background-color 0.2s ease;
         display: inline-block;
         text-align: center;
@@ -75,45 +63,29 @@ def mostrar():
     </style>
     """, unsafe_allow_html=True)
 
-    # ===================== ARMAR HTML DE TARJETAS =====================
-    html_tarjetas = "<div class='card-grid'>"
+    # ====== RENDER ======
+    st.markdown("<div class='card-grid'>", unsafe_allow_html=True)
 
-    for d in destacados:
-        titulo = d.get("nombre_actividad", "Actividad")
-        comision = d.get("id_comision_sai", "")
+    for _, d in destacados.iterrows():
+        titulo = f"{d.get('nombre_actividad','')} ({d.get('id_comision_sai','')})"
+        fecha_desde = pd.to_datetime(d.get("fecha_desde")).strftime("%d/%m/%Y") if pd.notna(d.get("fecha_desde")) else ""
+        fecha_hasta = pd.to_datetime(d.get("fecha_hasta")).strftime("%d/%m/%Y") if pd.notna(d.get("fecha_hasta")) else ""
         modalidad = d.get("modalidad_cursada", "")
-        creditos = d.get("creditos", "-")
-        fecha_desde = d.get("fecha_desde", "")
-        fecha_hasta = d.get("fecha_hasta", "")
-        link = d.get("link_externo") or ""
+        creditos = d.get("creditos", "")
+        link = d.get("link_externo", "")
 
-        # Formatear fechas
-        fechas = ""
-        if fecha_desde and fecha_hasta:
-            try:
-                fecha_desde_fmt = pd.to_datetime(fecha_desde).strftime("%d/%m/%Y")
-                fecha_hasta_fmt = pd.to_datetime(fecha_hasta).strftime("%d/%m/%Y")
-                fechas = f"{fecha_desde_fmt} al {fecha_hasta_fmt}"
-            except:
-                pass
-
-        boton = f'<a href="{link}" target="_blank">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:12px;">Sin enlace</span>'
-
-        html_tarjetas += f"""
+        st.markdown(f"""
         <div class="card">
             <div>
-                <h4>{titulo} ({comision})</h4>
-                <p>
-                    📅 {fechas if fechas else ''}<br>
-                    🎓 {modalidad if modalidad else ''}<br>
-                    ⭐ Créditos: {creditos if creditos not in [None, "nan", "NaN"] else "-"}
-                </p>
+                <h4>{titulo}</h4>
+                <p>📅 {fecha_desde} al {fecha_hasta}</p>
+                <p>🎓 {modalidad}</p>
+                <p>⭐ Créditos: {creditos}</p>
             </div>
-            <div>{boton}</div>
+            <div>
+                {'<a href="'+link+'" target="_blank">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:12px;">Sin enlace</span>'}
+            </div>
         </div>
-        """
+        """, unsafe_allow_html=True)
 
-    html_tarjetas += "</div>"
-
-    # Renderizar todas las tarjetas en bloque
-    st.markdown(html_tarjetas, unsafe_allow_html=True)
+    st.markdown("</div>", unsafe_allow_html=True)
