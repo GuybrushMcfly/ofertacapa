@@ -203,13 +203,13 @@ def mostrar():
                 fixedHeader: true,   // ✅ encabezado fijo
                 order: [],
                 columnDefs: [
-                    { targets: 0, width: "35%" },  // Actividad (Comisión)
+                    { targets: 0, width: "40%" },  // Actividad (Comisión)
                     { targets: 1, width: "10%" },  // Inicio
                     { targets: 2, width: "10%" },  // Fin
                     { targets: 3, width: "10%" },  // Cierre
                     { targets: 4, width: "5%" },  // Créditos
                     { targets: 5, width: "15%" },  // Modalidad
-                    { targets: 6, width: "20%" }   // Acciones
+                    { targets: 6, width: "15%" }   // Acciones
                 ],
                 language: {
                     paginate: {
@@ -250,7 +250,7 @@ def mostrar():
     # Altura dinámica: hasta 10 filas + espacio extra para paginación
     max_filas = 7
     filas_visibles = min(len(df_vista), max_filas)
-    altura = 140 + (filas_visibles * 45)   # 140 en lugar de 100 para sumar espacio al footer
+    altura = 170 + (filas_visibles * 45)   # 140 en lugar de 100 para sumar espacio al footer
     
     components.html(html_code, height=altura, scrolling=False)
 
