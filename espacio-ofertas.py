@@ -3,16 +3,20 @@ from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="Espacio de Ofertas de Capacitación", layout="wide")
 
+# =========================
 # Encabezado
+# =========================
 st.markdown("<h1 style='font-size:26px;'>🎓 Espacio de Ofertas de Capacitación</h1>", unsafe_allow_html=True)
 
-# ✅ Menú de navegación estilo horizontal
+# =========================
+# Navegación con botones horizontales (estilo Evaluaciones)
+# =========================
 seleccion = option_menu(
     menu_title=None,
     options=["📘 Tutorial", "🌟 Destacados", "📚 Ofertas", "📝 Preinscripción"],
     icons=["book", "star", "book-half", "pencil-square"],
-    orientation="horizontal",  # <- 👈 CLAVE: horizontal
-    default_index=1,  # Por defecto "Destacados"
+    orientation="horizontal",  # Botones horizontales
+    default_index=1,  # Por defecto muestra 'Destacados'
     styles={
         "container": {
             "display": "flex",
@@ -37,7 +41,7 @@ seleccion = option_menu(
 )
 
 # =========================
-# Renderizar vistas
+# Renderizar vistas según selección
 # =========================
 if seleccion == "📘 Tutorial":
     from views import tutorial
