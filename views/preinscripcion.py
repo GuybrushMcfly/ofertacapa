@@ -82,7 +82,7 @@ def mostrar():
     # -------------------------
     #st.markdown("#### 📝 Preinscripción en actividades de capacitación")
     st.markdown(
-        "<h3 style='text-align: center; color: #136ac1;'>📝 PREINSCRIPCIÓN EN ACTIVIDADES DE CAPACITACIÓN</h3>",
+        "<h4 style='text-align: center; color: #136ac1;'>📝 PREINSCRIPCIÓN EN ACTIVIDADES DE CAPACITACIÓN</h3>",
         unsafe_allow_html=True
     )
 
