@@ -154,18 +154,16 @@ def mostrar():
                     html += f'''
                         <a href="#" class="boton" onclick="cambiarVista()">📝 INDEC</a>
                         <script>
-                        function cambiarVista() {
-                            window.parent.postMessage({
+                        function cambiarVista() {{
+                            window.parent.postMessage({{
                                 type: "streamlit:setQueryParams",
-                                queryParams: { "selected_tab": "preinscripcion" }
-                            }, "*");
-                            setTimeout(() => {
+                                queryParams: {{ "selected_tab": "preinscripcion" }}
+                            }}, "*");
+                            setTimeout(function() {{
                                 window.parent.location.reload();
-                            }, 100);  // espera breve para que se setee el query param
-                        }
+                            }}, 100);
+                        }}
                         </script>
-
-                    </td>
                     '''
                                       
                 else:
