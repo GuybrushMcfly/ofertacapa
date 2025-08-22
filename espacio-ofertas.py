@@ -2,77 +2,71 @@
 import streamlit as st
 import streamlit.components.v1 as components
 
-
 st.set_page_config(page_title="Espacio de Ofertas de Capacitación", layout="wide")
 
-# ✅ 1. Primero: capturar cambio por query param si llega desde el botón
+# ✅ 1. Capturar query param si llega desde botón HTML (ej: desde tabla)
 if "selected_tab" in st.query_params:
     st.session_state.vista_actual = st.query_params["selected_tab"][0]
     st.query_params.clear()
 
-# =========================
-# Inicializar vista actual
-# =========================
+# ✅ 2. Inicializar vista por defecto
 if "vista_actual" not in st.session_state:
-    st.session_state.vista_actual = "destacados"  # por defecto
+    st.session_state.vista_actual = "destacados"
 
-# =========================
-# Estilo CSS de tabs (como Evaluaciones)
-# =========================
+# ✅ 3. Estilos CSS personalizados (tipo option_menu)
 st.markdown("""
 <style>
-.tab-container {
+.menu-container {
     display: flex;
     justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
     margin-bottom: 20px;
 }
-.tab-button {
-    background-color: #f0f0f0;
-    border: 1px solid #ccc;
-    padding: 10px 20px;
-    margin: 0 5px;
-    border-radius: 8px;
-    cursor: pointer;
+.menu-button {
+    background-color: #C9D8E6;
+    color: #1E1E1E;
+    font-size: 17px;
     font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
     text-align: center;
+    max-width: 280px;
+    transition: background-color 0.3s ease;
 }
-.tab-button:hover {
-    background-color: #e3f2fd;
-    border-color: #136ac1;
+.menu-button:hover {
+    background-color: #B0C9E3;
 }
-.tab-active {
-    background-color: #136ac1 !important;
-    color: white !important;
-    border: 1px solid #136ac1 !important;
+.menu-button.active {
+    background-color: #2C75B2;
+    color: white;
 }
 </style>
 """, unsafe_allow_html=True)
 
-# =========================
-# Tabs de navegación
-# =========================
+# ✅ 4. Botones de navegación HTML
 tabs = ["tutorial", "destacados", "ofertas", "preinscripcion"]
 labels = ["📘 Tutorial", "🌟 Destacados", "📚 Ofertas", "📝 Preinscripción"]
 
-cols = st.columns(len(tabs))
-
-for i, (tab, label) in enumerate(zip(tabs, labels)):
-    with cols[i]:
-        # Si se hace clic, cambia la vista
-        if st.button(label, key=f"btn_{tab}"):
-            st.session_state.vista_actual = tab
-
-        # Pintar activo o inactivo
-        if st.session_state.vista_actual == tab:
-            st.markdown(f"<div class='tab-button tab-active'>{label}</div>", unsafe_allow_html=True)
-        else:
-            st.markdown(f"<div class='tab-button'>{label}</div>", unsafe_allow_html=True)
-
+# Renderizado de botones
+st.markdown('<div class="menu-container">', unsafe_allow_html=True)
+for tab, label in zip(tabs, labels):
+    active_class = "active" if st.session_state.vista_actual == tab else ""
+    st.markdown(f"""
+        <button class="menu-button {active_class}" onclick="
+            window.parent.postMessage({{
+                type: 'streamlit:setQueryParams',
+                queryParams: {{ 'selected_tab': '{tab}' }}
+            }}, '*');
+            setTimeout(() => window.location.reload(), 100);
+        ">{label}</button>
+    """, unsafe_allow_html=True)
+st.markdown('</div>', unsafe_allow_html=True)
 st.markdown("---")
 
-# =========================
-# Renderizar vistas
-# =========================
+# ✅ 5. Renderizar vista correspondiente
 if st.session_state.vista_actual == "tutorial":
     from views import tutorial
     tutorial.mostrar()
