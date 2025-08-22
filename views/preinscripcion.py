@@ -39,9 +39,9 @@ def mostrar_dialogo_exito():
         text-align:center;
         font-size:16px;">
         <b>{nombre}</b>, tu preinscripción en la actividad 
-        <span style="color:#136ac1;">{actividad}</span> fue registrada correctamente. 🎉
+        <b><span style="color:#136ac1;">{actividad}</span></b> fue registrada correctamente. 🎉
         <br><br>
-        <span style="color:#555;">Recordá que esta solicitud no implica la asignación de vacante.</span>
+        <span style="color:#555;">ℹ️ Recordá que esta solicitud no implica la asignación de vacante. ℹ️</span>
     </div>
     """, unsafe_allow_html=True)
 
@@ -50,6 +50,7 @@ def mostrar_dialogo_exito():
         st.session_state.clear()
         st.session_state["__reset_placeholder"] = True
         st.rerun()
+
 
 
 
