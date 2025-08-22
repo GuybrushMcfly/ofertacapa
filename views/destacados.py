@@ -4,7 +4,7 @@ import pandas as pd
 from modules.db import get_supabase_client, obtener_comisiones_abiertas
 
 def mostrar():
-    st.markdown("## 🌟 Actividades destacadas")
+#    st.markdown("## 🌟 Actividades destacadas")
     
     # Conectar a Supabase
     supabase = get_supabase_client()
