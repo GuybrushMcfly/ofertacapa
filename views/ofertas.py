@@ -17,12 +17,12 @@ def mostrar():
     # Convertir a DataFrame
     df_comisiones = pd.DataFrame(data)
 
-    # Crear columna combinada
+    # Crear columna combinada: Actividad (Comisión)
     df_comisiones["Actividad (Comisión)"] = (
         df_comisiones["nombre_actividad"] + " (" + df_comisiones["id_comision_sai"] + ")"
     )
 
-    # Clasificar duración
+    # Clasificar duración según créditos
     df_comisiones["creditos"] = df_comisiones["creditos"].fillna(0).astype(int)
     def clasificar_duracion(c):
         if c < 10: return "BREVE"
@@ -30,11 +30,11 @@ def mostrar():
         else: return "PROLONGADA"
     df_comisiones["duracion"] = df_comisiones["creditos"].apply(clasificar_duracion)
 
-    # Formatear fechas
+    # Formatear fechas en formato dd-mm-yyyy
     for col in ["fecha_desde", "fecha_hasta", "fecha_cierre"]:
         df_comisiones[col] = pd.to_datetime(df_comisiones[col]).dt.strftime("%d-%m-%Y")
 
-    # FILTROS
+    # FILTROS: Organismo, Modalidad, Duración
     organismos = ["Todos"] + sorted(df_comisiones["organismo"].dropna().unique().tolist())
     modalidades = ["Todas"] + sorted(df_comisiones["modalidad_cursada"].dropna().unique().tolist())
     duraciones = ["Todas"] + sorted(df_comisiones["duracion"].unique())
@@ -47,7 +47,7 @@ def mostrar():
     with col3:
         filtro_dur = st.selectbox("Duración", duraciones)
 
-    # Aplicar filtros
+    # Aplicar filtros según selección
     df_filtrado = df_comisiones.copy()
     if filtro_org != "Todos":
         df_filtrado = df_filtrado[df_filtrado["organismo"] == filtro_org]
@@ -56,7 +56,7 @@ def mostrar():
     if filtro_dur != "Todas":
         df_filtrado = df_filtrado[df_filtrado["duracion"] == filtro_dur]
 
-    # Columnas a mostrar
+    # Columnas a mostrar en la tabla
     columnas_finales = [
         "Actividad (Comisión)", "fecha_desde", "fecha_hasta", "fecha_cierre",
         "creditos", "modalidad_cursada", "link_externo"
@@ -66,7 +66,7 @@ def mostrar():
         st.error(f"❌ Columnas faltantes: {faltantes}")
         st.stop()
 
-    # Renombrar
+    # Renombrar columnas para visualización
     df_vista = df_filtrado[columnas_finales].rename(columns={
         "fecha_desde": "Inicio",
         "fecha_hasta": "Fin",
@@ -76,14 +76,19 @@ def mostrar():
         "link_externo": "Acciones"
     })
 
+    # ✅ Mostrar mensaje visual si el DataFrame está vacío (como en el form.py original)
+    if df_vista.empty:
+        st.info("🔍 No hay cursos que coincidan con los filtros seleccionados.")
+        return
+
     # ========== TABLA HTML ==========
     def create_html_table(df):
-        headers = ''.join(f"<th>{col}</th>" if col != "Acciones" else "<th>Acciones</th>" for col in df.columns)
+        headers = ''.join(f"<th>{col}</th>" for col in df.columns)
 
         html = f"""
-        <link rel=\"stylesheet\" href=\"https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css\">
-        <script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>
-        <script src=\"https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js\"></script>
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
 
         <style>
         .courses-table {{
@@ -144,39 +149,31 @@ def mostrar():
             <tbody>
         """
 
-        if not df.empty:
-            for _, row in df.iterrows():
-                html += "<tr>"
-                for col in df.columns:
-                    val = row[col]
-                    if col == "Acciones":
-                        html += '<td>'
-                        if pd.notna(val) and val and val != "None":
-                            html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
-                        else:
-                            html += '<span class="no-link">Sin enlace</span>'
-                        html += '</td>'
+        # Agregar filas
+        for _, row in df.iterrows():
+            html += "<tr>"
+            for col in df.columns:
+                val = row[col]
+                if col == "Acciones":
+                    html += '<td>'
+                    if pd.notna(val) and val and val != "None":
+                        html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
                     else:
-                        html += f"<td>{val}</td>"
-                html += "</tr>"
-        else:
-            html += f"""
-            <tr>
-                <td colspan="{len(df.columns)}" style="text-align:center; font-style:italic; color:#999;">
-                    No hay cursos que coincidan con los filtros seleccionados.
-                </td>
-            </tr>
-            """
-
+                        html += '<span class="no-link">Sin enlace</span>'
+                    html += '</td>'
+                else:
+                    html += f"<td>{val}</td>"
+            html += "</tr>"
 
         html += "</tbody></table>"
 
-        # Agregar paginación y ordenamiento
+        # Script DataTables para paginación y ordenamiento
         html += """
         <script>
         $(document).ready(function() {
             $('#tabla-cursos').DataTable({
                 paging: true,
+                pageLength: 10,  // 🔢 Muestra 10 filas por página
                 searching: false,
                 info: false,
                 lengthChange: false,
@@ -210,7 +207,7 @@ def mostrar():
         </style>
     """, unsafe_allow_html=True)
 
-    # Render
+    # Render tabla final
     html_code = create_html_table(df_vista)
-    altura = min(800, 100 + (len(df_vista) * 45))
+    altura = min(800, 100 + (len(df_vista) * 45))  # Calcula altura según cantidad de filas
     components.html(html_code, height=altura, scrolling=True)
