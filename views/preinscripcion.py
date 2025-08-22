@@ -154,7 +154,7 @@ def mostrar():
     # PASO 3: Validación CUIL
     # -------------------------
     if actividad_seleccionada != "-Seleccioná una actividad para preinscribirte-":
-        st.markdown("##### 3) Ingresá tu número de CUIL/CUIT y validalo con el botón.")
+        st.markdown("###### 2) Ingresá tu número de CUIL/CUIT y validalo con el botón.")
         cuil_input = st.text_input("CUIL/CUIT (11 dígitos)", max_chars=11)
 
         if st.button("Validar CUIL/CUIT"):
@@ -223,6 +223,7 @@ def mostrar():
     ):
         datos = st.session_state["datos_agenteform"]
         correo_oficial = datos.get("email", "")    
+        st.markdown("###### 3) Completá las tareas que desarrollás habitualmente.")
         tareas = st.text_area("✍️ Tareas desarrolladas (obligatorio)", height=120).strip().lower()
         st.markdown(f"📧 Te vamos a contactar al correo registrado: **{correo_oficial}**. Si necesitás agregar otra forma de contacto, completá el siguiente campo.")
         email_alt = st.text_input("Correo alternativo (opcional)").strip()
