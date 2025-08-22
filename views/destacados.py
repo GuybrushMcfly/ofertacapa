@@ -107,7 +107,7 @@ def mostrar():
     .card-title {
         color: #136ac1;
         margin-bottom: 12px;
-        font-size: 13px;
+        font-size: 15px;
         font-weight: 700;
         line-height: 1.3;
         text-shadow: 0 1px 2px rgba(0,0,0,0.05);
