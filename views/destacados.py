@@ -4,8 +4,19 @@ import pandas as pd
 def mostrar(df_comisiones: pd.DataFrame):
     st.markdown("## 🌟 Actividades destacadas")
 
-    # Tomamos 6 primeras (o las que quieras definir como destacadas)
-    destacados = df_comisiones.head(6).to_dict(orient="records")
+    # ===================== FILTRO POR DESTACADAS =====================
+    if "oferta_destacada" not in df_comisiones.columns:
+        st.warning("⚠️ La tabla no tiene el campo 'oferta_destacada'.")
+        return
+
+    destacados_df = df_comisiones[df_comisiones["oferta_destacada"] == True]
+
+    if destacados_df.empty:
+        st.info("ℹ️ No hay ofertas destacadas en este momento.")
+        return
+
+    # Tomar hasta 6 destacadas aleatorias (rotación)
+    destacados = destacados_df.sample(n=min(6, len(destacados_df))).to_dict(orient="records")
 
     # ===================== ESTILO TARJETAS =====================
     st.markdown("""
