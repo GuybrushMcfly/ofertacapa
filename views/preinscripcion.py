@@ -163,9 +163,11 @@ def mostrar():
                 st.error("⚠️ El CUIL/CUIT no corresponde a un agente activo.")
                 return
             if verificar_formulario_historial(supabase, cuil_input, st.session_state["id_actividad"]):
-                #st.warning("⚠️ Ya realizaste esta actividad y fue APROBADA.")
+                # st.warning("⚠️ Ya realizaste esta actividad y fue APROBADA.")
                 st.info("⚠️ Ya aprobaste esta actividad. Podés consultar tu historial de capacitaciones.")
+                st.toast("lalala")
                 return
+
             if verificar_formulario_comision(supabase, cuil_input, st.session_state["comision_id"]):
                 #st.warning("⚠️ Ya estás inscripto en esta comisión.")
                 st.info("⚠️ Ya realizaste la preinscripción en esta comisión. Podés consultar tu historial de inscripciones.")
