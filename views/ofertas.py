@@ -144,20 +144,30 @@ def mostrar():
             <tbody>
         """
 
-        for _, row in df.iterrows():
-            html += "<tr>"
-            for col in df.columns:
-                val = row[col]
-                if col == "Acciones":
-                    html += '<td>'
-                    if pd.notna(val) and val and val != "None":
-                        html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
+        if not df.empty:
+            for _, row in df.iterrows():
+                html += "<tr>"
+                for col in df.columns:
+                    val = row[col]
+                    if col == "Acciones":
+                        html += '<td>'
+                        if pd.notna(val) and val and val != "None":
+                            html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
+                        else:
+                            html += '<span class="no-link">Sin enlace</span>'
+                        html += '</td>'
                     else:
-                        html += '<span class="no-link">Sin enlace</span>'
-                    html += '</td>'
-                else:
-                    html += f"<td>{val}</td>"
-            html += "</tr>"
+                        html += f"<td>{val}</td>"
+                html += "</tr>"
+        else:
+            html += f"""
+            <tr>
+                <td colspan="{len(df.columns)}" style="text-align:center; font-style:italic; color:#999;">
+                    No hay cursos que coincidan con los filtros seleccionados.
+                </td>
+            </tr>
+            """
+
 
         html += "</tbody></table>"
 
