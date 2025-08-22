@@ -97,7 +97,7 @@ def mostrar():
     # PASO 2: Selección
     # -------------------------
     st.markdown("")
-    st.markdown("###### 1) Seleccioná la actividad en la cual querés preinscribirte.")
+    st.markdown("###### 1) 🔎 Seleccioná la actividad en la cual querés preinscribirte.")
     
 
     df_temp["Actividad (Comisión)"] = df_temp["nombre_actividad"] + " (" + df_temp["id_comision_sai"] + ")"
@@ -165,25 +165,25 @@ def mostrar():
     # -------------------------
     if actividad_seleccionada != "-Seleccioná una actividad para preinscribirte-":
         st.markdown("---")
-        st.markdown("##### 2) Ingresá tu número de CUIL/CUIT y validalo con el botón.")
+        st.markdown("###### 2) 🆔 Ingresá tu número de CUIL/CUIT y validalo con el botón.")
                 
         cuil_input = st.text_input("CUIL/CUIT (11 dígitos)", max_chars=11)
 
         if st.button("Validar CUIL/CUIT"):
             if not validar_cuil(cuil_input):
-                st.error("CUIL/CUIT inválido. Verificá que tenga 11 dígitos y sea correcto.")
+                st.error("🚨 CUIL/CUIT inválido. Verificá que tenga 11 dígitos y sea correcto.")
                 return
             if not verificar_formulario_cuil(supabase, cuil_input):
-                st.error("⚠️ El CUIL/CUIT no corresponde a un agente activo.")
+                st.error("🚨 El CUIL/CUIT no corresponde a un agente activo.")
                 return
             if verificar_formulario_historial(supabase, cuil_input, st.session_state["id_actividad"]):
                 # st.warning("⚠️ Ya realizaste esta actividad y fue APROBADA.")
-                st.info("⚠️ Ya aprobaste esta actividad. Podés consultar tu historial de capacitaciones.")
+                st.info("⚠️ Ya aprobaste esta actividad. 🔎 Podés consultar tu historial de capacitaciones.")
                 return
 
             if verificar_formulario_comision(supabase, cuil_input, st.session_state["comision_id"]):
                 #st.warning("⚠️ Ya estás inscripto en esta comisión.")
-                st.info("⚠️ Ya realizaste la preinscripción en esta comisión. Podés consultar tu historial de inscripciones.")
+                st.info("⚠️ Ya realizaste la preinscripción en esta comisión. 🔎 Podés consultar tu historial de inscripciones.")
                 return
 
             st.session_state["cuil"] = cuil_input
@@ -195,11 +195,11 @@ def mostrar():
 
               # 🔹 Mensajes secuenciales para INAP
             if st.session_state.get("datos_agenteform") and fila["organismo"] == "INAP":
-                st.toast("❗ Seleccionaste una actividad del INAP")
+                st.toast("‼️Seleccionaste una actividad del INAP")
                 time.sleep(2)  # espera 2 segundos
-                st.toast("⚠️ Recordá que tenés que preinscribirte en el formulario INDEC")
+                st.toast("🚨 Recordá que tenés que preinscribirte en el formulario INDEC")
                 time.sleep(2)  # espera 2 segundos
-                st.toast("⚠️ Y también tenés que preinscribirte en el INAP.\nSiempre debes completar la doble preinscripción")      
+                st.toast("🚨 Y también tenés que preinscribirte en el INAP.\nSiempre debes completar la doble preinscripción")      
             
             #datos = st.session_state["datos_agenteform"]
             #if datos:
@@ -237,7 +237,7 @@ def mostrar():
         correo_oficial = datos.get("email", "") 
         
         st.markdown("---")
-        st.markdown("##### 3) Completá las tareas que desarrollás habitualmente.")
+        st.markdown("###### 3) 💻 Completá las tareas que desarrollás habitualmente.")
         tareas = st.text_area("✍️ Tareas desarrolladas (obligatorio)", height=120).strip().lower()
         st.markdown(f"📧 Te vamos a contactar al correo registrado: **{correo_oficial}**. Si necesitás agregar otra forma de contacto, completá el siguiente campo.")
         email_alt = st.text_input("Correo alternativo (opcional)").strip()
