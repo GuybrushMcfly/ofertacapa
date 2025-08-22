@@ -18,20 +18,57 @@ def get_supabase_client() -> Client:
 # ============================
 # RPCs de validación
 # ============================
-def verificar_formulario_cuil(supabase: Client, cuil: str):
-    return supabase.rpc("verificar_formulario_cuil", {"cuil_input": cuil}).execute()
+def validar_cuil(cuil: str) -> bool:
+    if not cuil.isdigit() or len(cuil) != 11:
+        return False
+    mult = [5, 4, 3, 2, 7, 6, 5, 4, 3, 2]
+    total = sum(int(cuil[i]) * mult[i] for i in range(10))
+    verificador = 11 - (total % 11)
+    if verificador == 11: verificador = 0
+    elif verificador == 10: verificador = 9
+    return verificador == int(cuil[-1])
 
-def obtener_datos_para_formulario(supabase: Client, cuil: str):
-    return supabase.rpc("obtener_datos_para_formulario", {"cuil_input": cuil}).execute()
+def verificar_formulario_cuil(supabase: Client, cuil: str) -> bool:
+    try:
+        response = supabase.rpc("verificar_formulario_cuil", {"cuil_input": cuil}).execute()
+        return response.data[0].get("existe", False)
+    except Exception:
+        st.error("Error al verificar el CUIL en la base de datos.")
+        return False
 
-def verificar_formulario_historial(supabase: Client, cuil: str, actividad_id: str):
-    return supabase.rpc("verificar_formulario_historial",
-                        {"cuil_input": cuil, "id_actividad_input": actividad_id}).execute()
+def verificar_formulario_historial(supabase: Client, cuil: str, id_actividad: str) -> bool:
+    try:
+        response = supabase.rpc("verificar_formulario_historial", {
+            "cuil_input": cuil,
+            "id_actividad_input": id_actividad
+        }).execute()
+        if isinstance(response.data, list) and response.data:
+            return response.data[0].get("existe", False)
+        return False
+    except Exception:
+        return False
 
+def verificar_formulario_comision(supabase: Client, cuil: str, comision_id: str) -> bool:
+    try:
+        response = supabase.rpc("verificar_formulario_comision", {
+            "cuil_input": cuil,
+            "comision_id_input": comision_id
+        }).execute()
+        if isinstance(response.data, list) and response.data:
+            return response.data[0].get("existe", False)
+        return False
+    except Exception:
+        return False
 
-def verificar_formulario_inscripcion(supabase: Client, cuil: str, comision_id: str):
-    return supabase.rpc("verificar_formulario_inscripcion",
-                        {"cuil_input": cuil, "comision_id": comision_id}).execute()
+def obtener_datos_para_formulario(supabase: Client, cuil: str) -> dict:
+    try:
+        response = supabase.rpc("obtener_datos_para_formulario", {"cuil_input": cuil}).execute()
+        if response.data and isinstance(response.data, list):
+            return response.data[0]  # Devuelve un dict
+        return {}
+    except Exception as e:
+        st.error(f"Error al obtener los datos del formulario: {e}")
+        return {}
 
 # ============================
 # Tablas y vistas
