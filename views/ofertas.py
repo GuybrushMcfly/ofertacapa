@@ -150,7 +150,11 @@ def mostrar():
                         html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
                     else:
                         html += '<span class="no-link">Sin enlace</span>'
-                    html += f'<a href="/preinscripcion" class="boton">📝 INDEC</a></td>'
+                    
+                    html += f'''
+                        <a href="#" class="boton" onclick="cambiarVista()">📝 INDEC</a>
+                    </td>
+                    '''                    
                 else:
                     html += f"<td>{val}</td>"
             html += "</tr>"
