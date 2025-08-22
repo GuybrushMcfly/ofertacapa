@@ -8,3 +8,4 @@ python-docx
 xlsxwriter
 pytz
 mailjet-rest   # (solo si vas a enviar mails)
+streamlit-option-menu
