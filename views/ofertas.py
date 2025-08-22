@@ -112,7 +112,7 @@ def mostrar():
         .courses-table {{
             width: 100%;
             border-collapse: collapse;
-            font-size: 12px;            
+            font-size: 11px;            
             font-family: "Source Sans Pro", sans-serif;            
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border-radius: 8px;
