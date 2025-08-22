@@ -30,6 +30,10 @@ def mostrar():
         else: return "PROLONGADA"
     df_comisiones["duracion"] = df_comisiones["creditos"].apply(clasificar_duracion)
 
+    # Formatear fechas
+    for col in ["fecha_desde", "fecha_hasta", "fecha_cierre"]:
+        df_comisiones[col] = pd.to_datetime(df_comisiones[col]).dt.strftime("%d-%m-%Y")
+
     # FILTROS
     organismos = ["Todos"] + sorted(df_comisiones["organismo"].dropna().unique().tolist())
     modalidades = ["Todas"] + sorted(df_comisiones["modalidad_cursada"].dropna().unique().tolist())
@@ -77,9 +81,9 @@ def mostrar():
         headers = ''.join(f"<th>{col}</th>" if col != "Acciones" else "<th>Acciones</th>" for col in df.columns)
 
         html = f"""
-        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+        <link rel=\"stylesheet\" href=\"https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css\">
+        <script src=\"https://code.jquery.com/jquery-3.6.0.min.js\"></script>
+        <script src=\"https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js\"></script>
 
         <style>
         .courses-table {{
@@ -150,22 +154,7 @@ def mostrar():
                         html += f'<a href="{val}" target="_blank" class="boton">🌐 Acceder</a>'
                     else:
                         html += '<span class="no-link">Sin enlace</span>'
-                                        
-                    html += f'''
-                        <a href="#" class="boton" onclick="cambiarVista()">📝 INDEC</a>
-                        <script>
-                        function cambiarVista() {{
-                            window.parent.postMessage({{
-                                type: "streamlit:setQueryParams",
-                                queryParams: {{ "selected_tab": "preinscripcion" }}
-                            }}, "*");
-                            setTimeout(function() {{
-                                window.parent.location.reload();
-                            }}, 100);
-                        }}
-                        </script>
-                    '''
-                                      
+                    html += '</td>'
                 else:
                     html += f"<td>{val}</td>"
             html += "</tr>"
