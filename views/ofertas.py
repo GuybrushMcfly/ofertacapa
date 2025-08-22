@@ -58,8 +58,10 @@ def mostrar():
 
     # Ordenar internamente por fecha_difusion (descendente)
     if "fecha_difusion" in df_filtrado.columns:
-        df_filtrado["fecha_difusion"] = pd.to_datetime(df_filtrado["fecha_difusion"], errors="coerce")
-        df_filtrado = df_filtrado.sort_values("fecha_difusion", ascending=False)
+        df_filtrado = df_filtrado.assign(
+            _fecha_difusion_orden=pd.to_datetime(df_filtrado["fecha_difusion"], dayfirst=True, errors="coerce")
+        ).sort_values("_fecha_difusion_orden", ascending=False).drop(columns=["_fecha_difusion_orden"])
+
 
 
     # Columnas a mostrar en la tabla
