@@ -140,11 +140,12 @@ def mostrar():
         st.markdown(f"""
         <div style="background-color: #f0f8ff; padding: 15px; border-left: 5px solid #136ac1; border-radius: 5px;">
           <b>🆔 Comisión:</b> {fila['id_comision_sai']}<br>
+          <b>🏫 Organismo:</b> {fila['organismo']}<br>
           <b>📅 Cursada:</b> {fecha_inicio} al {fecha_fin}<br>
           <b>📅 Cierre Inscripción:</b> {fecha_cierre}<br>
           <b>⭐ Créditos:</b> {fila['creditos']}<br>
           <b>🎓 Modalidad:</b> {fila['modalidad_cursada']}<br>
-          <b>🇹 Apto tramo:</b> {fila['apto_tramo']}<br>
+          <b>➡️ Apto tramo:</b> {fila['apto_tramo']}<br>
         </div>
         """, unsafe_allow_html=True)
 
