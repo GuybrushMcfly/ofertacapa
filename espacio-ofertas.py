@@ -5,13 +5,10 @@ import streamlit.components.v1 as components
 
 st.set_page_config(page_title="Espacio de Ofertas de Capacitación", layout="wide")
 
-# Si llega cambio desde la tabla (botón HTML)
-query_params = st.query_params
-if "selected_tab" in query_params:
-    st.session_state.vista_actual = query_params["selected_tab"][0]
-    st.query_params.clear()  # ✅ limpia los parámetros
-
-
+# ✅ 1. Primero: capturar cambio por query param si llega desde el botón
+if "selected_tab" in st.query_params:
+    st.session_state.vista_actual = st.query_params["selected_tab"][0]
+    st.query_params.clear()
 
 # =========================
 # Inicializar vista actual
