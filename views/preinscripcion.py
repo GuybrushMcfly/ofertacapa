@@ -15,6 +15,18 @@ from modules.db import (
 
 supabase = get_supabase_client()
 
+
+# ==========================================================
+# DIÁLOGO DE ÉXITO (se define UNA VEZ con decorador)
+# ==========================================================
+@st.dialog("✅ ¡Preinscripción exitosa!", width="small", dismissible=False)
+def mostrar_dialogo_exito():
+    st.markdown("Tu inscripción fue registrada correctamente. 🎉")
+    st.markdown("---")
+    if st.button("Cerrar"):
+        st.session_state.clear()   # limpia todos los valores en memoria
+        st.rerun()                 # vuelve a correr el script y resetea el formulario
+
 def mostrar():
     st.markdown("## 📝 Formulario de Preinscripción")
 
@@ -191,15 +203,11 @@ def mostrar():
 
                 result = insertar_inscripcion(supabase, datos_inscripcion)
 
+                
                 if result.data:
                     st.session_state["inscripcion_exitosa"] = True
-
-                    # Abrir diálogo de éxito
-                    with st.dialog("✅ ¡Preinscripción exitosa!", width="small", dismissible=False):
-                        st.markdown("Tu inscripción fue registrada correctamente. 🎉")
-                        if st.button("Cerrar"):
-                            st.session_state.clear()  # limpiar todo
-                            st.rerun()
+                    mostrar_dialogo_exito()   # 👈 acá se abre el popup modal
                 else:
                     st.error("❌ Ocurrió un error al guardar la inscripción.")
+
 
