@@ -29,6 +29,22 @@ def mostrar_dialogo_exito():
         st.session_state["__reset_placeholder"] = True
         st.rerun()                 # vuelve a correr el script y resetea el formulario
 
+# ==================== ESTILO GENERAL ====================
+st.markdown(
+    """
+    <style>
+    .main-container {
+        max-width: 70%;   /* 👈 ancho máximo */
+        margin: 0 auto;   /* 👈 centra horizontalmente */
+        padding: 20px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.markdown("<div class='main-container'>", unsafe_allow_html=True)
+
 
 def mostrar():
     st.markdown("## 📝 Formulario de Preinscripción")
@@ -216,3 +232,4 @@ def mostrar():
                     st.error("❌ Ocurrió un error al guardar la inscripción.")
 
 
+st.markdown("</div>", unsafe_allow_html=True)
