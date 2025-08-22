@@ -1,39 +1,37 @@
-# espacio-ofertas.py
 import streamlit as st
 from streamlit_option_menu import option_menu
 
 st.set_page_config(page_title="Espacio de Ofertas de Capacitación", layout="wide")
 
-# =========================
-# Estilo y navegación
-# =========================
+# Encabezado
 st.markdown("<h1 style='font-size:26px;'>🎓 Espacio de Ofertas de Capacitación</h1>", unsafe_allow_html=True)
 
-# ✅ Botones tipo menú
+# ✅ Menú de navegación estilo horizontal
 seleccion = option_menu(
     menu_title=None,
     options=["📘 Tutorial", "🌟 Destacados", "📚 Ofertas", "📝 Preinscripción"],
     icons=["book", "star", "book-half", "pencil-square"],
-    orientation="vertical",  # podés cambiarlo a "horizontal" si querés
-    default_index=1,  # por defecto "Destacados"
+    orientation="horizontal",  # <- 👈 CLAVE: horizontal
+    default_index=1,  # Por defecto "Destacados"
     styles={
         "container": {
-            "padding": "0!important", 
-            "background-color": "transparent",
+            "display": "flex",
+            "justify-content": "center",
+            "background-color": "#ffffff",
+            "margin-bottom": "20px"
         },
         "nav-link": {
             "font-size": "16px",
-            "text-align": "left",
-            "margin": "6px 2px",
-            "color": "#333333",
             "font-weight": "bold",
-            "background-color": "#e6ecf3",
+            "color": "#333333",
+            "padding": "10px 20px",
+            "margin": "0px 6px",
             "border-radius": "8px",
+            "background-color": "#e6ecf3",
         },
         "nav-link-selected": {
             "background-color": "#2C75B2",
             "color": "#ffffff",
-            "font-weight": "bold",
         },
     }
 )
