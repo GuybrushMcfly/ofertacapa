@@ -4,7 +4,12 @@ import streamlit.components.v1 as components
 from modules.db import get_supabase_client, obtener_comisiones_abiertas
 
 def mostrar():
-    st.header("📚 Ofertas de cursos")
+  #  st.header("📚 Ofertas de cursos")
+
+    st.markdown(
+        "<h4 style='text-align: center; color: #136ac1;'>📚 OFERTAS DISPONIBLES DE CAPACITACIONES</h3>",
+        unsafe_allow_html=True
+    )
 
     # Conexión a Supabase
     supabase = get_supabase_client()
