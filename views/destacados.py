@@ -73,16 +73,17 @@ def mostrar():
     """, unsafe_allow_html=True)
 
     # ===================== RENDER DE TARJETAS =====================
-    st.markdown("<div class='card-grid'>", unsafe_allow_html=True)
-
+    # ===================== RENDER DE TARJETAS =====================
+    cards_html = "<div class='card-grid'>"
+    
     for d in destacados:
         titulo = d.get("nombre_actividad", "")
-        fechas = f"{d.get('fecha_desde', '')} al {d.get('fecha_hasta', '')}"
+        fechas = f"{d.get('fecha_desde','')} al {d.get('fecha_hasta','')}"
         modalidad = d.get("modalidad_cursada", "")
         creditos = d.get("creditos", "")
         link = d.get("link_externo", "")
-
-        st.markdown(f"""
+    
+        cards_html += f"""
         <div class="card">
             <div>
                 <h4>{titulo}</h4>
@@ -92,6 +93,8 @@ def mostrar():
                 {'<a href="'+link+'" target="_blank">🌐 Acceder</a>' if link else '<span style="color:#999;font-size:12px;">Sin enlace</span>'}
             </div>
         </div>
-        """, unsafe_allow_html=True)
-
-    st.markdown("</div>", unsafe_allow_html=True)
+        """
+    
+    cards_html += "</div>"
+    
+    st.markdown(cards_html, unsafe_allow_html=True)
