@@ -26,7 +26,8 @@ def obtener_datos_para_formulario(supabase: Client, cuil: str):
 
 def verificar_formulario_historial(supabase: Client, cuil: str, actividad_id: str):
     return supabase.rpc("verificar_formulario_historial",
-                        {"cuil_input": cuil, "actividad_id": actividad_id}).execute()
+                        {"cuil_input": cuil, "id_actividad_input": actividad_id}).execute()
+
 
 def verificar_formulario_inscripcion(supabase: Client, cuil: str, comision_id: str):
     return supabase.rpc("verificar_formulario_inscripcion",
