@@ -13,7 +13,7 @@ st.markdown("<h1 style='font-size:26px;'>🎓 Espacio de Ofertas de Capacitació
 # =========================
 seleccion = option_menu(
     menu_title=None,
-    options=["📘 Tutorial", "🌟 Destacados", "📚 Listado Ofertas", "📝 Preinscripción"],
+    options=["📘 Tutorial", "🌟 Destacados", "📚 Listado Ofertas", "📝 Formulario INDEC"],
     orientation="horizontal",  # Botones horizontales
     default_index=1,  # Por defecto muestra 'Destacados'
     styles={
@@ -56,6 +56,6 @@ elif seleccion == "📚 Listado Ofertas":
     from views import ofertas
     ofertas.mostrar()
 
-elif seleccion == "📝 Preinscripción":
+elif seleccion == "📝 Formulario INDEC":
     from views import preinscripcion
     preinscripcion.mostrar()
