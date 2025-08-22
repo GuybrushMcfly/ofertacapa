@@ -196,14 +196,14 @@ def mostrar():
         $(document).ready(function() {
             $('#tabla-cursos').DataTable({
                 paging: true,        // ✅ paginación siempre
-                pageLength: 7,      // ✅ máximo 10 por página
+                pageLength: 6,      // ✅ máximo 10 por página
                 searching: false,
                 info: false,
                 lengthChange: false,
                 fixedHeader: true,   // ✅ encabezado fijo
                 order: [],
                 columnDefs: [
-                    { targets: 0, width: "30%" },  // Actividad (Comisión)
+                    { targets: 0, width: "35%" },  // Actividad (Comisión)
                     { targets: 1, width: "10%" },  // Inicio
                     { targets: 2, width: "10%" },  // Fin
                     { targets: 3, width: "10%" },  // Cierre
