@@ -162,7 +162,7 @@ def mostrar():
                         html += '<span class="no-link">Sin enlace</span>'
                     # 🚀 Nuevo botón Copiar
                     actividad = row["Actividad (Comisión)"]
-                    html += f'<a href="#" onclick="copyToField(`{actividad}`)" class="boton">📋 Copiar</a>'
+                    html += f'<a href="javascript:void(0);" onclick="copyToField(`{actividad}`)" class="boton">📋 Copiar</a>
                     html += '</td>'
                 else:
                     html += f"<td>{val}</td>"
