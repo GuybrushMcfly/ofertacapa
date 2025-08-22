@@ -7,9 +7,6 @@ from modules.db import get_supabase_client, obtener_comisiones_abiertas
 def mostrar():
     st.header("📚 Ofertas de cursos")
 
-    # =====================
-    # Carga y preparación
-    # =====================
     supabase = get_supabase_client()
     data = obtener_comisiones_abiertas(supabase)
 
@@ -17,32 +14,31 @@ def mostrar():
         st.warning("No se encontraron cursos disponibles.")
         return
 
-    df_comisiones = pd.DataFrame(data)
+    df = pd.DataFrame(data)
 
-    # Convertimos fechas
-    df_comisiones["fecha_desde"] = pd.to_datetime(df_comisiones["fecha_desde"])
-    df_comisiones["fecha_hasta"] = pd.to_datetime(df_comisiones["fecha_hasta"])
-    df_comisiones["duracion_dias"] = (df_comisiones["fecha_hasta"] - df_comisiones["fecha_desde"]).dt.days
+    # Preparación de fechas y campos
+    df["fecha_desde"] = pd.to_datetime(df["fecha_desde"])
+    df["fecha_hasta"] = pd.to_datetime(df["fecha_hasta"])
+    df["duracion_dias"] = (df["fecha_hasta"] - df["fecha_desde"]).dt.days
+    df["Actividad (Comisión)"] = df["nombre_actividad"] + " (" + df["id_comision_sai"] + ")"
 
-    # Crear columna combinada
-    df_comisiones["Actividad (Comisión)"] = (
-        df_comisiones["nombre_actividad"] + " (" + df_comisiones["id_comision_sai"] + ")"
-    )
+    # ================== FILTROS EN EL CUERPO ==================
+    st.markdown("### 🎯 Filtros")
+    col1, col2, col3 = st.columns(3)
 
-    # =====================
-    # Filtros laterales
-    # =====================
-    st.sidebar.subheader("🎯 Filtros")
+    with col1:
+        orgs = sorted(df["organismo"].dropna().unique())
+        organismo_sel = st.selectbox("Organismo", ["Todos"] + orgs)
 
-    organismos = sorted(df_comisiones["organismo"].dropna().unique())
-    modalidades = sorted(df_comisiones["modalidad_cursada"].dropna().unique())
+    with col2:
+        mods = sorted(df["modalidad_cursada"].dropna().unique())
+        modalidad_sel = st.selectbox("Modalidad", ["Todas"] + mods)
 
-    organismo_sel = st.sidebar.selectbox("Organismo", ["Todos"] + organismos)
-    modalidad_sel = st.sidebar.selectbox("Modalidad", ["Todas"] + modalidades)
-    duracion_max = int(df_comisiones["duracion_dias"].max())
-    duracion_sel = st.sidebar.slider("Duración máxima (días)", 1, duracion_max, duracion_max)
+    with col3:
+        duracion_max = int(df["duracion_dias"].max())
+        duracion_sel = st.slider("Duración máxima (días)", 1, duracion_max, duracion_max)
 
-    df_filtrado = df_comisiones.copy()
+    df_filtrado = df.copy()
     if organismo_sel != "Todos":
         df_filtrado = df_filtrado[df_filtrado["organismo"] == organismo_sel]
     if modalidad_sel != "Todas":
@@ -53,33 +49,29 @@ def mostrar():
         st.warning("⚠️ No hay comisiones que coincidan con los filtros seleccionados.")
         return
 
-    # =====================
-    # Preparación tabla
-    # =====================
-    columnas_finales = [
+    # ================== FORMATEO DE TABLA ==================
+    def formatear_boton_html(url):
+        if pd.isna(url) or url == "None":
+            return '<span class="no-link">Sin enlace</span>'
+        return f'<a href="{url}" target="_blank" class="boton">🌐 Acceder</a>'
+
+    columnas = [
         "Actividad (Comisión)", "fecha_desde", "fecha_hasta", "fecha_cierre",
         "creditos", "modalidad_cursada", "link_externo"
     ]
 
-    df_vista = df_filtrado[columnas_finales].rename(columns={
+    df_tabla = df_filtrado[columnas].rename(columns={
         "fecha_desde": "Inicio",
         "fecha_hasta": "Fin",
         "fecha_cierre": "Cierre",
         "creditos": "Créditos",
         "modalidad_cursada": "Modalidad",
-        "link_externo": "Ver más"
+        "link_externo": "Acción"
     })
 
-    # =====================
-    # Formateo HTML + DataTables
-    # =====================
-    def formatear_link_html(url):
-        if pd.isna(url) or url == "None":
-            return '<span class="no-link">Sin enlace</span>'
-        return f'<a href="{url}" target="_blank" class="boton">🌐 Acceder</a>'
+    df_tabla["Acción"] = df_tabla["Acción"].apply(formatear_boton_html)
 
-    df_vista["Ver más"] = df_vista["Ver más"].apply(formatear_link_html)
-
+    # ================== HTML + DATATABLE ==================
     html = """
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -102,6 +94,7 @@ def mostrar():
         border-radius: 5px;
         transition: all 0.3s ease;
         display: inline-block;
+        margin-right: 6px;
     }
     .boton:hover {
         background-color: #136ac1;
@@ -116,7 +109,7 @@ def mostrar():
 
     <script>
     $(document).ready(function() {
-        $('#ofertasTable').DataTable({
+        $('#tablaCursos').DataTable({
             paging: true,
             searching: false,
             info: false,
@@ -132,18 +125,18 @@ def mostrar():
     });
     </script>
 
-    <table id="ofertasTable" class="display" style="width:90%">
+    <table id="tablaCursos" class="display" style="width:90%">
         <thead><tr>
     """
 
-    for col in df_vista.columns:
+    for col in df_tabla.columns:
         html += f"<th>{col}</th>"
     html += "</tr></thead><tbody>"
 
-    for _, row in df_vista.iterrows():
+    for _, row in df_tabla.iterrows():
         html += "<tr>"
-        for col in df_vista.columns:
-            if col == "Ver más":
+        for col in df_tabla.columns:
+            if col == "Acción":
                 html += f"<td>{row[col]} <a href='/preinscripcion' class='boton'>📝 INDEC</a></td>"
             else:
                 html += f"<td>{row[col]}</td>"
@@ -151,5 +144,5 @@ def mostrar():
 
     html += "</tbody></table>"
 
-    altura = min(800, 100 + (len(df_vista) * 45))
+    altura = min(800, 100 + (len(df_tabla) * 45))
     components.html(html, height=altura, scrolling=True)
