@@ -117,6 +117,14 @@ def mostrar():
                 st.success("✅ CUIL válido. Podés completar el formulario.")
                 st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
 
+                # Mostrar los datos obtenidos del agente después de validar
+                datos = st.session_state["datos_agenteform"]
+                if datos:
+                    st.markdown("### 👤 Datos obtenidos del agente")
+                    st.json(datos)  # debug: muestra todo el diccionario
+
+    
+
     # ==========================================================
     # PASO 4: Formulario de inscripción
     # ==========================================================
