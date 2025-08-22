@@ -14,7 +14,6 @@ st.markdown("<h1 style='font-size:26px;'>🎓 Espacio de Ofertas de Capacitació
 seleccion = option_menu(
     menu_title=None,
     options=["📘 Tutorial", "🌟 Destacados", "📚 Listado Ofertas", "📝 Preinscripción"],
-    icons=["book", "star", "book-half", "pencil-square"],
     orientation="horizontal",  # Botones horizontales
     default_index=1,  # Por defecto muestra 'Destacados'
     styles={
