@@ -39,7 +39,29 @@ def mostrar():
     
     all_columns = columns_row1 + columns_row2
     
-    # Aplicar estilo para las tarjetas individuales
+    # Sistema de rotación si hay más de 6 actividades destacadas
+    if len(df_destacadas) > 6:
+        # Usar session_state para manejar la rotación
+        if 'rotation_offset' not in st.session_state:
+            st.session_state.rotation_offset = 0
+        
+        # Botón para rotar las ofertas
+        if st.button("🔄 Ver más ofertas destacadas", key="rotate_offers"):
+            st.session_state.rotation_offset = (st.session_state.rotation_offset + 6) % len(df_destacadas)
+        
+        # Aplicar offset de rotación
+        rotated_destacadas = df_destacadas.iloc[st.session_state.rotation_offset:].head(6)
+        if len(rotated_destacadas) < 6:
+            # Si no hay suficientes desde el offset, tomar del principio
+            remaining = 6 - len(rotated_destacadas)
+            extra = df_destacadas.head(remaining)
+            rotated_destacadas = pd.concat([rotated_destacadas, extra])
+        
+        destacados = rotated_destacadas.to_dict(orient="records")
+        
+        st.info(f"📊 Mostrando ofertas {st.session_state.rotation_offset + 1} a {min(st.session_state.rotation_offset + 6, len(df_destacadas))} de {len(df_destacadas)} disponibles")
+    
+    # Aplicar estilo para las tarjetas individuales con animaciones
     st.markdown("""
     <style>
     .destacada-card {
@@ -48,29 +70,60 @@ def mostrar():
         border-left: 5px solid #136ac1;
         border-radius: 10px;
         box-shadow: 1px 1px 5px rgba(0,0,0,0.05);
-        height: 200px;
+        height: 220px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
         margin-bottom: 10px;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
     }
+    
+    .destacada-card:hover {
+        transform: scale(1.05);
+        box-shadow: 0 8px 20px rgba(19, 106, 193, 0.2);
+    }
+    
     .destacada-card h5 {
         color: #136ac1;
         margin-bottom: 8px;
         font-size: 14px;
         line-height: 1.2;
     }
+    
     .destacada-card p {
         color: #333;
         font-size: 12px;
         margin-bottom: 8px;
         flex-grow: 1;
     }
+    
+    .card-button {
+        background-color: #136ac1;
+        color: white;
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        font-size: 12px;
+        transition: background-color 0.2s ease;
+        display: inline-block;
+        text-align: center;
+        margin-top: 5px;
+        border: none;
+        cursor: pointer;
+    }
+    
+    .card-button:hover {
+        background-color: #0d4a87;
+        color: white;
+        text-decoration: none;
+    }
+    
     .destacada-empty {
         background-color: #f5f5f5;
         border: 2px dashed #ddd;
         border-radius: 10px;
-        height: 200px;
+        height: 220px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -78,6 +131,28 @@ def mostrar():
         font-style: italic;
         font-size: 12px;
         margin-bottom: 10px;
+        transition: transform 0.3s ease;
+    }
+    
+    .destacada-empty:hover {
+        transform: scale(1.02);
+        border-color: #bbb;
+    }
+    
+    /* Animación de entrada suave */
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .destacada-card, .destacada-empty {
+        animation: fadeInUp 0.6s ease-out;
     }
     </style>
     """, unsafe_allow_html=True)
