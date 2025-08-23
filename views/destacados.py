@@ -101,7 +101,7 @@ def mostrar():
     .destacada-card:hover {
         transform: translateY(-8px) scale(1.02);
         box-shadow: 0 12px 25px rgba(19, 106, 193, 0.15);
-        border-left-color: #4fa8e8;
+        border-left-color: #db6fc0;
     }
     
     .card-title {
@@ -114,7 +114,7 @@ def mostrar():
     }
     
     .card-dates {
-        color: #2c5aa0;
+        color: #c756aa;
         font-size: 12px;
         font-weight: 500;
         margin-bottom: 8px;
@@ -137,7 +137,7 @@ def mostrar():
     
     .card-credits {
         background: linear-gradient(90deg, #e8f2ff, #f0f8ff);
-        color: #136ac1;
+        color: #c756aa;
         font-size: 12px;
         font-weight: 600;
         padding: 4px 8px;
