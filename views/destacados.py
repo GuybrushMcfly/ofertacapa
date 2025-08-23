@@ -24,9 +24,11 @@ def mostrar():
     #if 'rotation_offset' not in st.session_state:
     #    st.session_state.rotation_offset = random.randint(0, max(0, len(df_destacadas)-1))
     # Al entrar, siempre elegir aleatorio
-    if 'rotation_offset' not in st.session_state or st.session_state.get("force_random", False):
+    # Forzar offset nuevo al entrar en la vista
+    current_page = "destacados"
+    if st.session_state.get("last_page") != current_page:
         st.session_state.rotation_offset = random.randint(0, max(0, len(df_destacadas)-1))
-        st.session_state.force_random = False
+        st.session_state.last_page = current_page
 
     
     # ============================
