@@ -129,7 +129,7 @@ def mostrar():
                         {'<div class="card-info">' + creditos_modalidad_line + '</div>' if creditos_modalidad_line else ''}
                     </div>
                     <div>
-                        {'<a href="'+link+'" target="_blank" class="card-button">🌐 Acceder al curso</a>' if link else '<div class="no-link">⚠️ Sin enlace disponible</div>'}
+                        {'<a href="'+link+'" target="_blank" class="card-button">🌐 MÁS INFORMACIÓN</a>' if link else '<div class="no-link">⚠️ Sin enlace disponible</div>'}
                     </div>
                 </div>
                 """
