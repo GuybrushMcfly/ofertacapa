@@ -19,34 +19,24 @@ def mostrar():
         return
     
     # ============================
-    # 2) Inicializar rotación aleatoria al entrar
+    # 2) Selección aleatoria de 6 destacadas en cada render
     # ============================
-    #if 'rotation_offset' not in st.session_state:
-    #    st.session_state.rotation_offset = random.randint(0, max(0, len(df_destacadas)-1))
-    # Al entrar, siempre elegir aleatorio
-    # Forzar offset nuevo al entrar en la vista
-    current_page = "destacados"
-    if st.session_state.get("last_page") != current_page:
-        st.session_state.rotation_offset = random.randint(0, max(0, len(df_destacadas)-1))
-        st.session_state.last_page = current_page
+    if len(df_destacadas) > 6:
+        destacados = df_destacadas.sample(n=6, replace=False).to_dict(orient="records")
+    else:
+        destacados = df_destacadas.to_dict(orient="records")
 
+    # Rellenar hasta 6 tarjetas para mantener la grilla completa
+    while len(destacados) < 6:
+        destacados.append(None)
     
     # ============================
-    # 3) Calcular grupo actual de 6 elementos
-    # ============================
-    rotated_destacadas = df_destacadas.iloc[st.session_state.rotation_offset:].head(6)
-    if len(rotated_destacadas) < 6:
-        extra = df_destacadas.head(6 - len(rotated_destacadas))
-        rotated_destacadas = pd.concat([rotated_destacadas, extra])
-    
-    destacados = rotated_destacadas.to_dict(orient="records")
-    
-    # ============================
-    # 4) Definir grilla de 6 columnas (2 filas de 3)
+    # 3) Definir grilla de 6 columnas (2 filas de 3)
     # ============================
     col1, col2, col3 = st.columns(3, gap="large")
     col4, col5, col6 = st.columns(3, gap="large")
     all_columns = [col1, col2, col3, col4, col5, col6]
+
     
     # ============================
     # 5) Estilos CSS con animación
