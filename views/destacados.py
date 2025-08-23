@@ -201,7 +201,7 @@ def mostrar():
                     <div>
                         <div class="card-title"><strong>{titulo} ({comision})</strong></div>
                         {'<div class="card-org">🏢 ' + organismo + '</div>' if organismo else ''}
-                        {'<div class="card-dates">' + fechas_formatted + '</div>' if fechas_formatted else ''}
+                        {'<div class="card-dates">'📅 + fechas_formatted + '</div>' if fechas_formatted else ''}
                         {'<div class="card-info">' + creditos_modalidad_line + '</div>' if creditos_modalidad_line else ''}
                     </div>
                     <div>
