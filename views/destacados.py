@@ -148,7 +148,7 @@ def mostrar():
     }
     
     .card-button {
-        background: linear-gradient(135deg, #136ac1 0%, #1e7fd4 100%);
+        background: linear-gradient(135deg, #c756aa 0%, #db6fc0 100%);
         color: white !important;
         text-decoration: none !important;
         padding: 10px 16px;
