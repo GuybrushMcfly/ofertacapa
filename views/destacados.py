@@ -166,7 +166,7 @@ def mostrar():
     }
     
     .card-button:hover {
-        background: linear-gradient(135deg, #0d4a87 0%, #1666b8 100%);
+        background: linear-gradient(135deg, #c756aa 0%, #db6fc0 100%);
         transform: translateY(-2px);
         box-shadow: 0 4px 8px rgba(19, 106, 193, 0.3);
         color: white !important;
