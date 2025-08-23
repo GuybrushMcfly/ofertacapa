@@ -113,9 +113,9 @@ def mostrar():
                 creditos = d.get("creditos", "")
                 creditos_line = []
                 if creditos:
-                    creditos_line.append(f"🎓 {creditos} créditos")
+                    creditos_line.append(f"⭐ {creditos} créditos")
                 if modalidad:
-                    creditos_line.append(f"🖥️ {modalidad}")
+                    creditos_line.append(f"🎓 {modalidad}")
                 creditos_modalidad_line = " • ".join(creditos_line)
                 
                 link = d.get("link_externo", "")
@@ -124,7 +124,7 @@ def mostrar():
                 <div class="destacada-card">
                     <div>
                         <div class="card-title"><strong>{titulo} ({comision})</strong></div>
-                        {'<div class="card-org">🏢 ' + organismo + '</div>' if organismo else ''}
+                        {'<div class="card-org">🏫 ' + organismo + '</div>' if organismo else ''}
                         {'<div class="card-dates">📅 ' + fechas_formatted + '</div>' if fechas_formatted else ''}
                         {'<div class="card-info">' + creditos_modalidad_line + '</div>' if creditos_modalidad_line else ''}
                     </div>
