@@ -21,8 +21,13 @@ def mostrar():
     # ============================
     # 2) Inicializar rotación aleatoria al entrar
     # ============================
-    if 'rotation_offset' not in st.session_state:
+    #if 'rotation_offset' not in st.session_state:
+    #    st.session_state.rotation_offset = random.randint(0, max(0, len(df_destacadas)-1))
+    # Al entrar, siempre elegir aleatorio
+    if 'rotation_offset' not in st.session_state or st.session_state.get("force_random", False):
         st.session_state.rotation_offset = random.randint(0, max(0, len(df_destacadas)-1))
+        st.session_state.force_random = False
+
     
     # ============================
     # 3) Calcular grupo actual de 6 elementos
@@ -147,7 +152,7 @@ def mostrar():
     # ============================
     # 7) Botón de rotación al final
     # ============================
-    if len(df_destacadas) > 6:
-        if st.button("🔄 Ver más ofertas destacadas", key="rotate_offers"):
-            st.session_state.rotation_offset = (st.session_state.rotation_offset + 6) % len(df_destacadas)
-            st.rerun()
+    if st.button("🔄 Ver más ofertas destacadas", key="rotate_offers"):
+        st.session_state.rotation_offset = (st.session_state.rotation_offset + 6) % len(df_destacadas)
+        st.rerun()
+
