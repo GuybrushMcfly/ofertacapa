@@ -1,6 +1,7 @@
 # views/destacados.py
 import streamlit as st
 import pandas as pd
+import random
 from modules.db import get_supabase_client, obtener_comisiones_abiertas
 
 def mostrar():
@@ -18,29 +19,20 @@ def mostrar():
         return
     
     # ============================
-    # 2) Inicializar las 6 tarjetas visibles
+    # 2) Inicializar rotación aleatoria al entrar
     # ============================
-    destacados = df_destacadas.head(6).to_dict(orient="records")
-    while len(destacados) < 6:
-        destacados.append(None)  # Relleno para completar la grilla
+    if 'rotation_offset' not in st.session_state:
+        st.session_state.rotation_offset = random.randint(0, max(0, len(df_destacadas)-1))
     
     # ============================
-    # 3) Sistema de rotación
+    # 3) Calcular grupo actual de 6 elementos
     # ============================
-    if len(df_destacadas) > 6:
-        if 'rotation_offset' not in st.session_state:
-            st.session_state.rotation_offset = 0
-        
-
-        
-        # Obtener el grupo rotado de 6 elementos
-        rotated_destacadas = df_destacadas.iloc[st.session_state.rotation_offset:].head(6)
-        if len(rotated_destacadas) < 6:
-            # Si faltan, traer desde el inicio
-            extra = df_destacadas.head(6 - len(rotated_destacadas))
-            rotated_destacadas = pd.concat([rotated_destacadas, extra])
-        
-        destacados = rotated_destacadas.to_dict(orient="records")
+    rotated_destacadas = df_destacadas.iloc[st.session_state.rotation_offset:].head(6)
+    if len(rotated_destacadas) < 6:
+        extra = df_destacadas.head(6 - len(rotated_destacadas))
+        rotated_destacadas = pd.concat([rotated_destacadas, extra])
+    
+    destacados = rotated_destacadas.to_dict(orient="records")
     
     # ============================
     # 4) Definir grilla de 6 columnas (2 filas de 3)
@@ -50,69 +42,42 @@ def mostrar():
     all_columns = [col1, col2, col3, col4, col5, col6]
     
     # ============================
-    # 5) Estilos CSS con comentarios
+    # 5) Estilos CSS con animación
     # ============================
     st.markdown("""
     <style>
-    /* === Tarjeta principal === */
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to   { opacity: 1; transform: translateY(0); }
+    }
+
     .destacada-card {
-        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%); /* Fondo degradado suave */
-        padding: 18px;                /* Espaciado interno */
-        border-left: 5px solid #c756aa; /* Borde lateral en color principal */
-        border-radius: 12px;          /* Bordes redondeados */
-        box-shadow: 0 2px 8px rgba(0,0,0,0.08); /* Sombra sutil */
-        height: 260px;                /* Altura fija para uniformidad */
-        display: flex;                /* Layout flexible */
-        flex-direction: column;       /* Apilar elementos verticalmente */
-        justify-content: space-between; /* Separar título/detalles del botón */
-        margin-bottom: 15px;          /* Espacio inferior */
-        transition: all 0.3s ease;    /* Animación suave al hover */
-        position: relative;           /* Para animaciones internas */
+        background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);
+        padding: 18px;
+        border-left: 5px solid #c756aa;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        height: 260px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        transition: all 0.3s ease;
+        position: relative;
         overflow: hidden;
+        animation: fadeInUp 0.6s ease-out; /* 👈 Animación de entrada */
     }
-
-    /* === Efecto hover de la tarjeta === */
     .destacada-card:hover {
-        transform: translateY(-10px) scale(1.03); /* Se eleva y agranda un poco más */
-        box-shadow: 0 16px 32px rgba(199, 86, 170, 0.35); /* Sombra más fuerte */
-        border-left-color: #db6fc0; /* Cambio de color en el borde lateral */
+        transform: translateY(-12px) scale(1.04);
+        box-shadow: 0 18px 36px rgba(199, 86, 170, 0.4);
+        border-left-color: #db6fc0;
     }
-
-    /* === Título del curso === */
-    .card-title {
-        color: #c756aa;       /* Color principal */
-        margin-bottom: 14px;
-        font-size: 15px;
-        font-weight: 700;
-        line-height: 1.4;
-    }
-
-    /* === Organismo (aparece antes de la fecha) === */
-    .card-org {
-        color: #5a5d61;       /* Color secundario */
-        font-size: 12px;
-        margin-bottom: 6px;
-        font-weight: 600;
-    }
-
-    /* === Fechas del curso === */
-    .card-dates {
-        color: #5a5d61;       /* Color secundario */
-        font-size: 12px;
-        margin-bottom: 6px;
-    }
-
-    /* === Créditos y modalidad === */
-    .card-info {
-        color: #5a5d61;       /* Color secundario */
-        font-size: 12px;
-        margin-bottom: 8px;
-        line-height: 1.4;
-    }
-
-    /* === Botón de acceso === */
+    .card-title { color: #c756aa; margin-bottom: 14px; font-size: 15px; font-weight: 700; }
+    .card-org   { color: #5a5d61; font-size: 12px; margin-bottom: 6px; font-weight: 600; }
+    .card-dates { color: #5a5d61; font-size: 12px; margin-bottom: 6px; }
+    .card-info  { color: #5a5d61; font-size: 12px; margin-bottom: 8px; line-height: 1.4; }
     .card-button {
-        background: linear-gradient(135deg, #c756aa 0%, #db6fc0 100%); /* Fondo degradado en tonos principales */
+        background: linear-gradient(135deg, #c756aa 0%, #db6fc0 100%);
         color: white !important;
         text-decoration: none !important;
         padding: 10px 16px;
@@ -124,41 +89,9 @@ def mostrar():
         width: 100%;
         transition: all 0.2s ease;
     }
-    .card-button:hover {
-        transform: translateY(-3px);  /* Hover más notorio */
-        box-shadow: 0 6px 12px rgba(199, 86, 170, 0.4);
-    }
-
-    /* === Aviso cuando no hay link === */
-    .no-link {
-        color: #999;
-        font-size: 11px;
-        font-style: italic;
-        text-align: center;
-        padding: 6px;
-        background: #f5f5f5;
-        border-radius: 6px;
-        margin-top: 6px;
-    }
-
-    /* === Tarjeta vacía (placeholder) === */
-    .destacada-empty {
-        background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%);
-        border: 2px dashed #ddd;
-        border-radius: 12px;
-        height: 260px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #999;
-        font-style: italic;
-        font-size: 12px;
-        transition: all 0.3s ease;
-    }
-    .destacada-empty:hover {
-        transform: translateY(-4px);  /* También se levanta un poco al hover */
-        border-color: #bbb;
-    }
+    .card-button:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(199, 86, 170, 0.4); }
+    .no-link { color: #999; font-size: 11px; font-style: italic; text-align: center; padding: 6px; background: #f5f5f5; border-radius: 6px; margin-top: 6px; }
+    .destacada-empty { background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%); border: 2px dashed #ddd; border-radius: 12px; height: 260px; display: flex; align-items: center; justify-content: center; color: #999; font-style: italic; font-size: 12px; animation: fadeInUp 0.6s ease-out; }
     </style>
     """, unsafe_allow_html=True)
     
@@ -173,7 +106,6 @@ def mostrar():
                 comision = d.get("id_comision_sai", "")
                 organismo = d.get("organismo", "")
                 
-                # Fechas formateadas
                 fechas_formatted = ""
                 if d.get("fecha_desde") and d.get("fecha_hasta"):
                     fecha_desde = pd.to_datetime(d['fecha_desde']).strftime('%d/%m/%Y')
@@ -182,8 +114,6 @@ def mostrar():
                 
                 modalidad = d.get("modalidad_cursada", "")
                 creditos = d.get("creditos", "")
-                
-                # Línea créditos + modalidad
                 creditos_line = []
                 if creditos:
                     creditos_line.append(f"🎓 {creditos} créditos")
@@ -193,7 +123,6 @@ def mostrar():
                 
                 link = d.get("link_externo", "")
                 
-                # HTML de la tarjeta
                 card_content = f"""
                 <div class="destacada-card">
                     <div>
@@ -209,13 +138,16 @@ def mostrar():
                 """
                 st.markdown(card_content, unsafe_allow_html=True)
             else:
-                # Tarjeta vacía
                 st.markdown("""
                 <div class="destacada-empty">
                     ⭐ Próximamente más actividades destacadas
                 </div>
                 """, unsafe_allow_html=True)
 
-        # Botón para rotar la vista
+    # ============================
+    # 7) Botón de rotación al final
+    # ============================
+    if len(df_destacadas) > 6:
         if st.button("🔄 Ver más ofertas destacadas", key="rotate_offers"):
             st.session_state.rotation_offset = (st.session_state.rotation_offset + 6) % len(df_destacadas)
+            st.rerun()
