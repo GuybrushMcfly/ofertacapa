@@ -47,7 +47,7 @@ seleccion = option_menu(
             "--hover-color": "#B0C9E3",
         },
         "nav-link-selected": {
-            "background-color": "#2C75B2",
+            "background-color": "#c756aa",
             "color": "#ffffff",
             "font-weight": "bold",
             "border-radius": "8px",
