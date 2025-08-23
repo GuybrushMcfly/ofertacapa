@@ -31,9 +31,7 @@ def mostrar():
         if 'rotation_offset' not in st.session_state:
             st.session_state.rotation_offset = 0
         
-        # Botón para rotar la vista
-        if st.button("🔄 Ver más ofertas destacadas", key="rotate_offers"):
-            st.session_state.rotation_offset = (st.session_state.rotation_offset + 6) % len(df_destacadas)
+
         
         # Obtener el grupo rotado de 6 elementos
         rotated_destacadas = df_destacadas.iloc[st.session_state.rotation_offset:].head(6)
@@ -201,7 +199,7 @@ def mostrar():
                     <div>
                         <div class="card-title"><strong>{titulo} ({comision})</strong></div>
                         {'<div class="card-org">🏢 ' + organismo + '</div>' if organismo else ''}
-                        {'<div class="card-dates">'📅 + fechas_formatted + '</div>' if fechas_formatted else ''}
+                        {'<div class="card-dates">📅 ' + fechas_formatted + '</div>' if fechas_formatted else ''}
                         {'<div class="card-info">' + creditos_modalidad_line + '</div>' if creditos_modalidad_line else ''}
                     </div>
                     <div>
@@ -217,3 +215,7 @@ def mostrar():
                     ⭐ Próximamente más actividades destacadas
                 </div>
                 """, unsafe_allow_html=True)
+
+        # Botón para rotar la vista
+        if st.button("🔄 Ver más ofertas destacadas", key="rotate_offers"):
+            st.session_state.rotation_offset = (st.session_state.rotation_offset + 6) % len(df_destacadas)
