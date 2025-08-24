@@ -192,7 +192,8 @@ def css_flip_cards():
 def css_inputs_un_tercio():
     st.markdown("""
     <style>
-    input[type="text"] {
+    /* Aplica a todos los st.text_input */
+    .stTextInput > div > div > input {
         width: 33% !important;   /* ocupa 1/3 del ancho */
         min-width: 300px;        /* evita que se achique demasiado */
     }
