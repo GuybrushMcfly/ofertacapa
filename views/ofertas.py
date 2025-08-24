@@ -96,6 +96,9 @@ def mostrar():
 
     # ========== TABLA HTML ==========
   #font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+           #f   font-family: "Source Sans Pro", sans-serif;            
+
+  
     def create_html_table(df):
         headers = ''.join(f"<th>{col}</th>" for col in df.columns)
 
@@ -113,7 +116,7 @@ def mostrar():
             width: 100%;
             border-collapse: collapse;
             font-size: 11px;            
-            font-family: "Source Sans Pro", sans-serif;            
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;           
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             border-radius: 8px;
             overflow: hidden;
