@@ -49,7 +49,7 @@ def mostrar_dialogo_exito():
     """, unsafe_allow_html=True)
 
     st.markdown("---")
-    if st.button("Cerrar"):
+    if st.button("Cerrar", type="primary"):
         st.session_state.clear()
         st.session_state["__reset_placeholder"] = True
         st.rerun()
@@ -218,7 +218,7 @@ def mostrar():
             email_alt = st.text_input("Correo alternativo (opcional)").strip()
         
 
-        if st.button("ENVIAR PREINSCRIPCIÓN"):
+        if st.button("ENVIAR PREINSCRIPCIÓN", type="primary"):
             if not tareas:
                 st.error("⚠️ El campo 'Tareas desarrolladas' es obligatorio.")
                 return
