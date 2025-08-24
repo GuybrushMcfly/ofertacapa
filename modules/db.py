@@ -70,6 +70,31 @@ def obtener_datos_para_formulario(supabase: Client, cuil: str) -> dict:
         st.error(f"Error al obtener los datos del formulario: {e}")
         return {}
 
+def verificar_preinscripcion(supabase: Client, cuil: str, id_actividad: str, comision_id: str) -> dict:
+    """
+    Llama a la función RPC 'verificar_preinscripcion' en Supabase.
+    Devuelve un dict con las banderas:
+      - existe_agente
+      - ya_aprobo
+      - ya_inscripto
+    """
+    try:
+        resp = supabase.rpc(
+            "verificar_preinscripcion",
+            {
+                "cuil_input": cuil,
+                "id_actividad_input": id_actividad,
+                "comision_id_input": comision_id
+            }
+        ).execute()
+        return resp.data[0] if resp.data else {}
+    except Exception as e:
+        st.error("❌ Error al verificar preinscripción en la base de datos.")
+        st.exception(e)
+        return {}
+
+
+
 # ============================
 # Tablas y vistas
 # ============================
