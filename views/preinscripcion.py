@@ -8,8 +8,10 @@ from modules.db import (
     validar_cuil,
     obtener_datos_para_formulario,
     insertar_inscripcion,
-    obtener_comisiones_abiertas
+    obtener_comisiones_abiertas,
+    verificar_preinscripcion   
 )
+
 from modules.utils import formatear_fecha
 
 # ==========================================================
@@ -156,23 +158,14 @@ def mostrar():
             if not validar_cuil(cuil_input):
                 st.error("🚨 CUIL/CUIT inválido. Verificá que tenga 11 dígitos y sea correcto.")
                 return
-
-            # 🚀 Una sola llamada RPC
-            try:
-                resp = supabase.rpc(
-                    "verificar_preinscripcion",
-                    {
-                        "cuil_input": cuil_input,
-                        "id_actividad_input": st.session_state["id_actividad"],
-                        "comision_id_input": st.session_state["comision_id"]
-                    }
-                ).execute()
-                datos_check = resp.data[0] if resp.data else {}
-            except Exception as e:
-                st.error("❌ Error al verificar en la base de datos.")
-                st.exception(e)
-                return
-
+        
+            datos_check = verificar_preinscripcion(
+                supabase,
+                cuil_input,
+                st.session_state["id_actividad"],
+                st.session_state["comision_id"]
+            )
+        
             if not datos_check.get("existe_agente", False):
                 st.error("🚨 El CUIL/CUIT no corresponde a un agente activo.")
                 return
@@ -182,13 +175,14 @@ def mostrar():
             if datos_check.get("ya_inscripto", False):
                 st.info("⚠️ Ya realizaste la preinscripción en esta comisión. 🔎 Podés consultar tu historial de inscripciones.")
                 return
-
+        
             # ✅ Si todo OK
             st.session_state["cuil"] = cuil_input
             st.session_state["cuil_valido"] = True
             st.session_state["validado"] = True
             st.success("✅ CUIL/CUIT válido. Podés continuar con la preinscripción.")
             st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
+
             
             # Ajustes de valores por defecto
             datos = st.session_state["datos_agenteform"]
