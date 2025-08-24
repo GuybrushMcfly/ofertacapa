@@ -46,7 +46,7 @@ def mostrar():
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        filtro_org = st.selectbox("Organismo", organismos)
+        filtro_org = st.selectbox("FILTRAR POR ORGANISMO", organismos)
     with col2:
         filtro_mod = st.selectbox("Modalidad", modalidades)
     with col3:
