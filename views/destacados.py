@@ -6,6 +6,12 @@ from modules.db import get_supabase_client, obtener_comisiones_abiertas
 
 def mostrar():
     # ============================
+    # Inicializar variable de rotación en session_state
+    # ============================
+    if "rotation_offset" not in st.session_state:
+        st.session_state.rotation_offset = 0
+
+    # ============================
     # 1) Conectar a Supabase y traer comisiones
     # ============================
     supabase = get_supabase_client()
@@ -17,6 +23,7 @@ def mostrar():
     if df_destacadas.empty:
         st.info("⚠️ No hay actividades destacadas disponibles por el momento.")
         return
+
     
     # ============================
     # 2) Selección aleatoria de 6 destacadas en cada render
