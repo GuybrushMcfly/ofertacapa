@@ -210,7 +210,7 @@ def mostrar():
         st.markdown("---")
         st.markdown("###### 3) 💻 Completá las tareas que desarrollás habitualmente.")
         tareas = st.text_area("✍️ Tareas desarrolladas (obligatorio)", height=120).strip().lower()
-        st.markdown(f"📧 Te vamos a contactar al correo registrado: **{correo_oficial}**. Si necesitás agregar otra forma de contacto, completá el siguiente campo.")
+        st.markdown(f"📧 Por defecto, siempre te vamos a contactar al correo registrado: **{correo_oficial}**. Si necesitás agregar una forma de contacto adicional, completá el siguiente campo.")
        # email_alt = st.text_input("Correo alternativo (opcional)").strip()
         col1, col2, col3 = st.columns([1,1,1])  # 3 columnas iguales
         with col1:
