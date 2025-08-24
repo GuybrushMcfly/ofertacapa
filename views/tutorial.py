@@ -1,7 +1,10 @@
 import streamlit as st
 
 def mostrar():
-    st.markdown("## 📘 Tutoriales (Preguntas Frecuentes)")
+    st.markdown(
+        "<h4 style='text-align: center; color: #136ac1;'>⁉️ PREGUNTAS FRECUENTES</h3>",
+        unsafe_allow_html=True
+    )    
 
     # ===== CSS para tarjetas flip =====
     st.markdown("""
