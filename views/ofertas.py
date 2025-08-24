@@ -46,11 +46,11 @@ def mostrar():
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        filtro_org = st.selectbox("Organismo", organismos)
+        filtro_org = st.selectbox("Filtrar por Organismo", organismos)
     with col2:
-        filtro_mod = st.selectbox("Modalidad", modalidades)
+        filtro_mod = st.selectbox("Filtrar por Modalidad", modalidades)
     with col3:
-        filtro_dur = st.selectbox("ff", duraciones)
+        filtro_dur = st.selectbox("Filtrar por Duración", duraciones)
 
     # Aplicar filtros según selección
     df_filtrado = df_comisiones.copy()
@@ -86,7 +86,7 @@ def mostrar():
         "fecha_cierre": "Cierre",
         "creditos": "Créditos",
         "modalidad_cursada": "Modalidad",
-        "link_externo": "Externo"
+        "link_externo": "Link Externo"
     })
 
     # ✅ Mostrar mensaje visual si el DataFrame está vacío (como en el form.py original)
