@@ -46,11 +46,11 @@ def mostrar():
 
     col1, col2, col3 = st.columns(3)
     with col1:
-        filtro_org = st.selectbox("FILTRAR POR ORGANISMO", organismos)
+        filtro_org = st.selectbox("Organismo", organismos)
     with col2:
         filtro_mod = st.selectbox("Modalidad", modalidades)
     with col3:
-        filtro_dur = st.selectbox("Duración", duraciones)
+        filtro_dur = st.selectbox("ff", duraciones)
 
     # Aplicar filtros según selección
     df_filtrado = df_comisiones.copy()
