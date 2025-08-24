@@ -44,7 +44,7 @@ def mostrar_dialogo_exito():
         <br><br>
         <span style="color:#555;">ℹ️ Recordá que esta solicitud no implica la asignación de vacante.</span>        
         <br><br>
-        <span style="color:#555;">🚨🚨 Si es un curso de INAP, y aún no lo hiciste, acordate de registrarte en su página 🚨🚨.</span>      
+        <span style="color:#555;">🚨🚨 Si es un curso de INAP, acordate de inscribirte también en su página 🚨🚨.</span>      
     </div>
     """, unsafe_allow_html=True)
 
