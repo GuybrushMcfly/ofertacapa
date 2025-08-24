@@ -151,7 +151,7 @@ def mostrar():
     # ============================
     # 7) Botón de rotación al final
     # ============================
-    if st.button("🔄 Ver más ofertas destacadas", key="rotate_offers"):
+    if st.button("🔄 Ver más ofertas destacadas", key="rotate_offers", type="primary"):
         st.session_state.rotation_offset = (st.session_state.rotation_offset + 6) % len(df_destacadas)
         st.rerun()
 
