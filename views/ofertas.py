@@ -172,7 +172,7 @@ def mostrar():
             html += "<tr>"
             for col in df.columns:
                 val = row[col]
-                if col == "Externo":
+                if col == "Link Externo":
                     html += '<td>'
                     if pd.notna(val) and val and val != "None":
                         
