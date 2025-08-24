@@ -27,7 +27,7 @@ st.markdown(
 # =========================
 seleccion = option_menu(
     menu_title=None,
-    options=["📘 Tutorial", "🌟 Destacados", "📚 Listado Ofertas", "📝 Formulario INDEC"],
+    options=["❓ Preguntas", "🌟 Destacados", "📚 Listado Ofertas", "📝 Formulario INDEC"],
     orientation="horizontal",  # Botones horizontales
     default_index=1,  # Por defecto muestra 'Destacados'
     styles={
@@ -58,7 +58,7 @@ seleccion = option_menu(
 # =========================
 # Renderizar vistas según selección
 # =========================
-if seleccion == "📘 Tutorial":
+if seleccion == "❓ Preguntas":
     from views import tutorial
     tutorial.mostrar()
 
