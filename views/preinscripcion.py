@@ -11,8 +11,8 @@ from modules.db import (
     obtener_comisiones_abiertas,
     verificar_preinscripcion   
 )
-
 from modules.utils import formatear_fecha
+from modules.styles import css_global, css_inputs_un_tercio  # 👈 agregamos imports de estilos
 
 # ==========================================================
 # CONEXIÓN A SUPABASE
@@ -60,14 +60,8 @@ def mostrar_dialogo_exito():
 # ==========================================================
 def mostrar():
     # ==================== ESTILO GENERAL ====================
-    st.markdown(
-        """
-        <style>
-        /* Acá podés agregar estilos generales si querés */
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    css_global()           # 👈 aplica estilos globales
+    css_inputs_un_tercio() # 👈 aplica ancho de 1/3 a los inputs
 
     # -------------------------
     # PASO 1: Traer comisiones
@@ -152,7 +146,7 @@ def mostrar():
         st.markdown("---")
         st.markdown("###### 2) 🆔 Ingresá tu número de CUIL/CUIT y validalo con el botón.")
                 
-        cuil_input = st.text_input("CUIL/CUIT (11 dígitos)", max_chars=11)
+        cuil_input = st.text_input("CUIL/CUIT (11 dígitos)", max_chars=11)  # 👈 ahora con ancho fijo 1/3
 
         if st.button("Validar CUIL/CUIT"):
             if not validar_cuil(cuil_input):
@@ -183,7 +177,6 @@ def mostrar():
             st.success("✅ CUIL/CUIT válido. Podés continuar con la preinscripción.")
             st.session_state["datos_agenteform"] = obtener_datos_para_formulario(supabase, cuil_input)
 
-            
             # Ajustes de valores por defecto
             datos = st.session_state["datos_agenteform"]
             if not datos.get("nivel_educativo") or str(datos.get("nivel_educativo")).upper() == "NULL":
@@ -207,7 +200,7 @@ def mostrar():
         st.markdown("###### 3) 💻 Completá las tareas que desarrollás habitualmente.")
         tareas = st.text_area("✍️ Tareas desarrolladas (obligatorio)", height=120).strip().lower()
         st.markdown(f"📧 Te vamos a contactar al correo registrado: **{correo_oficial}**. Si necesitás agregar otra forma de contacto, completá el siguiente campo.")
-        email_alt = st.text_input("Correo alternativo (opcional)").strip()
+        email_alt = st.text_input("Correo alternativo (opcional)").strip()  # 👈 también con ancho fijo 1/3
 
         if st.button("ENVIAR PREINSCRIPCIÓN"):
             if not tareas:
