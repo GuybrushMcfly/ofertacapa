@@ -175,10 +175,10 @@ def mostrar():
                 st.error("🚨 El CUIL/CUIT no corresponde a un agente activo.")
                 return
             if datos_check.get("ya_aprobo", False):
-                st.info("⚠️ Ya aprobaste esta actividad. 🔎 Podés consultar tu historial de capacitaciones.")
+                st.info("⚠️ Ya aprobaste esta actividad anteriormente.")
                 return
             if datos_check.get("ya_inscripto", False):
-                st.info("⚠️ Ya realizaste la preinscripción en esta comisión. 🔎 Podés consultar tu historial de inscripciones.")
+                st.info("⚠️ Ya realizaste la preinscripción en esta comisión. No es necesario volver a realizarla.")
                 return
         
             # ✅ Si todo OK
