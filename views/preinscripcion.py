@@ -158,7 +158,8 @@ def mostrar():
             cuil_input = st.text_input("CUIL/CUIT (11 dígitos)", max_chars=11)
         
 
-        if st.button("Validar CUIL/CUIT"):
+        #if st.button("Validar CUIL/CUIT"):
+        if st.button("Validar CUIL/CUIT", type="primary"):
             if not validar_cuil(cuil_input):
                 st.error("🚨 CUIL/CUIT inválido. Verificá que tenga 11 dígitos y sea correcto.")
                 return
