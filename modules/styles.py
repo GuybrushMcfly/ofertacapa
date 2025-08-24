@@ -184,3 +184,17 @@ def css_flip_cards():
     }
     </style>
     """, unsafe_allow_html=True)
+
+
+# ----------------------------
+# CSS para inputs de 1/3 pantalla
+# ----------------------------
+def css_inputs_un_tercio():
+    st.markdown("""
+    <style>
+    input[type="text"] {
+        width: 33% !important;   /* ocupa 1/3 del ancho */
+        min-width: 300px;        /* evita que se achique demasiado */
+    }
+    </style>
+    """, unsafe_allow_html=True)
