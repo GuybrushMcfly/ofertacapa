@@ -106,7 +106,17 @@ def mostrar():
         z-index: 100;
         border-radius: 0 0 0 8px; /* Solo esquina inferior izquierda redondeada */
     }
-            
+
+    .ribbon-pronto {
+        position: absolute; top: -5px; right: -5px;
+        background: #f59e0b; color: white; padding: 3px 12px;
+        font-size: 9px; font-weight: 700; 
+        transform: rotate(0deg);
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3); 
+        z-index: 100;
+        border-radius: 0 0 0 8px;
+    }
+
     </style>
     """, unsafe_allow_html=True)
     
@@ -139,13 +149,22 @@ def mostrar():
                 link = d.get("link_externo", "")
 
                 # Determinar si es "nuevo" (ejemplo: creado hace menos de 30 días)
+                # Lógica de ribbons simulada
                 from datetime import datetime, timedelta
-                fecha_limite = datetime.now() - timedelta(days=30)
-                es_nuevo = True  # Por ahora siempre True, después puedes usar fechas reales
+                
+                if i == 0:  # Primera tarjeta
+                    ribbon_tipo = "pronto"
+                    ribbon_text = "🔥 CIERRA PRONTO"
+                elif i == 1 or i == 4:  # Segunda y quinta tarjeta
+                    ribbon_tipo = "nuevo"
+                    ribbon_text = "🆕 NUEVO"
+                else:
+                    ribbon_tipo = None
+                    ribbon_text = ""
                 
                 card_content = f"""
                 <div class="destacada-card">
-                    {'<div class="ribbon-nuevo">NUEVO</div>' if es_nuevo else ''}
+                    {f'<div class="ribbon-{ribbon_tipo}">{ribbon_text}</div>' if ribbon_tipo else ''}
                     <div>
                         <div class="card-title"><strong>{titulo} ({comision})</strong></div>
                         {'<div class="card-org">🏫 ' + organismo + '</div>' if organismo else ''}
