@@ -41,7 +41,7 @@ def mostrar():
     # 3) Definir grilla de 6 columnas (2 filas de 3)
     # ============================
     col1, col2, col3 = st.columns(3, gap="medium")
-    col4, col5, col6 = st.columns(3, gap="large")
+    col4, col5, col6 = st.columns(3, gap="medium")
     all_columns = [col1, col2, col3, col4, col5, col6]
 
     
