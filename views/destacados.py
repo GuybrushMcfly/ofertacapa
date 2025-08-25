@@ -162,9 +162,14 @@ def mostrar():
                     ribbon_tipo = None
                     ribbon_text = ""
                 
+                # Crear ribbon por separado
+                ribbon_html = ""
+                if ribbon_tipo:
+                    ribbon_html = f'<div class="ribbon-{ribbon_tipo}">{ribbon_text}</div>'
+                
                 card_content = f"""
                 <div class="destacada-card">
-                    {'<div class="ribbon-'+ribbon_tipo+'">'+ribbon_text+'</div>' if ribbon_tipo else ''}
+                    {ribbon_html}
                     <div>
                         <div class="card-title"><strong>{titulo} ({comision})</strong></div>
                         {'<div class="card-org">🏫 ' + organismo + '</div>' if organismo else ''}
@@ -176,13 +181,6 @@ def mostrar():
                     </div>
                 </div>
                 """
-                st.markdown(card_content, unsafe_allow_html=True)
-            else:
-                st.markdown("""
-                <div class="destacada-empty">
-                    ⭐ Próximamente más actividades destacadas
-                </div>
-                """, unsafe_allow_html=True)
 
     # ============================
     # 7) Botón de rotación al final
