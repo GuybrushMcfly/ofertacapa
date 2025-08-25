@@ -98,15 +98,15 @@ def mostrar():
     .destacada-empty { background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%); border: 2px dashed #ddd; border-radius: 12px; height: 260px; display: flex; align-items: center; justify-content: center; color: #999; font-style: italic; font-size: 12px; animation: fadeInUp 0.6s ease-out; }
  
     .ribbon-nuevo {
-        position: absolute; top: -5px; right: -5px;
-        background: #ef4444; color: white; padding: 3px 12px;
+        position: absolute; top: 5px; right: -3px;
+        background: #ef4444; color: white; padding: 3px 15px;
         font-size: 9px; font-weight: 700; 
-        transform: rotate(0deg); /* Sin rotación = horizontal */
+        transform: rotate(5deg); /* Menos rotación */
         box-shadow: 0 2px 6px rgba(0,0,0,0.3); 
         z-index: 100;
-        border-radius: 0 0 0 8px; /* Solo esquina inferior izquierda redondeada */
+        border-radius: 2px;
     }
-        
+            
     </style>
     """, unsafe_allow_html=True)
     
