@@ -164,7 +164,7 @@ def mostrar():
                 
                 card_content = f"""
                 <div class="destacada-card">
-                    {f'<div class="ribbon-{ribbon_tipo}">{ribbon_text}</div>' if ribbon_tipo else ''}
+                    {'<div class="ribbon-'+ribbon_tipo+'">'+ribbon_text+'</div>' if ribbon_tipo else ''}
                     <div>
                         <div class="card-title"><strong>{titulo} ({comision})</strong></div>
                         {'<div class="card-org">🏫 ' + organismo + '</div>' if organismo else ''}
