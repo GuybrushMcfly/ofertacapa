@@ -77,9 +77,9 @@ def mostrar():
         border-left-color: #db6fc0;
     }
     .card-title { color: #c756aa; margin-bottom: 14px; font-size: 15px; font-weight: 700; }
-    .card-org   { color: #5a5d61; font-size: 12px; margin-bottom: 6px; font-weight: 600; }
-    .card-dates { color: #5a5d61; font-size: 12px; margin-bottom: 6px; }
-    .card-info  { color: #5a5d61; font-size: 12px; margin-bottom: 8px; line-height: 1.4; }
+    .card-org   { color: #5a5d61; font-size: 13px; margin-bottom: 6px; font-weight: 600; }
+    .card-dates { color: #5a5d61; font-size: 13px; margin-bottom: 6px; }
+    .card-info  { color: #5a5d61; font-size: 13px; margin-bottom: 8px; line-height: 1.4; }
     .card-button {
         background: linear-gradient(135deg, #c756aa 0%, #db6fc0 100%);
         color: white !important;
