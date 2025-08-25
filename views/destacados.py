@@ -100,7 +100,7 @@ def mostrar():
     .ribbon-nuevo {
         position: absolute; top: -5px; right: -5px;
         background: #ef4444; color: white; padding: 3px 12px;
-        font-size: 9px; font-weight: 700; 
+        font-size: 10px; font-weight: 700; 
         transform: rotate(0deg); /* Sin rotación = horizontal */
         box-shadow: 0 2px 6px rgba(0,0,0,0.3); 
         z-index: 100;
