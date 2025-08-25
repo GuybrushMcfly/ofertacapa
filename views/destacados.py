@@ -149,27 +149,13 @@ def mostrar():
                 link = d.get("link_externo", "")
 
                 # Determinar si es "nuevo" (ejemplo: creado hace menos de 30 días)
-                # Lógica de ribbons simulada
                 from datetime import datetime, timedelta
-                
-                if i == 0:  # Primera tarjeta
-                    ribbon_tipo = "pronto"
-                    ribbon_text = "🔥 CIERRA PRONTO"
-                elif i == 1 or i == 4:  # Segunda y quinta tarjeta
-                    ribbon_tipo = "nuevo"
-                    ribbon_text = "🆕 NUEVO"
-                else:
-                    ribbon_tipo = None
-                    ribbon_text = ""
-                
-                # Crear ribbon por separado
-                ribbon_html = ""
-                if ribbon_tipo:
-                    ribbon_html = f'<div class="ribbon-{ribbon_tipo}">{ribbon_text}</div>'
+                fecha_limite = datetime.now() - timedelta(days=30)
+                es_nuevo = True  # Por ahora siempre True, después puedes usar fechas reales
                 
                 card_content = f"""
                 <div class="destacada-card">
-                    {ribbon_html}
+                    {'<div class="ribbon-nuevo">NUEVO</div>' if es_nuevo else ''}
                     <div>
                         <div class="card-title"><strong>{titulo} ({comision})</strong></div>
                         {'<div class="card-org">🏫 ' + organismo + '</div>' if organismo else ''}
@@ -181,6 +167,13 @@ def mostrar():
                     </div>
                 </div>
                 """
+                st.markdown(card_content, unsafe_allow_html=True)
+            else:
+                st.markdown("""
+                <div class="destacada-empty">
+                    ⭐ Próximamente más actividades destacadas
+                </div>
+                """, unsafe_allow_html=True)
 
     # ============================
     # 7) Botón de rotación al final
@@ -188,4 +181,3 @@ def mostrar():
     if st.button("🔄 Ver más ofertas destacadas", key="rotate_offers", type="primary"):
         st.session_state.rotation_offset = (st.session_state.rotation_offset + 6) % len(df_destacadas)
         st.rerun()
-
