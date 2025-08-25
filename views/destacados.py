@@ -96,6 +96,15 @@ def mostrar():
     .card-button:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(199, 86, 170, 0.4); }
     .no-link { color: #999; font-size: 11px; font-style: italic; text-align: center; padding: 6px; background: #f5f5f5; border-radius: 6px; margin-top: 6px; }
     .destacada-empty { background: linear-gradient(135deg, #f5f5f5 0%, #fafafa 100%); border: 2px dashed #ddd; border-radius: 12px; height: 260px; display: flex; align-items: center; justify-content: center; color: #999; font-style: italic; font-size: 12px; animation: fadeInUp 0.6s ease-out; }
+ 
+    .ribbon-nuevo {
+        position: absolute; top: 15px; right: -10px;
+        background: #ef4444; color: white; padding: 4px 15px;
+        font-size: 10px; font-weight: 700; transform: rotate(12deg);
+        box-shadow: 0 2px 4px rgba(0,0,0,0.3); z-index: 10;
+    }
+
+    
     </style>
     """, unsafe_allow_html=True)
     
@@ -126,9 +135,15 @@ def mostrar():
                 creditos_modalidad_line = " • ".join(creditos_line)
                 
                 link = d.get("link_externo", "")
+
+                # Determinar si es "nuevo" (ejemplo: creado hace menos de 30 días)
+                from datetime import datetime, timedelta
+                fecha_limite = datetime.now() - timedelta(days=30)
+                es_nuevo = True  # Por ahora siempre True, después puedes usar fechas reales
                 
                 card_content = f"""
                 <div class="destacada-card">
+                    {'<div class="ribbon-nuevo">NUEVO</div>' if es_nuevo else ''}
                     <div>
                         <div class="card-title"><strong>{titulo} ({comision})</strong></div>
                         {'<div class="card-org">🏫 ' + organismo + '</div>' if organismo else ''}
