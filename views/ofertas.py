@@ -371,9 +371,12 @@ def mostrar():
     # Render tabla final
     html_code = create_html_table(df_vista)
     
+
     # Altura dinámica: hasta 10 filas + espacio extra para paginación
     max_filas = 8
     filas_visibles = min(len(df_vista), max_filas)
-    altura = 180 + (filas_visibles * 45)   # 140 en lugar de 100 para sumar espacio al footer
+    altura_desktop = 180 + (filas_visibles * 45)   # Para tabla desktop
+    altura_minima_movil = 600   # Altura mínima para que se vean bien las tarjetas móviles
+    altura = max(altura_desktop, altura_minima_movil)
     
-    components.html(html_code, height=altura, scrolling=False)
+    components.html(html_code, height=altura, scrolling=True)
