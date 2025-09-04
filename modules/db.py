@@ -144,10 +144,13 @@ def insertar_inscripcion(supabase: Client, datos: dict):
     }
 
     resp = supabase.rpc("inscripciones_form_campus", payload).execute()
-    st.write("DEBUG RPC:", resp)  # 🔧 debug temporal
+    st.write("DEBUG RPC:", resp)  # 🔧 debug
 
-    if resp.data:
-        # si es escalar → lo devolvemos en un dict
-        return {"id": resp.data}  
-
-    return None
+    # si devuelve escalar (UUID como string)
+    if isinstance(resp.data, str):
+        return {"id": resp.data}
+    # si devuelve lista con dicts
+    elif isinstance(resp.data, list) and resp.data:
+        return {"id": resp.data[0].get("id")}
+    else:
+        return None
