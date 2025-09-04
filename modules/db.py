@@ -116,5 +116,5 @@ def insertar_inscripcion(supabase: Client, datos: dict):
     """
     Inserta una inscripción en la tabla definitiva
     """
-    resp = supabase.table("cursos_inscripciones").insert(datos).execute()
+    resp = supabase.table("cursos_inscripciones_tmp").insert(datos).execute()
     return resp
