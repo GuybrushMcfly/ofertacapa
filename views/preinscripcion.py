@@ -198,6 +198,7 @@ def mostrar():
             st.session_state["datos_agenteform"] = datos
 
     # -------------------------
+    # -------------------------
     # PASO 4: Formulario final
     # -------------------------
     if (
@@ -217,7 +218,6 @@ def mostrar():
         with col1:
             email_alt = st.text_input("Correo alternativo (opcional)").strip()
         
-
         if st.button("ENVIAR PREINSCRIPCIÓN", type="primary"):
             if not tareas:
                 st.error("⚠️ El campo 'Tareas desarrolladas' es obligatorio.")
@@ -265,17 +265,17 @@ def mostrar():
        #     else:
        #         st.error("❌ Ocurrió un error al guardar la inscripción.")
 
-            result = insertar_inscripcion(supabase, datos_inscripcion)
-            st.write("DEBUG RESULT:", result)  # Temporal para debugging
-            
-            if result is not None and "id" in result:
-                st.session_state["inscripcion_exitosa"] = True
-                mostrar_dialogo_exito()
-            else:
-                st.error("❌ Ocurrió un error al guardar la inscripción.")
-                st.write("DEBUG: result =", result)
+            try:
+                result = insertar_inscripcion(supabase, datos_inscripcion)
+                st.write("DEBUG RESULT:", result)  # Temporal para debugging
                 
-        except Exception as e:
-            st.error(f"❌ Error inesperado: {str(e)}")
-            st.write("DEBUG EXCEPTION:", e)
+                if result is not None and "id" in result:
+                    st.session_state["inscripcion_exitosa"] = True
+                    mostrar_dialogo_exito()
+                else:
+                    st.error("❌ Ocurrió un error al guardar la inscripción.")
+                    st.write("DEBUG: result =", result)
+            except Exception as e:
+                st.error(f"❌ Error inesperado: {str(e)}")
+                st.write("DEBUG EXCEPTION:", e)
 
