@@ -258,9 +258,17 @@ def mostrar():
                 "id_dependencia_general": datos.get("id_dependencia_general"),
             }
 
+       #     result = insertar_inscripcion(supabase, datos_inscripcion)
+       #     if result.data:
+       #         st.session_state["inscripcion_exitosa"] = True
+       #         mostrar_dialogo_exito()
+       #     else:
+       #         st.error("❌ Ocurrió un error al guardar la inscripción.")
+
             result = insertar_inscripcion(supabase, datos_inscripcion)
-            if result.data:
+            if result and result.get("id"):
                 st.session_state["inscripcion_exitosa"] = True
                 mostrar_dialogo_exito()
             else:
                 st.error("❌ Ocurrió un error al guardar la inscripción.")
+
