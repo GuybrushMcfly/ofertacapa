@@ -112,9 +112,38 @@ def obtener_inscripciones(supabase: Client):
     resp = supabase.table("cursos_inscripciones").select("*").execute()
     return resp.data if resp.data else []
 
+#def insertar_inscripcion(supabase: Client, datos: dict):
+#    """
+#    Inserta una inscripción en la tabla definitiva
+#    """
+#    resp = supabase.table("cursos_inscripciones_tmp").insert(datos).execute()
+#    return resp
+
 def insertar_inscripcion(supabase: Client, datos: dict):
     """
-    Inserta una inscripción en la tabla definitiva
+    Inserta una inscripción usando la función RPC inscripciones_form_campus
     """
-    resp = supabase.table("cursos_inscripciones_tmp").insert(datos).execute()
+    resp = supabase.rpc("inscripciones_form_campus", {
+        "p_comision_id": datos["comision_id"],
+        "p_cuil": datos["cuil"],
+        "p_fecha_inscripcion": datos.get("fecha_inscripcion"),
+        "p_estado_inscripcion": datos.get("estado_inscripcion"),
+        "p_vacante": datos.get("vacante", False),
+        "p_sexo": datos.get("sexo"),
+        "p_situacion_revista": datos.get("situacion_revista"),
+        "p_nivel": datos.get("nivel"),
+        "p_grado": datos.get("grado"),
+        "p_agrupamiento": datos.get("agrupamiento"),
+        "p_tramo": datos.get("tramo"),
+        "p_id_dependencia_simple": datos.get("id_dependencia_simple"),
+        "p_id_dependencia_general": datos.get("id_dependencia_general"),
+        "p_email": datos.get("email"),
+        "p_email_alternativo": datos.get("email_alternativo"),
+        "p_nivel_educativo": datos.get("nivel_educativo"),
+        "p_titulo": datos.get("titulo"),
+        "p_tareas_desarrolladas": datos.get("tareas_desarrolladas"),
+        "p_fecha_nacimiento": datos.get("fecha_nacimiento"),
+        "p_edad_inscripcion": datos.get("edad_inscripcion")
+    }).execute()
     return resp
+
