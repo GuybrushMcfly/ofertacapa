@@ -121,8 +121,8 @@ def obtener_inscripciones(supabase: Client):
 
 def insertar_inscripcion(supabase: Client, datos: dict):
     payload = {
-        "p_comision_id": str(datos["comision_id"]),
-        "p_cuil": datos["cuil"],
+        "p_comision_id": datos["comision_id"],  # SIN str() - mantener como UUID
+        "p_cuil": str(datos["cuil"]),
         "p_fecha_inscripcion": datos.get("fecha_inscripcion"),
         "p_estado_inscripcion": datos.get("estado_inscripcion", "Nueva"),
         "p_vacante": datos.get("vacante", False),
@@ -142,15 +142,27 @@ def insertar_inscripcion(supabase: Client, datos: dict):
         "p_fecha_nacimiento": datos.get("fecha_nacimiento"),
         "p_edad_inscripcion": datos.get("edad_inscripcion"),
     }
-
-    resp = supabase.rpc("inscripciones_form_campus", payload).execute()
-    st.write("DEBUG RPC:", resp)  # 🔧 debug
-
-    # si devuelve escalar (UUID como string)
-    if isinstance(resp.data, str):
-        return {"id": resp.data}
-    # si devuelve lista con dicts
-    elif isinstance(resp.data, list) and resp.data:
-        return {"id": resp.data[0].get("id")}
-    else:
+    
+    try:
+        resp = supabase.rpc("inscripciones_form_campus", payload).execute()
+        st.write("DEBUG RPC:", resp)  # Temporal para debugging
+        
+        # Tu función RPC devuelve un UUID
+        if resp.data:
+            if isinstance(resp.data, str):
+                return {"id": resp.data}
+            elif isinstance(resp.data, list) and len(resp.data) > 0:
+                if isinstance(resp.data[0], str):
+                    return {"id": resp.data[0]}
+                elif isinstance(resp.data[0], dict) and "id" in resp.data[0]:
+                    return {"id": resp.data[0]["id"]}
+            else:
+                return {"id": str(resp.data)}
+        
+        # Si no hay data pero no hay error, considerar éxito
+        return {"id": "success"}
+        
+    except Exception as e:
+        st.error(f"Error al insertar inscripción: {str(e)}")
+        st.write("DEBUG ERROR:", e)  # Temporal para debugging
         return None
