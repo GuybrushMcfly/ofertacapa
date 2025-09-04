@@ -266,9 +266,16 @@ def mostrar():
        #         st.error("❌ Ocurrió un error al guardar la inscripción.")
 
             result = insertar_inscripcion(supabase, datos_inscripcion)
-            if result and result.get("id"):
+            st.write("DEBUG RESULT:", result)  # Temporal para debugging
+            
+            if result is not None and "id" in result:
                 st.session_state["inscripcion_exitosa"] = True
                 mostrar_dialogo_exito()
             else:
                 st.error("❌ Ocurrió un error al guardar la inscripción.")
+                st.write("DEBUG: result =", result)
+                
+        except Exception as e:
+            st.error(f"❌ Error inesperado: {str(e)}")
+            st.write("DEBUG EXCEPTION:", e)
 
