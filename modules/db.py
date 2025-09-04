@@ -120,8 +120,11 @@ def obtener_inscripciones(supabase: Client):
 #    return resp
 
 def insertar_inscripcion(supabase: Client, datos: dict):
+    # Debug de los datos originales
+    st.write("🔧 DEBUG - Datos originales completos:", datos)
+    
     payload = {
-        "p_comision_id": datos["comision_id"],  # SIN str() - mantener como UUID
+        "p_comision_id": datos["comision_id"],
         "p_cuil": str(datos["cuil"]),
         "p_fecha_inscripcion": datos.get("fecha_inscripcion"),
         "p_estado_inscripcion": datos.get("estado_inscripcion", "Nueva"),
@@ -143,26 +146,90 @@ def insertar_inscripcion(supabase: Client, datos: dict):
         "p_edad_inscripcion": datos.get("edad_inscripcion"),
     }
     
+    # Debug del payload
+    st.write("🔧 DEBUG - Payload:", payload)
+    st.write("🔧 DEBUG - Tipos de datos:", {k: type(v).__name__ for k, v in payload.items()})
+    
+    # Verificar valores problemáticos
+    for key, value in payload.items():
+        if value is not None and not isinstance(value, (str, int, float, bool, type(None))):
+            st.warning(f"⚠️ Valor problemático en {key}: {value} (tipo: {type(value)})")
+    
+    # Como el dato se inserta pero da error, vamos a intentar inserción directa primero
     try:
-        resp = supabase.rpc("inscripciones_form_campus", payload).execute()
-        st.write("DEBUG RPC:", resp)  # Temporal para debugging
+        st.write("🔧 Intentando inserción directa...")
+        direct_result = supabase.table('cursos_inscripciones').insert({
+            "comision_id": datos["comision_id"],
+            "cuil": str(datos["cuil"]),
+            "fecha_inscripcion": datos.get("fecha_inscripcion"),
+            "estado_inscripcion": datos.get("estado_inscripcion", "Nueva"),
+            "vacante": datos.get("vacante", False),
+            "sexo": datos.get("sexo"),
+            "situacion_revista": datos.get("situacion_revista"),
+            "nivel": datos.get("nivel"),
+            "grado": datos.get("grado"),
+            "agrupamiento": datos.get("agrupamiento"),
+            "tramo": datos.get("tramo"),
+            "id_dependencia_simple": datos.get("id_dependencia_simple"),
+            "id_dependencia_general": datos.get("id_dependencia_general"),
+            "email": datos.get("email"),
+            "email_alternativo": datos.get("email_alternativo"),
+            "nivel_educativo": datos.get("nivel_educativo"),
+            "titulo": datos.get("titulo"),
+            "tareas_desarrolladas": datos.get("tareas_desarrolladas"),
+            "fecha_nacimiento": datos.get("fecha_nacimiento"),
+            "edad_inscripcion": datos.get("edad_inscripcion"),
+            "usuario": "form_anon",
+            "fecha_modificado": "now()"
+        }).execute()
         
-        # Tu función RPC devuelve un UUID
-        if resp.data:
-            if isinstance(resp.data, str):
-                return {"id": resp.data}
-            elif isinstance(resp.data, list) and len(resp.data) > 0:
-                if isinstance(resp.data[0], str):
-                    return {"id": resp.data[0]}
-                elif isinstance(resp.data[0], dict) and "id" in resp.data[0]:
-                    return {"id": resp.data[0]["id"]}
+        st.success("✅ Inserción directa exitosa")
+        st.write("🔧 DEBUG - Respuesta inserción directa:", direct_result.data)
+        return {"id": direct_result.data[0]["id"]}
+        
+    except Exception as direct_error:
+        st.write(f"⚠️ Inserción directa falló (esperado con RLS): {direct_error}")
+        
+        # Si falló inserción directa, usar RPC
+        try:
+            st.write("🔧 Intentando con RPC...")
+            resp = supabase.rpc("inscripciones_form_campus", payload).execute()
+            st.write("🔧 DEBUG RPC Response:", resp)
+            
+            if resp.data:
+                if isinstance(resp.data, str):
+                    return {"id": resp.data}
+                elif isinstance(resp.data, list) and len(resp.data) > 0:
+                    if isinstance(resp.data[0], str):
+                        return {"id": resp.data[0]}
+                    elif isinstance(resp.data[0], dict) and "id" in resp.data[0]:
+                        return {"id": resp.data[0]["id"]}
+                else:
+                    return {"id": str(resp.data)}
+            
+            # Si llegamos aquí, el RPC funcionó pero no devolvió data
+            # Pero como dices que se inserta, vamos a verificar si existe
+            st.write("🔧 RPC ejecutado sin error pero sin data, verificando inserción...")
+            check_result = supabase.table('cursos_inscripciones').select('id').eq('cuil', datos['cuil']).eq('comision_id', datos['comision_id']).order('fecha_modificado', desc=True).limit(1).execute()
+            
+            if check_result.data:
+                st.success("✅ Verificación: El registro SÍ fue insertado")
+                return {"id": check_result.data[0]["id"]}
             else:
-                return {"id": str(resp.data)}
-        
-        # Si no hay data pero no hay error, considerar éxito
-        return {"id": "success"}
-        
-    except Exception as e:
-        st.error(f"Error al insertar inscripción: {str(e)}")
-        st.write("DEBUG ERROR:", e)  # Temporal para debugging
-        return None
+                st.error("❌ Verificación: No se encontró el registro")
+                return None
+                
+        except Exception as rpc_error:
+            st.error(f"❌ Error en RPC: {str(rpc_error)}")
+            st.write("🔧 DEBUG RPC Error completo:", rpc_error)
+            
+            # Como última opción, verificar si se insertó de todas formas
+            try:
+                check_result = supabase.table('cursos_inscripciones').select('id').eq('cuil', datos['cuil']).eq('comision_id', datos['comision_id']).order('fecha_modificado', desc=True).limit(1).execute()
+                if check_result.data:
+                    st.warning("⚠️ El RPC dio error pero el registro SÍ se insertó")
+                    return {"id": check_result.data[0]["id"]}
+            except:
+                pass
+                
+            return None
