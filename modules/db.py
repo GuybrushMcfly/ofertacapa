@@ -120,10 +120,6 @@ def obtener_inscripciones(supabase: Client):
 #    return resp
 
 def insertar_inscripcion(supabase: Client, datos: dict):
-    """
-    Inserta una inscripción usando la función RPC inscripciones_form_campus
-    y devuelve el UUID generado por la tabla.
-    """
     resp = supabase.rpc("inscripciones_form_campus", {
         "p_comision_id": datos["comision_id"],
         "p_cuil": datos["cuil"],
@@ -147,9 +143,7 @@ def insertar_inscripcion(supabase: Client, datos: dict):
         "p_edad_inscripcion": datos.get("edad_inscripcion"),
     }).execute()
 
-    # La función devuelve un array con el UUID, ej: [{"id": "xxxxxxxx-xxxx-..."}]
     if resp.data and isinstance(resp.data, list):
-        return {"id": resp.data[0]}  # dict con el uuid
-    else:
-        return None
+        return {"id": resp.data[0]}
+    return None
 
