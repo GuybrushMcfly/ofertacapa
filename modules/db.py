@@ -120,11 +120,11 @@ def obtener_inscripciones(supabase: Client):
 #    return resp
 
 def insertar_inscripcion(supabase: Client, datos: dict):
-    resp = supabase.rpc("inscripciones_form_campus", {
-        "p_comision_id": datos["comision_id"],
+    payload = {
+        "p_comision_id": str(datos["comision_id"]),  # aseguramos string UUID
         "p_cuil": datos["cuil"],
-        "p_fecha_inscripcion": datos.get("fecha_inscripcion"),
-        "p_estado_inscripcion": datos.get("estado_inscripcion"),
+        "p_fecha_inscripcion": datos.get("fecha_inscripcion"),  # 'YYYY-MM-DD'
+        "p_estado_inscripcion": datos.get("estado_inscripcion", "Nueva"),
         "p_vacante": datos.get("vacante", False),
         "p_sexo": datos.get("sexo"),
         "p_situacion_revista": datos.get("situacion_revista"),
@@ -141,9 +141,11 @@ def insertar_inscripcion(supabase: Client, datos: dict):
         "p_tareas_desarrolladas": datos.get("tareas_desarrolladas"),
         "p_fecha_nacimiento": datos.get("fecha_nacimiento"),
         "p_edad_inscripcion": datos.get("edad_inscripcion"),
-    }).execute()
+    }
+
+    resp = supabase.rpc("inscripciones_form_campus", payload).execute()
+    st.write("DEBUG RPC:", resp)  # 🔧 agregado para depurar
 
     if resp.data and isinstance(resp.data, list):
         return {"id": resp.data[0]}
     return None
-
