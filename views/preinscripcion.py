@@ -2,6 +2,7 @@ import streamlit as st
 import time
 import pandas as pd
 import random
+from datetime import datetime
 from datetime import date
 from modules.db import (
     get_supabase_client,
@@ -238,7 +239,8 @@ def mostrar():
             datos_inscripcion = {
                 "comision_id": st.session_state["comision_id"],
                 "cuil": st.session_state["cuil"],
-                "fecha_inscripcion": date.today().isoformat(),
+#                "fecha_inscripcion": date.today().isoformat(),
+                "fecha_inscripcion": datetime.now().isoformat(),
                 "estado_inscripcion": "Nueva",
                 "vacante": False,
                 "tareas_desarrolladas": tareas,
