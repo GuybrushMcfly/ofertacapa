@@ -112,7 +112,7 @@ def mostrar():
 
 
         <style>
-        .courses-table {
+        .courses-table {{
             width: 100%;
             border-collapse: collapse;
             font-size: 12px;            
@@ -121,26 +121,26 @@ def mostrar():
             border-radius: 8px;
             overflow: hidden;
             background-color: white;
-        }
-        .courses-table thead tr {
+        }}
+        .courses-table thead tr {{
             background-color: #136ac1;
             color: #ffffff;
             text-align: left;
             font-weight: bold;
-        }
-        .courses-table th, .courses-table td {
+        }}
+        .courses-table th, .courses-table td {{
             padding: 10px 8px;
             border-bottom: 1px solid #e0e0e0;
-        }
-        .courses-table tbody tr {
+        }}
+        .courses-table tbody tr {{
             background-color: #ffffff;
             transition: all 0.3s ease;
-        }
-        .courses-table tbody tr:hover {
+        }}
+        .courses-table tbody tr:hover {{
             background-color: #e3f2fd;
             transform: translateY(-1px);
-        }
-        .courses-table a.boton {
+        }}
+        .courses-table a.boton {{
             color: #136ac1;
             text-decoration: none;
             font-weight: bold;
@@ -150,88 +150,85 @@ def mostrar():
             transition: all 0.3s ease;
             display: inline-block;
             margin-right: 6px;
-        }
-        .courses-table a.boton:hover {
+        }}
+        .courses-table a.boton:hover {{
             background-color: #136ac1;
             color: white;
             transform: scale(1.05);
-        }
-        .no-link {
+        }}
+        .no-link {{
             color: #bdc3c7;
             font-style: italic;
-        }
-        
+        }}
+
         /* Media query para móviles */
-        @media screen and (max-width: 768px) {
-            .courses-table { display: none !important; }
-            .mobile-cards { display: block !important; }
-        }
-        @media screen and (min-width: 769px) {
-            .mobile-cards { display: none !important; }
-        }
-        
+        @media screen and (max-width: 768px) {{
+            .courses-table {{
+                display: none !important;
+            }}
+            
+            .mobile-cards {{
+                display: block !important;
+            }}
+        }}
+
+        @media screen and (min-width: 769px) {{
+            .mobile-cards {{
+                display: none !important;
+            }}
+        }}
+
         /* Estilos para las tarjetas móviles */
-        .mobile-cards { display: none; }
-        .mobile-card {
+        .mobile-cards {{
+            display: none;
+        }}
+
+        .mobile-card {{
             background: white;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 12px;
             padding: 16px;
             border-left: 4px solid #136ac1;
-        }
-        .card-title {
+        }}
+
+        .card-title {{
             font-weight: bold;
             color: #136ac1;
             font-size: 14px;
             margin-bottom: 12px;
             line-height: 1.3;
-        }
-        .card-info {
+        }}
+
+        .card-info {{
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             margin-bottom: 12px;
             font-size: 12px;
-        }
-        .card-info-item { display: flex; flex-direction: column; }
-        .card-info-label {
+        }}
+
+        .card-info-item {{
+            display: flex;
+            flex-direction: column;
+        }}
+
+        .card-info-label {{
             font-weight: bold;
             color: #666;
             font-size: 11px;
-        }
-        .card-info-value { color: #333; margin-top: 2px; }
-        .card-link { text-align: center; margin-top: 8px; }
-        
-        /* 🔧 Estilos de paginación */
-        .dataTables_wrapper .dataTables_paginate {
-            margin-top: 10px;
-            text-align: center;
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button {
-            display: inline-block;
-            padding: 6px 12px;
-            margin: 2px;
-            border-radius: 6px;
-            border: 1px solid #136ac1;
-            background: #fff;
-            color: #136ac1 !important;
-            font-size: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-            background: #136ac1;
-            color: #fff !important;
-        }
-        .dataTables_wrapper .dataTables_paginate .paginate_button.current {
-            background: #136ac1 !important;
-            color: #fff !important;
-            border: 1px solid #136ac1;
-        }
-        </style>
+        }}
 
+        .card-info-value {{
+            color: #333;
+            margin-top: 2px;
+        }}
+
+        .card-link {{
+            text-align: center;
+            margin-top: 8px;
+        }}
+        </style>
 
         <div style="overflow-x:auto">
         <table class="courses-table" id="tabla-cursos">
