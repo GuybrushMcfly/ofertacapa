@@ -69,8 +69,7 @@ def mostrar():
     
     respuestas = [
         "Tenés que seleccionar el botón FORMULARIO INDEC. "
-        "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.\n"
-        "Recordá que si el curso es de INAP, tenés que completar tanto el FORMULARIO INDEC como el de INAP.",
+        "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.",
         "Row Level Security: seguridad a nivel de filas.",
         "Caspio es no-code; Streamlit requiere programar en Python.",
         "Con ALTER TABLE ... ENABLE ROW LEVEL SECURITY y luego CREATE POLICY.",
