@@ -121,11 +121,6 @@ def obtener_inscripciones(supabase: Client):
 #    return resp
 
 def insertar_inscripcion(supabase: Client, datos: dict):
-    # ===========================
-    # Debug inicial
-    # ===========================
-    st.write("🔧 DEBUG - Datos originales completos:", datos)
-
     payload = {
         "p_comision_id": str(datos["comision_id"]),
         "p_cuil": str(datos["cuil"]),
@@ -149,15 +144,10 @@ def insertar_inscripcion(supabase: Client, datos: dict):
         "p_edad_inscripcion": datos.get("edad_inscripcion"),
     }
 
-    # Debug del payload y tipos
-    st.write("🔧 DEBUG - Payload:", payload)
-    st.write("🔧 DEBUG - Tipos de datos:", {k: type(v).__name__ for k, v in payload.items()})
-
     # ===========================
-    # Inserción directa (esperado que falle con RLS)
+    # Inserción directa
     # ===========================
     try:
-        st.write("🔧 Intentando inserción directa...")
         direct_result = supabase.table("cursos_inscripciones").insert({
             "comision_id": datos["comision_id"],
             "cuil": str(datos["cuil"]),
@@ -183,26 +173,19 @@ def insertar_inscripcion(supabase: Client, datos: dict):
             "fecha_modificado": "now()"
         }).execute()
 
-        st.success("✅ Inserción directa exitosa")
-        st.write("🔧 DEBUG - Respuesta inserción directa:", direct_result.data)
         return {"id": direct_result.data[0]["id"]}
-
-    except Exception as direct_error:
-        st.write(f"⚠️ Inserción directa falló (esperado con RLS): {direct_error}")
+    except Exception:
+        pass
 
     # ===========================
     # Inserción vía RPC
     # ===========================
     try:
-        st.write("🔧 Intentando con RPC...")
         resp = supabase.rpc("inscripciones_form_campus", payload).execute()
-        st.write("🔧 DEBUG RPC Response:", resp)
 
         if resp.data:
-            # Caso más común: lista con dicts [{"id": "..."}]
             if isinstance(resp.data, list) and isinstance(resp.data[0], dict) and "id" in resp.data[0]:
                 return {"id": resp.data[0]["id"]}
-            # Caso raro: lista de strings o un string directo
             elif isinstance(resp.data, str):
                 return {"id": resp.data}
             elif isinstance(resp.data, list) and resp.data:
@@ -210,8 +193,7 @@ def insertar_inscripcion(supabase: Client, datos: dict):
             else:
                 return {"id": str(resp.data)}
 
-        # Si llegamos aquí, RPC se ejecutó pero no devolvió nada
-        st.warning("⚠️ RPC ejecutado sin error pero sin data, verificando inserción...")
+        # Si no devolvió nada, verificamos manualmente
         check_result = supabase.table("cursos_inscripciones") \
             .select("id") \
             .eq("cuil", datos["cuil"]) \
@@ -221,17 +203,11 @@ def insertar_inscripcion(supabase: Client, datos: dict):
             .execute()
 
         if check_result.data:
-            st.success("✅ Verificación: El registro SÍ fue insertado")
             return {"id": check_result.data[0]["id"]}
         else:
-            st.error("❌ Verificación: No se encontró el registro")
             return None
 
-    except Exception as rpc_error:
-        st.error(f"❌ Error en RPC: {str(rpc_error)}")
-        st.write("🔧 DEBUG RPC Error completo:", rpc_error)
-
-        # Como última opción, verificar si igual se insertó
+    except Exception:
         try:
             check_result = supabase.table("cursos_inscripciones") \
                 .select("id") \
@@ -241,9 +217,9 @@ def insertar_inscripcion(supabase: Client, datos: dict):
                 .limit(1) \
                 .execute()
             if check_result.data:
-                st.warning("⚠️ El RPC dio error pero el registro SÍ se insertó")
                 return {"id": check_result.data[0]["id"]}
         except:
             pass
 
         return None
+
