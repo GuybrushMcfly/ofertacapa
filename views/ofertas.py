@@ -243,18 +243,31 @@ def mostrar():
             html += "<tr>"
             for col in df.columns:
                 val = row[col]
+        
                 if col == "Link Externo":
-                    ...
+                    html += "<td>"
+                    if pd.notna(val) and val and val != "None":
+                        html += f'<a href="{val}" target="_blank" class="boton">Form. INAP</a>'
+                    else:
+                        html += '<span class="no-link">Sin enlace</span>'
+                    html += "</td>"
+        
                 elif col in ["Inicio", "Fin", "Cierre"]:
                     if pd.notna(val) and val != "":
-                        fecha_iso = pd.to_datetime(val, dayfirst=True, errors="coerce").strftime("%Y-%m-%d")
-                        fecha_display = pd.to_datetime(val, dayfirst=True, errors="coerce").strftime("%d/%m/%Y")
-                        html += f'<td data-order="{fecha_iso}">{fecha_display}</td>'
+                        fecha_dt = pd.to_datetime(val, errors="coerce", dayfirst=True)
+                        if pd.notna(fecha_dt):
+                            fecha_iso = fecha_dt.strftime("%Y-%m-%d")   # ordenamiento
+                            fecha_display = fecha_dt.strftime("%d/%m/%Y")  # visual
+                            html += f'<td data-order="{fecha_iso}">{fecha_display}</td>'
+                        else:
+                            html += "<td></td>"
                     else:
                         html += "<td></td>"
+        
                 else:
                     html += f"<td>{val}</td>"
             html += "</tr>"
+
 
 
         html += """
