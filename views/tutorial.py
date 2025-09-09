@@ -68,13 +68,12 @@ def mostrar():
     ]
     
     respuestas = [
-        "Tenés que seleccionar el botón FORMULARIO INDEC. Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.
-Recordá que si el curso es de INAP, tenés que completar tanto el FORMULARIO INDEC como el de INAP.",
+        "Tenés que seleccionar el botón FORMULARIO INDEC. "
+        "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.\n"
+        "Recordá que si el curso es de INAP, tenés que completar tanto el FORMULARIO INDEC como el de INAP.",
         "Row Level Security: seguridad a nivel de filas.",
         "Caspio es no-code; Streamlit requiere programar en Python.",
         "Con ALTER TABLE ... ENABLE ROW LEVEL SECURITY y luego CREATE POLICY.",
-        "Con el decorador @st.cache_data (o @st.cache_resource para objetos).",
-        "Una función que corre con privilegios del dueño, no del usuario que la ejecuta."
     ]
     
     # ===== Renderizar en 2 filas de 3 =====
