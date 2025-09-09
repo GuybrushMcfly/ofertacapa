@@ -89,6 +89,13 @@ def mostrar():
         "link_externo": "Link Externo"
     })
 
+    # 🔧 Agregar columnas ocultas ISO para ordenamiento correcto
+    df_vista["Inicio_raw"] = pd.to_datetime(df_filtrado["fecha_desde"], errors="coerce").dt.strftime("%Y-%m-%d")
+    df_vista["Fin_raw"] = pd.to_datetime(df_filtrado["fecha_hasta"], errors="coerce").dt.strftime("%Y-%m-%d")
+    df_vista["Cierre_raw"] = pd.to_datetime(df_filtrado["fecha_cierre"], errors="coerce").dt.strftime("%Y-%m-%d")
+    df_vista["Difusion_raw"] = pd.to_datetime(df_filtrado["fecha_difusion"], errors="coerce").dt.strftime("%Y-%m-%d")
+
+  
     # ✅ Mostrar mensaje visual si el DataFrame está vacío (como en el form.py original)
     if df_vista.empty:
         st.info("🔍 No hay cursos que coincidan con los filtros seleccionados.")
@@ -325,7 +332,7 @@ def mostrar():
                 info: false,
                 lengthChange: false,
                 fixedHeader: true,   // ✅ encabezado fijo
-                order: [],
+                order: [[8, "desc"]],   // 🔧 usar columna Inicio_raw  
                 columnDefs: [
                     { targets: 0, width: "40%" },  // Actividad (Comisión)
                     { targets: 1, width: "10%" },  // Inicio
