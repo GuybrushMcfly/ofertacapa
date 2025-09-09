@@ -50,7 +50,7 @@ def mostrar():
       background-color: #f9f9f9;
       color: #333;
       transform: rotateY(180deg);
-      font-size: 14px;
+      font-size: 16px;
       line-height: 1.4em;
       text-align: justify;
     }
