@@ -73,6 +73,8 @@ def mostrar():
         "Row Level Security: seguridad a nivel de filas.",
         "Caspio es no-code; Streamlit requiere programar en Python.",
         "Con ALTER TABLE ... ENABLE ROW LEVEL SECURITY y luego CREATE POLICY.",
+        "respuesta",
+        "respuesta"
     ]
     
     # ===== Renderizar en 2 filas de 3 =====
