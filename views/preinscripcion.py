@@ -24,7 +24,7 @@ supabase = get_supabase_client()
 # ==========================================================
 # DIÁLOGO DE ÉXITO (modal al inscribirse)
 # ==========================================================
-@st.dialog("✅ ¡Preinscripción exitosa!", width="large", dismissible=False)
+@st.dialog("✅ ¡Inscripción exitosa!", width="large", dismissible=False)
 def mostrar_dialogo_exito():
     actividad = st.session_state.get("actividad_nombre", "la actividad seleccionada")
     datos_agente = st.session_state.get("datos_agenteform", {})
@@ -40,7 +40,7 @@ def mostrar_dialogo_exito():
         padding:20px;
         text-align:center;
         font-size:17px;">
-        <b>{nombre}</b>, tu preinscripción en la actividad 
+        <b>{nombre}</b>, tu inscripción en la actividad 
         <b><span style="color:#136ac1;">{actividad}</span></b> fue registrada correctamente. 🎉
         <br><br>
         <span style="color:#555;">ℹ️ Recordá que esta solicitud no implica la asignación de vacante.</span>        
@@ -74,7 +74,7 @@ def mostrar():
     # PASO 1: Traer comisiones
     # -------------------------
     st.markdown(
-        "<h4 style='text-align: center; color: #136ac1;'>📝 PREINSCRIPCIÓN EN ACTIVIDADES DE CAPACITACIÓN</h4>",
+        "<h4 style='text-align: center; color: #136ac1;'>📝 INSCRIPCIÓN EN ACTIVIDADES DE CAPACITACIÓN</h4>",
         unsafe_allow_html=True
     )
 
@@ -179,7 +179,7 @@ def mostrar():
                 st.info("⚠️ Ya aprobaste esta actividad anteriormente.")
                 return
             if datos_check.get("ya_inscripto", False):
-                st.info("⚠️ Ya realizaste la preinscripción en esta comisión. No es necesario volver a realizarla.")
+                st.info("⚠️ Ya realizaste la inscripción en esta comisión. No es necesario volver a realizarla.")
                 return
         
             # ✅ Si todo OK
@@ -219,7 +219,7 @@ def mostrar():
         with col1:
             email_alt = st.text_input("Correo alternativo (opcional)").strip()
         
-        if st.button("ENVIAR PREINSCRIPCIÓN", type="primary"):
+        if st.button("ENVIAR INSCRIPCIÓN", type="primary"):
             if not tareas:
                 st.error("⚠️ El campo 'Tareas desarrolladas' es obligatorio.")
                 return
@@ -269,15 +269,15 @@ def mostrar():
 
             try:
                 result = insertar_inscripcion(supabase, datos_inscripcion)
-                st.write("DEBUG RESULT:", result)  # Temporal para debugging
+               # st.write("DEBUG RESULT:", result)  # Temporal para debugging
                 
                 if result is not None and "id" in result:
                     st.session_state["inscripcion_exitosa"] = True
                     mostrar_dialogo_exito()
                 else:
                     st.error("❌ Ocurrió un error al guardar la inscripción.")
-                    st.write("DEBUG: result =", result)
+                #    st.write("DEBUG: result =", result)
             except Exception as e:
                 st.error(f"❌ Error inesperado: {str(e)}")
-                st.write("DEBUG EXCEPTION:", e)
+             #   st.write("DEBUG EXCEPTION:", e)
 
