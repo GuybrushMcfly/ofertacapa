@@ -332,7 +332,18 @@ def mostrar():
                 info: false,
                 lengthChange: false,
                 fixedHeader: true,   // ✅ encabezado fijo
-                order: [[8, "desc"]],   // 🔧 usar columna Inicio_raw  
+                order: [[10, "desc"]],
+                columnDefs: [
+                    { targets: [7,8,9,10], visible: false },  // ocultar todas las *_raw
+                    { targets: 0, width: "40%" },
+                    { targets: 1, width: "10%" },
+                    { targets: 2, width: "10%" },
+                    { targets: 3, width: "10%" },
+                    { targets: 4, width: "5%" },
+                    { targets: 5, width: "10%" },
+                    { targets: 6, width: "20%" }
+                ],
+
                 columnDefs: [
                     { targets: 0, width: "40%" },  // Actividad (Comisión)
                     { targets: 1, width: "10%" },  // Inicio
