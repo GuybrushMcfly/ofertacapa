@@ -244,17 +244,18 @@ def mostrar():
             for col in df.columns:
                 val = row[col]
                 if col == "Link Externo":
-                    html += '<td>'
-                    if pd.notna(val) and val and val != "None":
-                        
-                        html += f'<a href="{val}" target="_blank" class="boton"> Form. INAP</a>'
-
+                    ...
+                elif col in ["Inicio", "Fin", "Cierre"]:
+                    if pd.notna(val) and val != "":
+                        fecha_iso = pd.to_datetime(val, dayfirst=True, errors="coerce").strftime("%Y-%m-%d")
+                        fecha_display = pd.to_datetime(val, dayfirst=True, errors="coerce").strftime("%d/%m/%Y")
+                        html += f'<td data-order="{fecha_iso}">{fecha_display}</td>'
                     else:
-                        html += '<span class="no-link">Sin enlace</span>'
-                    html += '</td>'
+                        html += "<td></td>"
                 else:
                     html += f"<td>{val}</td>"
             html += "</tr>"
+
 
         html += """
             </tbody>
@@ -319,29 +320,25 @@ def mostrar():
         <script>
         $(document).ready(function() {
             $('#tabla-cursos').DataTable({
-                paging: true,        // ✅ paginación siempre
-                pageLength: 8,      // ✅ máximo 10 por página
+                paging: true,
+                pageLength: 8,
                 searching: false,
                 info: false,
                 lengthChange: false,
-                fixedHeader: true,   // ✅ encabezado fijo
-                order: [],
+                fixedHeader: true,
+                order: [], 
                 columnDefs: [
-                    { targets: 0, width: "40%" },  // Actividad (Comisión)
-                    { targets: 1, width: "10%" },  // Inicio
-                    { targets: 2, width: "10%" },  // Fin
-                    { targets: 3, width: "10%" },  // Cierre
-                    { targets: 4, width: "5%" },  // Créditos
+                    { targets: 0, width: "40%" },  // Actividad
+                    { targets: [1,2,3], type: "date", width: "10%" }, // Fechas ordenables
+                    { targets: 4, width: "5%" },   // Créditos
                     { targets: 5, width: "10%" },  // Modalidad
                     { targets: 6, width: "20%" }   // Acciones
                 ],
                 language: {
-                    paginate: {
-                        previous: "Anterior",
-                        next: "Siguiente"
-                    }
+                    paginate: { previous: "Anterior", next: "Siguiente" }
                 }
             });
+
 
 
         });
