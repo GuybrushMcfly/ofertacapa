@@ -59,7 +59,7 @@ def mostrar():
 
     # ===== Contenido de las tarjetas =====
     preguntas = [
-        "¿Cuál es la capital de Argentina?",
+        "¿COMO ME INSCRIBO EN UN CURSO?",
         "¿Qué significa RLS en Supabase?",
         "Explicá la diferencia entre Caspio y Streamlit.",
         "¿Cómo se activa un policy en Supabase?",
@@ -68,7 +68,8 @@ def mostrar():
     ]
     
     respuestas = [
-        "Buenos Aires.",
+        "Tenés que seleccionar el botón FORMULARIO INDEC. Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.
+Recordá que si el curso es de INAP, tenés que completar tanto el FORMULARIO INDEC como el de INAP.",
         "Row Level Security: seguridad a nivel de filas.",
         "Caspio es no-code; Streamlit requiere programar en Python.",
         "Con ALTER TABLE ... ENABLE ROW LEVEL SECURITY y luego CREATE POLICY.",
