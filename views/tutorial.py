@@ -58,16 +58,24 @@ def mostrar():
     """, unsafe_allow_html=True)
 
     # ===== Contenido de las tarjetas =====
-    preguntas = [f"Pregunta {i}" for i in range(1, 7)]
-    respuestas = [
-        "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed non risus.",
-        "Suspendisse lectus tortor, dignissim sit amet, adipiscing nec, ultricies sed, dolor.",
-        "Cras elementum ultrices diam. Maecenas ligula massa, varius a, semper congue.",
-        "Suspendisse potenti. Ut sed lectus nec sapien fringilla sagittis vitae eget nunc.",
-        "Praesent dapibus, neque id cursus faucibus, tortor neque egestas auguae.",
-        "Donec sit amet eros. Lorem ipsum dolor sit amet, consectetuer adipiscing elit."
+    preguntas = [
+        "¿Cuál es la capital de Argentina?",
+        "¿Qué significa RLS en Supabase?",
+        "Explicá la diferencia entre Caspio y Streamlit.",
+        "¿Cómo se activa un policy en Supabase?",
+        "¿Qué comando usás para cachear datos en Streamlit?",
+        "¿Qué es una función SECURITY DEFINER?"
     ]
-
+    
+    respuestas = [
+        "Buenos Aires.",
+        "Row Level Security: seguridad a nivel de filas.",
+        "Caspio es no-code; Streamlit requiere programar en Python.",
+        "Con ALTER TABLE ... ENABLE ROW LEVEL SECURITY y luego CREATE POLICY.",
+        "Con el decorador @st.cache_data (o @st.cache_resource para objetos).",
+        "Una función que corre con privilegios del dueño, no del usuario que la ejecuta."
+    ]
+    
     # ===== Renderizar en 2 filas de 3 =====
     for fila in range(2):
         cols = st.columns(3)
