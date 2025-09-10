@@ -68,7 +68,7 @@ def mostrar():
     ]
     
     respuestas = [
-        "Tenés que cliquear en el botón **FORMULARIO INDEC**. "
+        "Tenés que cliquear en el botón <b>FORMULARIO INDEC</b>. "
         "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.",
         "**Solamente en los cursos de INAP** tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC. "
         "Esta doble inscripción permite llevar un mejor control de las inscripciones y vacantes.",
