@@ -59,15 +59,19 @@ def mostrar():
 
     # ===== Contenido de las tarjetas =====
     preguntas = [
+        "¿DÓNDE ENCUENTRO LOS CURSOS DISPONIBLES PARA INSCRIBIRME?",
         "¿CÓMO ME INSCRIBO EN UN CURSO?",
         "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?",
-        "Explicá la diferencia entre Caspio y Streamlit.",
         "¿Cómo se activa un policy en Supabase?",
         "¿Qué comando usás para cachear datos en Streamlit?",
         "¿Qué es una función SECURITY DEFINER?"
     ]
     
     respuestas = [
+        #respuesta "¿DÓNDE ENCUENTRO LOS CURSOS DISPONIBLES PARA INSCRIBIRME?"
+        "Tanto en el botón DESTACADOS como en el LISTADO OFERTAS vas a encontrar las actividades disponibles. "
+        "Todas las semanas se irán actualizando las ofertas.",
+        
         #respuesta "¿CÓMO ME INSCRIBO EN UN CURSO?"
         "Tenés que cliquear en el botón FORMULARIO INDEC. "
         "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.",
@@ -76,8 +80,7 @@ def mostrar():
         "SI. Solamente en los cursos de INAP tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC. "
         "Esta doble inscripción garantiza un mejor control de las inscripciones y vacantes.",
     
-        "<b>Caspio</b> es <b>no-code</b>; <b>Streamlit</b> requiere programar en <b>Python</b>.",
-    
+   
         "Con <b>ALTER TABLE ... ENABLE ROW LEVEL SECURITY</b> y luego <b>CREATE POLICY</b>.",
     
         "Podés usar <b>@st.cache_data</b> para cachear datos en Streamlit.",
