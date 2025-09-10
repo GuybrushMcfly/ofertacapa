@@ -69,14 +69,20 @@ def mostrar():
     
     respuestas = [
         "Tenés que cliquear en el botón <b>FORMULARIO INDEC</b>. "
-        "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.",
-        "**Solamente en los cursos de INAP** tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC. "
+        "Luego elegís la <b>actividad</b> en la cual querés inscribirte y completás los datos requeridos.",
+    
+        "Solamente en los cursos de <b>INAP</b> tenés que inscribirte tanto en su plataforma como en el <b>FORMULARIO INDEC</b>. "
         "Esta doble inscripción permite llevar un mejor control de las inscripciones y vacantes.",
-        "Caspio es no-code; Streamlit requiere programar en Python.",
-        "Con ALTER TABLE ... ENABLE ROW LEVEL SECURITY y luego CREATE POLICY.",
-        "respuesta",
-        "respuesta"
+    
+        "<b>Caspio</b> es <b>no-code</b>; <b>Streamlit</b> requiere programar en <b>Python</b>.",
+    
+        "Con <b>ALTER TABLE ... ENABLE ROW LEVEL SECURITY</b> y luego <b>CREATE POLICY</b>.",
+    
+        "Podés usar <b>@st.cache_data</b> para cachear datos en Streamlit.",
+    
+        "Una función <b>SECURITY DEFINER</b> se ejecuta con los privilegios del creador, no del invocador."
     ]
+
     
     # ===== Renderizar en 2 filas de 3 =====
     for fila in range(2):
