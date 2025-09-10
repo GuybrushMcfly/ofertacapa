@@ -68,11 +68,13 @@ def mostrar():
     ]
     
     respuestas = [
-        "Tenés que cliquear en el botón <b>FORMULARIO INDEC</b>. "
-        "Luego elegís la <b>actividad</b> en la cual querés inscribirte y completás los datos requeridos.",
-    
-        "Solamente en los cursos de <b>INAP</b> tenés que inscribirte tanto en su plataforma como en el <b>FORMULARIO INDEC</b>. "
-        "Esta doble inscripción permite llevar un mejor control de las inscripciones y vacantes.",
+        #respuesta "¿CÓMO ME INSCRIBO EN UN CURSO?"
+        "Tenés que cliquear en el botón FORMULARIO INDEC. "
+        "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.",
+
+        #respuesta "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?"
+        "Solamente en los cursos de INAP tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC. "
+        "Esta doble inscripción garantiza un mejor control de las inscripciones y vacantes.",
     
         "<b>Caspio</b> es <b>no-code</b>; <b>Streamlit</b> requiere programar en <b>Python</b>.",
     
