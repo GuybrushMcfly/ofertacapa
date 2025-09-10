@@ -43,14 +43,14 @@ def mostrar():
     .flip-card-front {
       background-color: #d14fbb;
       color: white;
-      font-size: 18px;
+      font-size: 20px;
       font-weight: bold;
     }
     .flip-card-back {
       background-color: #f9f9f9;
       color: #333;
       transform: rotateY(180deg);
-      font-size: 17px;
+      font-size: 18px;
       line-height: 1.4em;
       text-align: justify;
     }
@@ -73,7 +73,7 @@ def mostrar():
         "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.",
 
         #respuesta "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?"
-        "Solamente en los cursos de INAP tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC. "
+        "SI. Solamente en los cursos de INAP tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC. "
         "Esta doble inscripción garantiza un mejor control de las inscripciones y vacantes.",
     
         "<b>Caspio</b> es <b>no-code</b>; <b>Streamlit</b> requiere programar en <b>Python</b>.",
