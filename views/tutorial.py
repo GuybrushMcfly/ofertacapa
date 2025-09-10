@@ -63,12 +63,12 @@ def mostrar():
         "¿CÓMO ME INSCRIBO EN UN CURSO?",
         "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?",
         "¿QUIERO INSCRIBIRME PERO EL FORMULARIO NO PERMITE?",
-        "¿Qué comando usás para cachear datos en Streamlit?",
+        "¿CUÁNDO RECIBO LA VACANTE DE LAS ACTIDADES SOLICITADAS?",
         "¿Qué es una función SECURITY DEFINER?"
     ]
     
     respuestas = [
-        #respuesta "¿DÓNDE ENCUENTRO LOS CURSOS DISPONIBLES PARA INSCRIBIRME?"
+        #respuesta "¿DÓNDE ENCUENTRO LAS ACTIVIDADES DISPONIBLES PARA INSCRIBIRME?"
         "Tanto en el botón DESTACADOS como en el LISTADO OFERTAS vas a encontrar las actividades disponibles. "
         "Todas las semanas se irán actualizando las ofertas.",
         
@@ -77,14 +77,16 @@ def mostrar():
         "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.",
 
         #respuesta "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?"
-        "SI. Solamente en los cursos de INAP tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC. "
+        "SI. Solamente en las actividades de INAP tenés que inscribirte tanto en INAP como en el FORMULARIO INDEC. "
         "Esta doble inscripción garantiza un mejor control de las inscripciones y vacantes.",
     
-         #respuesta "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?""¿QUIERO INSCRIBIRME PERO EL FORMULARIO NO PERMITE?",
-         "Al seleccionar una actividad vas a tener que validar tus datos. Si no te permite continuar: "
-         "a) verificá tu CUIL/CUIL, b) ya te inscribiste en esa actividad, c) ya aprobaste esa actividad anteriormente.",
-    
-        "Podés usar <b>@st.cache_data</b> para cachear datos en Streamlit.",
+        #respuesta "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?""¿QUIERO INSCRIBIRME PERO EL FORMULARIO NO PERMITE?",
+        "Al seleccionar una actividad vas a tener que validar tus datos. Si no te permite continuar: "
+        "a) verificá tu CUIL/CUIL, b) ya te inscribiste en esa actividad, c) ya aprobaste esa actividad anteriormente.",
+
+        #respuesta "¿CUÁNDO RECIBO LA VACANTE DE LAS ACTIVIDADES SOLICITADAS?"    
+        "La noticación de la vacante te puede llegar a tu correo incluso el mismo día que comienza la actividad."
+        "IMPORTANTE!! Recordá que haberte inscripto en una actividad no garantiza la asignación de vacante.",
     
         "Una función <b>SECURITY DEFINER</b> se ejecuta con los privilegios del creador, no del invocador."
     ]
