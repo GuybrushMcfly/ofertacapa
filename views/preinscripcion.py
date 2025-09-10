@@ -56,6 +56,36 @@ def mostrar_dialogo_exito():
         st.rerun()
 
 
+    st.markdown(
+        """
+        <style>
+        /* 🔧 Inputs con borde azul por defecto */
+        input[type="text"], input[type="email"], textarea {
+            border: 2px solid #136ac1 !important;   /* Azul cuando está inactivo */
+            border-radius: 6px !important;
+            padding: 6px 10px !important;
+            background-color: #FFFFFF !important;
+            color: #1E1E1E !important;
+        }
+    
+        /* 🔧 Inputs con borde rosa al hacer focus */
+        input[type="text"]:focus, input[type="email"]:focus, textarea:focus {
+            border: 2px solid #c756aa !important;   /* Rosa cuando tiene foco */
+            box-shadow: 0 0 6px rgba(199,86,170,0.5) !important;
+            outline: none !important;
+        }
+    
+        /* Placeholder más visible */
+        input::placeholder, textarea::placeholder {
+            color: #888888 !important;
+            opacity: 1 !important;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+
 # ==========================================================
 # FUNCIÓN PRINCIPAL
 # ==========================================================
