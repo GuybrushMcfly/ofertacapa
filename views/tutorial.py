@@ -62,7 +62,7 @@ def mostrar():
         "¿DÓNDE ENCUENTRO LOS CURSOS DISPONIBLES PARA INSCRIBIRME?",
         "¿CÓMO ME INSCRIBO EN UN CURSO?",
         "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?",
-        "¿Cómo se activa un policy en Supabase?",
+        "¿QUIERO INSCRIBIRME PERO EL FORMULARIO NO PERMITE?",
         "¿Qué comando usás para cachear datos en Streamlit?",
         "¿Qué es una función SECURITY DEFINER?"
     ]
@@ -80,8 +80,9 @@ def mostrar():
         "SI. Solamente en los cursos de INAP tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC. "
         "Esta doble inscripción garantiza un mejor control de las inscripciones y vacantes.",
     
-   
-        "Con <b>ALTER TABLE ... ENABLE ROW LEVEL SECURITY</b> y luego <b>CREATE POLICY</b>.",
+         #respuesta "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?""¿QUIERO INSCRIBIRME PERO EL FORMULARIO NO PERMITE?",
+         "Al seleccionar una actividad vas a tener que validar tu CUIL/CUIL para continuar con la inscripción. "
+         "Si no lo permite: a) verificá tu CUIL/CUIL, b) ya te inscribiste en esa actividad, c) ya aprobaste esa actividad.",
     
         "Podés usar <b>@st.cache_data</b> para cachear datos en Streamlit.",
     
