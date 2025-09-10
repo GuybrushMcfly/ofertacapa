@@ -81,8 +81,8 @@ def mostrar():
         "Esta doble inscripción garantiza un mejor control de las inscripciones y vacantes.",
     
          #respuesta "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?""¿QUIERO INSCRIBIRME PERO EL FORMULARIO NO PERMITE?",
-         "Al seleccionar una actividad vas a tener que validar tu CUIL/CUIL para continuar con la inscripción. "
-         "Si no lo permite: a) verificá tu CUIL/CUIL, b) ya te inscribiste en esa actividad, c) ya aprobaste esa actividad.",
+         "Al seleccionar una actividad vas a tener que validar tus datos. Si no te permite continuar: "
+         "a) verificá tu CUIL/CUIL, b) ya te inscribiste en esa actividad, c) ya aprobaste esa actividad anteriormente.",
     
         "Podés usar <b>@st.cache_data</b> para cachear datos en Streamlit.",
     
