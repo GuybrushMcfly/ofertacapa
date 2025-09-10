@@ -68,7 +68,7 @@ def mostrar():
         <style>
         /* 🔧 Inputs con borde azul por defecto */
         input[type="text"], input[type="email"], textarea {
-            border: 2px solid #136ac1 !important;   /* Azul cuando está inactivo */
+            border: 1px solid #136ac1 !important;   /* Azul cuando está inactivo */
             border-radius: 6px !important;
             padding: 6px 10px !important;
             background-color: #FFFFFF !important;
