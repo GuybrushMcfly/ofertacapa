@@ -56,6 +56,13 @@ def mostrar_dialogo_exito():
         st.rerun()
 
 
+
+
+# ==========================================================
+# FUNCIÓN PRINCIPAL
+# ==========================================================
+def mostrar():
+    # ==================== ESTILO GENERAL ====================
     st.markdown(
         """
         <style>
@@ -80,21 +87,6 @@ def mostrar_dialogo_exito():
             color: #888888 !important;
             opacity: 1 !important;
         }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
-
-# ==========================================================
-# FUNCIÓN PRINCIPAL
-# ==========================================================
-def mostrar():
-    # ==================== ESTILO GENERAL ====================
-    st.markdown(
-        """
-        <style>
-        /* Acá podés agregar estilos generales si querés */
         </style>
         """,
         unsafe_allow_html=True
