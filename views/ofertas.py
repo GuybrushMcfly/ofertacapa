@@ -123,7 +123,7 @@ def mostrar():
             background-color: white;
         }}
         .courses-table thead tr {{
-            background-color: #136ac1;
+            background-color: #476EAE;
             color: #ffffff;
             text-align: left;
             font-weight: bold;
