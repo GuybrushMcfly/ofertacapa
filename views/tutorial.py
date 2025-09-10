@@ -50,7 +50,7 @@ def mostrar():
       background-color: #f9f9f9;
       color: #333;
       transform: rotateY(180deg);
-      font-size: 16px;
+      font-size: 17px;
       line-height: 1.4em;
       text-align: justify;
     }
@@ -68,9 +68,9 @@ def mostrar():
     ]
     
     respuestas = [
-        "Tenés que cliquear en el botón FORMULARIO INDEC. "
+        "Tenés que cliquear en el botón **FORMULARIO INDEC**. "
         "Luego elegís la actividad en la cual querés inscribirte y completás los datos requeridos.",
-        "Solamente en los cursos de INAP tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC."
+        "**Solamente en los cursos de INAP** tenés que inscribirte tanto en su plataforma como en el FORMULARIO INDEC. "
         "Esta doble inscripción permite llevar un mejor control de las inscripciones y vacantes.",
         "Caspio es no-code; Streamlit requiere programar en Python.",
         "Con ALTER TABLE ... ENABLE ROW LEVEL SECURITY y luego CREATE POLICY.",
