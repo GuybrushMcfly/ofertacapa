@@ -64,7 +64,7 @@ def mostrar():
         "¿TENGO QUE HACER DOBLE INSCRIPCIÓN?",
         "¿QUIERO INSCRIBIRME PERO EL FORMULARIO NO PERMITE?",
         "¿CUÁNDO RECIBO LA VACANTE DE LAS ACTIDADES SOLICITADAS?",
-        "¿Qué es una función SECURITY DEFINER?"
+        "¿PUEDO SOLICITAR LA BAJA DE UNA VACANTE OTORGADA?"
     ]
     
     respuestas = [
@@ -85,10 +85,12 @@ def mostrar():
         "a) verificá tu CUIL/CUIL, b) ya te inscribiste en esa actividad, c) ya aprobaste esa actividad anteriormente.",
 
         #respuesta "¿CUÁNDO RECIBO LA VACANTE DE LAS ACTIVIDADES SOLICITADAS?"    
-        "La noticación de la vacante te puede llegar a tu correo incluso el mismo día que comienza la actividad."
+        "La noticación de la vacante te puede llegar a tu correo incluso el mismo día que comienza la actividad. "
         "IMPORTANTE!! Recordá que haberte inscripto en una actividad no garantiza la asignación de vacante.",
-    
-        "Una función <b>SECURITY DEFINER</b> se ejecuta con los privilegios del creador, no del invocador."
+ 
+        #respuesta "¿PUEDO SOLICITAR LA BAJA DE UNA VACANTE OTORGADA?"
+        "Sí. Si se te otorgó una vacante en una actividad y no podés realizarla, escribinos a capacitacion@indec.gob.ar "
+        "y te vamos a indicar como realizar la solicitud de baja."
     ]
 
     
