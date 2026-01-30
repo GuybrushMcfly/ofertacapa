@@ -1,6 +1,6 @@
-streamlit==1.48.0
+streamlit==1.53.0
 pandas
-supabase==1.0.3
+supabase==2.27.0
 fpdf==1.7.2
 plotly
 streamlit-aggrid
