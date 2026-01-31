@@ -4,17 +4,48 @@ from streamlit_option_menu import option_menu
 st.set_page_config(page_title="🎓 Espacio de Ofertas de Capacitación", layout="wide")
 
 
-st.markdown(
-    """
-    <style>
-    /* Ocultar íconos de ancla en todos los títulos de Streamlit */
-    h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
-        display: none !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+# ========================
+# 🔤 Cargar fuente global
+# ========================
+st.markdown("""
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@400;700&display=swap" rel="stylesheet">
+""", unsafe_allow_html=True)
+
+st.markdown("""
+<style>
+/* Aplicar Montserrat Alternates a TODA la app */
+html, body, [class*="css"], .stApp, .main {
+    font-family: 'Montserrat Alternates', sans-serif !important;
+}
+
+/* Títulos */
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Montserrat Alternates', sans-serif !important;
+}
+
+/* Labels de inputs */
+label {
+    font-family: 'Montserrat Alternates', sans-serif !important;
+}
+
+/* Párrafos y texto general */
+p, span, div {
+    font-family: 'Montserrat Alternates', sans-serif !important;
+}
+
+/* Botones */
+button {
+    font-family: 'Montserrat Alternates', sans-serif !important;
+}
+
+/* Ocultar íconos de ancla en todos los títulos de Streamlit */
+h1 a, h2 a, h3 a, h4 a, h5 a, h6 a {
+    display: none !important;
+}
+</style>
+""", unsafe_allow_html=True)
 
 
 # =========================
